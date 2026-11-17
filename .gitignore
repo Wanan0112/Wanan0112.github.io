@@ -20,3 +20,6 @@ $RECYCLE.BIN/
 
 # 本地预览服务器
 serve.ps1
+
+# 本地发布脚本
+publish.ps1
