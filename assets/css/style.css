@@ -139,6 +139,8 @@ textarea {
   max-width: var(--wrap);
   margin: 0 auto;
   padding: 0 28px;
+  position: relative;
+  z-index: 2;
 }
 
 /* ---------- 02. 纸纹 & 手绘装饰 ---------- */
@@ -150,6 +152,55 @@ textarea {
   background-image: var(--grain-url);
   opacity: 0.14;
   mix-blend-mode: multiply;
+}
+
+/* ---------- 02.1 IP 小精灵背景装饰 ---------- */
+.ip-decor {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ip-decor__item {
+  position: absolute;
+  display: block;
+  width: clamp(70px, 6.4vw, 104px);
+  height: auto;
+  filter: drop-shadow(0 8px 14px rgba(35, 65, 76, 0.22));
+  animation: ip-float 9s ease-in-out infinite;
+  will-change: transform;
+}
+
+.ip-decor__item--red {
+  left: 1.2%;
+  top: 24%;
+  animation-duration: 8.5s;
+}
+
+.ip-decor__item--yellow {
+  right: 1.4%;
+  top: 47%;
+  animation-duration: 10.5s;
+  animation-delay: -3.5s;
+}
+
+.ip-decor__item--blue {
+  left: 1.6%;
+  bottom: 13%;
+  animation-duration: 12s;
+  animation-delay: -6.5s;
+}
+
+@keyframes ip-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -15px, 0) rotate(-2.5deg);
+  }
 }
 
 .tape {
@@ -2275,9 +2326,31 @@ textarea {
   .board--row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  /* 小精灵缩小并贴近边缘，避免压住正文 */
+  .ip-decor__item {
+    width: clamp(46px, 6.6vw, 68px);
+    opacity: 0.92;
+  }
+  .ip-decor__item--red {
+    left: 0.8%;
+    top: 28%;
+  }
+  .ip-decor__item--yellow {
+    right: 1%;
+    top: 50%;
+  }
+  .ip-decor__item--blue {
+    right: 0.8%;
+    bottom: 10%;
+  }
 }
 
 @media (max-width: 900px) {
+  /* 窄屏正文占满宽度，小精灵收起 */
+  .ip-decor {
+    display: none;
+  }
   .nav__links {
     display: none;
   }
