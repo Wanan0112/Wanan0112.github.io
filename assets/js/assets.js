@@ -1,0 +1,165 @@
+/* 作品素材清单（由 tools 脚本生成，请勿手改） */
+window.SITE_ASSETS = {
+  'stone-knife': {
+    images: [
+      { src: 'assets/images/works/3d/stone-knife/01.jpg', cap: '原画（高模）', ratio: 1.7798 },
+      { src: 'assets/images/works/3d/stone-knife/02.jpg', cap: '原画', ratio: 1.7798 },
+      { src: 'assets/images/works/3d/stone-knife/03.jpg', cap: '最终效果', ratio: 2.3222 },
+      { src: 'assets/images/works/3d/stone-knife/04.jpg', cap: '高模效果', ratio: 2.3324 },
+      { src: 'assets/images/works/3d/stone-knife/05.jpg', cap: '高模截图', ratio: 3.1841 },
+      { src: 'assets/images/works/3d/stone-knife/06.jpg', cap: '材质截图', ratio: 3.1903 },
+      { src: 'assets/images/works/3d/stone-knife/07.jpg', cap: '多角度渲染', ratio: 0.6 },
+      { src: 'assets/images/works/3d/stone-knife/08.jpg', cap: '渲染大图', ratio: 0.6 },
+    ],
+    videos: [],
+  },
+  'hard-surface-box': {
+    images: [
+      { src: 'assets/images/works/3d/hard-surface-box/01.jpg', cap: '场景渲染 01', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/02.jpg', cap: '场景渲染 02', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/03.jpg', cap: '场景渲染 03', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/04.jpg', cap: '场景渲染 04', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/05.jpg', cap: '场景渲染 05', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/06.jpg', cap: '场景渲染 06', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/07.jpg', cap: '场景渲染 07', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/08.jpg', cap: '场景渲染 08', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/09.jpg', cap: '场景渲染 09', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/10.jpg', cap: '场景渲染 10', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/11.jpg', cap: '场景渲染 11', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/12.jpg', cap: '场景渲染 12', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/13.jpg', cap: '场景渲染 13', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/14.jpg', cap: '场景渲染 14', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/15.jpg', cap: '场景渲染 15', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/16.jpg', cap: '场景渲染 16', ratio: 1.5873 },
+      { src: 'assets/images/works/3d/hard-surface-box/17.jpg', cap: '箱体渲染 01', ratio: 1 },
+      { src: 'assets/images/works/3d/hard-surface-box/18.jpg', cap: '箱体渲染 02', ratio: 1 },
+      { src: 'assets/images/works/3d/hard-surface-box/19.jpg', cap: '箱体渲染 03', ratio: 1 },
+      { src: 'assets/images/works/3d/hard-surface-box/20.jpg', cap: '箱体渲染 04', ratio: 1 },
+      { src: 'assets/images/works/3d/hard-surface-box/21.jpg', cap: '箱体渲染 05', ratio: 1 },
+      { src: 'assets/images/works/3d/hard-surface-box/22.jpg', cap: '最终效果', ratio: 2.322 },
+      { src: 'assets/images/works/3d/hard-surface-box/23.jpg', cap: '硬表面最终效果', ratio: 2.3222 },
+      { src: 'assets/images/works/3d/hard-surface-box/24.jpg', cap: '法线贴图', ratio: 1 },
+    ],
+    videos: [],
+  },
+  'robot-chef': {
+    images: [
+      { src: 'assets/images/works/3d/robot-chef/01.jpg', cap: '测试展示主视觉', ratio: 2.3222 },
+      { src: 'assets/images/works/3d/robot-chef/02.jpg', cap: '测试展示正视图', ratio: 1 },
+      { src: 'assets/images/works/3d/robot-chef/03.jpg', cap: '参考图一', ratio: 0.9708 },
+      { src: 'assets/images/works/3d/robot-chef/04.jpg', cap: '参考图二', ratio: 0.9708 },
+      { src: 'assets/images/works/3d/robot-chef/05.jpg', cap: '环境光遮蔽贴图', ratio: 1 },
+      { src: 'assets/images/works/3d/robot-chef/06.jpg', cap: '基础色贴图', ratio: 1 },
+      { src: 'assets/images/works/3d/robot-chef/07.jpg', cap: '自发光贴图', ratio: 1 },
+      { src: 'assets/images/works/3d/robot-chef/08.jpg', cap: '金属度贴图', ratio: 1 },
+      { src: 'assets/images/works/3d/robot-chef/09.jpg', cap: '法线贴图', ratio: 1 },
+      { src: 'assets/images/works/3d/robot-chef/10.jpg', cap: '粗糙度贴图', ratio: 1 },
+    ],
+    videos: [],
+  },
+  'ue-interior': {
+    images: [
+      { src: 'assets/images/works/ue/interior/01.jpg', cap: '室内场景 01', ratio: 1.7787 },
+      { src: 'assets/images/works/ue/interior/02.jpg', cap: '室内场景 02', ratio: 1.7787 },
+      { src: 'assets/images/works/ue/interior/03.jpg', cap: '室内渲染 03', ratio: 2.2528 },
+      { src: 'assets/images/works/ue/interior/04.jpg', cap: '室内渲染 04', ratio: 2.2528 },
+      { src: 'assets/images/works/ue/interior/05.jpg', cap: '室内渲染 05', ratio: 2.2528 },
+      { src: 'assets/images/works/ue/interior/06.jpg', cap: '室内渲染 06', ratio: 2.2528 },
+      { src: 'assets/images/works/ue/interior/07.jpg', cap: '室内渲染 07', ratio: 2.2528 },
+      { src: 'assets/images/works/ue/interior/08.jpg', cap: '室内渲染 08', ratio: 2.2528 },
+    ],
+    videos: [
+      { src: 'assets/videos/interior-ue.mp4', poster: 'assets/videos/poster-interior-ue.jpg', cap: '室内场景视频渲染（4K 渲染降采样至 1080p）' },
+    ],
+  },
+  'ue-forest': {
+    images: [
+      { src: 'assets/images/works/ue/forest/01.jpg', cap: '树林视角一', ratio: 2.0548 },
+      { src: 'assets/images/works/ue/forest/02.jpg', cap: '树林视角二', ratio: 2.0548 },
+      { src: 'assets/images/works/ue/forest/03.jpg', cap: '树林视角三', ratio: 2.0548 },
+      { src: 'assets/images/works/ue/forest/04.jpg', cap: '树林视角四', ratio: 2.0548 },
+      { src: 'assets/images/works/ue/forest/05.jpg', cap: '树林主视图', ratio: 2.0548 },
+    ],
+    videos: [
+      { src: 'assets/videos/forest-ue.mp4', poster: 'assets/videos/poster-forest-ue.jpg', cap: '树林场景动画' },
+    ],
+  },
+  'tapestry': {
+    images: [
+      { src: 'assets/images/works/interactive/tapestry/01.jpg', cap: '装置全景', ratio: 0.75 },
+      { src: 'assets/images/works/interactive/tapestry/02.jpg', cap: '硬件交互', ratio: 1.3333 },
+      { src: 'assets/images/works/interactive/tapestry/03.jpg', cap: '动态呈现', ratio: 1.3333 },
+    ],
+    videos: [
+      { src: 'assets/videos/tapestry-a.mp4', poster: 'assets/videos/poster-tapestry-a.jpg', cap: '装置展示片段一' },
+      { src: 'assets/videos/tapestry-b.mp4', poster: 'assets/videos/poster-tapestry-b.jpg', cap: '装置展示片段二' },
+    ],
+  },
+  'swarm-wave': {
+    images: [
+      { src: 'assets/images/works/interactive/swarm-wave/01.jpg', cap: '装置静帧 6s', ratio: 1.7766 },
+      { src: 'assets/images/works/interactive/swarm-wave/02.jpg', cap: '装置静帧 22s', ratio: 1.7766 },
+      { src: 'assets/images/works/interactive/swarm-wave/03.jpg', cap: '装置静帧 42s', ratio: 1.7766 },
+    ],
+    videos: [
+      { src: 'assets/videos/swarm-wave.mp4', poster: 'assets/videos/poster-swarm-wave.jpg', cap: '蜂浪装置展示视频（54 秒完整演示）' },
+    ],
+  },
+  'true-color': {
+    images: [
+      { src: 'assets/images/works/viz/true-color/01.jpg', cap: '作品信息图', ratio: 1.3655 },
+      { src: 'assets/images/works/viz/true-color/02.jpg', cap: '视频静帧 3s', ratio: 0.6667 },
+    ],
+    videos: [
+      { src: 'assets/videos/true-color.mp4', poster: 'assets/videos/poster-true-color.jpg', cap: '《本色共生》动态展示' },
+    ],
+  },
+  'ember-poster': {
+    images: [
+      { src: 'assets/images/works/viz/ember-poster/01.jpg', cap: '动态海报一信息图', ratio: 1 },
+      { src: 'assets/images/works/viz/ember-poster/02.jpg', cap: '动态海报二信息图', ratio: 1 },
+    ],
+    videos: [
+      { src: 'assets/videos/ember-poster-1.mp4', poster: 'assets/videos/poster-ember-1.jpg', cap: '动态海报一 · 音画交互演示' },
+      { src: 'assets/videos/ember-poster-2.mp4', poster: 'assets/videos/poster-ember-2.jpg', cap: '动态海报二 · 音画交互演示' },
+    ],
+  },
+  'colorful-world': {
+    images: [
+      { src: 'assets/images/works/ip/colorful-world/01.jpg', cap: '绘本内页 01', ratio: 1.4003 },
+      { src: 'assets/images/works/ip/colorful-world/02.jpg', cap: '绘本内页 02', ratio: 1.4013 },
+      { src: 'assets/images/works/ip/colorful-world/03.jpg', cap: '绘本内页 03', ratio: 1.4013 },
+      { src: 'assets/images/works/ip/colorful-world/04.jpg', cap: '绘本内页 04', ratio: 1.4013 },
+      { src: 'assets/images/works/ip/colorful-world/05.jpg', cap: '绘本内页 05', ratio: 1.4013 },
+      { src: 'assets/images/works/ip/colorful-world/06.jpg', cap: '绘本内页 06', ratio: 1.4013 },
+      { src: 'assets/images/works/ip/colorful-world/07.jpg', cap: '绘本内页 07', ratio: 1.4013 },
+      { src: 'assets/images/works/ip/colorful-world/08.jpg', cap: '绘本内页 08', ratio: 1.4013 },
+      { src: 'assets/images/works/ip/colorful-world/09.jpg', cap: '绘本内页 09', ratio: 1.4003 },
+      { src: 'assets/images/works/ip/colorful-world/10.jpg', cap: '绘本内页 10', ratio: 1.4003 },
+      { src: 'assets/images/works/ip/colorful-world/11.jpg', cap: '绘本内页 11', ratio: 1.4003 },
+      { src: 'assets/images/works/ip/colorful-world/12.jpg', cap: '绘本内页 12', ratio: 1.4003 },
+    ],
+    videos: [],
+  },
+  'boards': {
+    images: [
+      { src: 'assets/images/works/boards/01.jpg', cap: '拾柴甜露 · 维纳圣墟（UE5 场景概念）', ratio: 0.706 },
+      { src: 'assets/images/works/boards/02.jpg', cap: '从保护到呈现 · 文物保护空间路径解码', ratio: 0.6667 },
+      { src: 'assets/images/works/boards/03.jpg', cap: '桃坞七里农场 · 乡村空间规划', ratio: 0.6667 },
+      { src: 'assets/images/works/boards/04.jpg', cap: '本色共生 · AR 新交互', ratio: 0.6656 },
+      { src: 'assets/images/works/boards/05.jpg', cap: '电子绦虫 · 行为逻辑与数据表达', ratio: 0.6714 },
+      { src: 'assets/images/works/boards/06.jpg', cap: '本色共生 · 数字媒介转译', ratio: 0.6645 },
+      { src: 'assets/images/works/boards/07.jpg', cap: '2025 钱江潮汐数据可视化', ratio: 0.5593 },
+      { src: 'assets/images/works/boards/08.jpg', cap: '坠世遗城 · 世界观设定', ratio: 0.706 },
+      { src: 'assets/images/works/boards/09.jpg', cap: '桃花源里人家 · 景观手绘', ratio: 0.692 },
+      { src: 'assets/images/works/boards/10.jpg', cap: '潮涌钱塘 · 水文数据展板', ratio: 0.5627 },
+      { src: 'assets/images/works/boards/11.jpg', cap: 'Frida Kahlo · 视觉设计海报', ratio: 0.7073 },
+      { src: 'assets/images/works/boards/12.jpg', cap: '记忆余烬 · 动态海报展板', ratio: 0.6667 },
+      { src: 'assets/images/works/boards/13.jpg', cap: '诗意长河 · 景观手绘展板', ratio: 0.6667 },
+      { src: 'assets/images/works/boards/14.jpg', cap: '群生 · 共振之浪 · 交互装置展板', ratio: 0.706 },
+      { src: 'assets/images/works/boards/15.jpg', cap: '双能而行 · 人类文明的动力史诗', ratio: 0.6667 },
+    ],
+    videos: [],
+  },
+};
+

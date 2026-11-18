@@ -1,9 +1,9 @@
 /* ============================================================
    作品集框架 · 交互脚本
    ------------------------------------------------------------
-   1. 内容渲染（精选 / 陈列 / 技能 / 履历 / 服务 / 联系方式）
+   1. 内容渲染（精选 / 分类作品 / 技能 / 履历 / 服务 / 联系方式）
    2. 图片占位检测（没有图时显示虚线框）
-   3. 项目详情弹层
+   3. 项目详情弹层（含展示视频与设计说明）
    4. 图片灯箱
    5. 滚动进场动画
    6. 导航（移动端菜单 / 当前区块高亮）
@@ -16,12 +16,37 @@
   'use strict';
 
   var DATA = window.SITE_DATA || {};
+  var ASSETS = window.SITE_ASSETS || {};
   var $ = function (sel, root) {
     return (root || document).querySelector(sel);
   };
   var $$ = function (sel, root) {
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
   };
+
+  /* ---------- 作品与素材查询 ---------- */
+  function projectById(id) {
+    var list = DATA.projects || [];
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].id === id) return list[i];
+    }
+    return null;
+  }
+
+  function projectAssets(p) {
+    return (p && ASSETS[p.assets]) || { images: [], videos: [] };
+  }
+
+  // 全部图片（灯箱使用）
+  function allImages() {
+    var out = [];
+    (DATA.projects || []).forEach(function (p) {
+      (projectAssets(p).images || []).forEach(function (im, i) {
+        out.push({ id: p.id + '-' + i, image: im.src, title: p.title, meta: im.cap });
+      });
+    });
+    return out;
+  }
 
   /* ---------- 1. 内容渲染 ---------- */
 
@@ -67,15 +92,16 @@
     wrap.innerHTML = list
       .map(function (item, i) {
         var idx = String(i + 1).padStart(2, '0');
+        var p = projectById(item.project) || {};
         return (
           '<button class="polaroid' +
           (item.shape === 'tall' ? ' polaroid--tall' : '') +
           '" type="button" style="--rot:' +
           (item.rot || '0deg') +
           '" data-project="' +
-          item.id +
+          (item.project || '') +
           '">' +
-          slotHTML(item.image, '作品图位 · ' + item.id, 'polaroid__slot', item.ratio) +
+          slotHTML(item.image, '作品图位 · ' + (p.title || ''), 'polaroid__slot', item.ratio) +
           '<div class="polaroid__cap">' +
           '<span class="polaroid__idx">' +
           idx +
@@ -83,16 +109,16 @@
           String(list.length).padStart(2, '0') +
           '</span>' +
           '<span class="polaroid__tag">' +
-          (item.category || '') +
+          (p.category || '') +
           '</span>' +
           '</div>' +
           '<p class="polaroid__title">' +
-          (item.title || '') +
+          (p.title || '') +
           '</p>' +
           '<p class="polaroid__more">' +
-          (item.client || '') +
+          (p.meta || '') +
           ' · ' +
-          (item.year || '') +
+          (p.year || '') +
           ' →</p>' +
           '</button>'
         );
@@ -100,68 +126,85 @@
       .join('');
   }
 
-  function artHTML(item) {
+  // 项目内的一张图片
+  function projectCardHTML(p, img) {
     return (
-      '<button class="art" type="button" data-lightbox="' +
-      item.id +
-      '" data-category="' +
-      (item.category || '') +
+      '<button class="art" type="button" data-project="' +
+      p.id +
       '">' +
-      slotHTML(item.image, '作品图位 · ' + item.id, 'art__slot', item.ratio) +
+      slotHTML(img.src, img.cap || '作品图', 'art__slot', img.ratio) +
       '<div class="art__cap">' +
       '<span class="art__title">' +
-      (item.title || '') +
+      (img.cap || '') +
       '</span>' +
       '<span class="art__meta">' +
-      (item.meta || '') +
+      (p.title || '') +
       '</span>' +
       '</div>' +
       '</button>'
     );
   }
 
-  // 全部作品：按专业方向分组排版
+  // 全部作品：严格按「一级目录 → 二级目录」分组
   function renderGroups() {
     var wrap = $('#boardAll');
     if (!wrap) return;
-    var works = DATA.works || [];
-    var groups = DATA.groups || [];
-    if (!groups.length) {
-      wrap.innerHTML = works.map(artHTML).join('');
-      return;
-    }
-    wrap.innerHTML = groups
-      .map(function (g) {
-        var items = works.filter(function (w) {
-          return w.category === g.cat;
-        });
+    var cats = DATA.categories || [];
+    wrap.innerHTML = cats
+      .map(function (cat) {
+        var items = (cat.projects || []).map(projectById).filter(Boolean);
         if (!items.length) return '';
-        var cols = Math.min(items.length, 5);
         return (
           '<section class="work-group" data-cat="' +
-          g.cat +
+          cat.cat +
           '">' +
           '<h3 class="board-label" data-reveal>' +
-          g.label +
+          cat.label +
           ' <span class="board-label__n">' +
           items.length +
-          ' 件</span></h3>' +
-          '<div class="board board--row" style="--cols:' +
-          cols +
-          '">' +
-          items.map(artHTML).join('') +
-          '</div>' +
+          ' 个项目</span></h3>' +
+          '<p class="work-cat__desc" data-reveal>' +
+          (cat.desc || '') +
+          '</p>' +
+          items
+            .map(function (p) {
+              var a = projectAssets(p);
+              var imgs = a.images || [];
+              if (!imgs.length) return '';
+              var cols = imgs.length <= 3 ? imgs.length : imgs.length >= 14 ? 6 : 4;
+              var vcount = (a.videos || []).length;
+              return (
+                '<article class="work-project" data-reveal>' +
+                '<header class="work-project__head">' +
+                '<h4 class="work-project__title">' +
+                p.title +
+                '</h4>' +
+                '<span class="work-project__path">' +
+                (p.folder || '') +
+                '</span>' +
+                '<span class="work-project__count">' +
+                imgs.length +
+                ' 张图' +
+                (vcount ? ' · ' + vcount + ' 段视频' : '') +
+                '</span>' +
+                '</header>' +
+                '<div class="board board--row" style="--cols:' +
+                cols +
+                '">' +
+                imgs
+                  .map(function (im) {
+                    return projectCardHTML(p, im);
+                  })
+                  .join('') +
+                '</div>' +
+                '</article>'
+              );
+            })
+            .join('') +
           '</section>'
         );
       })
       .join('');
-  }
-
-  // 主题海报设计（展板）：单独成区，不参与分类筛选
-  function renderPosters() {
-    var wrap = $('#boardPoster');
-    if (!wrap) return;
-    wrap.innerHTML = (DATA.posters || []).map(artHTML).join('');
   }
 
   function renderFilters() {
@@ -298,24 +341,23 @@
   var modalState = { index: 0, items: [] };
 
   function projectItems() {
-    var list = (DATA.featured || []).slice();
-    return list.length ? list : [DATA.projectDetail || {}];
+    return DATA.projects || [];
   }
 
-  function fillModal(item, index, total) {
-    var d = item.detail || DATA.projectDetail || {};
+  function fillModal(p, index, total) {
     var set = function (sel, val) {
       var node = $(sel);
       if (node) node.textContent = val;
     };
-    set('#modalIndex', 'Project ' + (index + 1) + ':');
-    set('#modalClient', item.client || d.client || '');
-    set('#modalTitle', item.title || d.title || '');
-    set('#modalSubtitle', d.subtitle || '');
+    set('#modalIndex', '项目 ' + (index + 1) + ' / ' + total);
+    set('#modalPath', p.folder || '');
+    set('#modalClient', p.meta || '');
+    set('#modalTitle', p.title || '');
+    set('#modalSubtitle', p.subtitle || '');
 
     var facts = $('#modalFacts');
     if (facts) {
-      facts.innerHTML = (d.facts || [])
+      facts.innerHTML = (p.facts || [])
         .map(function (f) {
           return '<div><dt>' + f.k + '</dt><dd>' + f.v + '</dd></div>';
         })
@@ -324,28 +366,99 @@
 
     var desc = $('#modalDesc');
     if (desc) {
-      desc.innerHTML = d.desc
-        ? '<p>' + d.desc + '</p>'
+      desc.innerHTML = p.desc
+        ? '<p>' + p.desc + '</p>'
         : '<p>项目背景、协作方式与最终成果详见上方要点。</p>';
     }
 
+    var a = projectAssets(p);
+    var imgs = a.images || [];
+    var vids = a.videos || [];
+
+    // 展示视频
+    var vwrap = $('#modalVideos');
+    if (vwrap) {
+      vwrap.innerHTML = vids.length
+        ? '<h4 class="mini-head">展示视频</h4>' +
+          vids
+            .map(function (v) {
+              return (
+                '<figure class="pv">' +
+                '<video controls preload="none" playsinline poster="' +
+                (v.poster || '') +
+                '">' +
+                '<source src="' +
+                v.src +
+                '" type="video/mp4" />' +
+                '您的浏览器不支持视频播放，可<a href="' +
+                v.src +
+                '" download>下载视频</a>观看。' +
+                '</video>' +
+                '<figcaption>' +
+                (v.cap || '') +
+                '</figcaption>' +
+                '</figure>'
+              );
+            })
+            .join('')
+        : '';
+      vwrap.hidden = !vids.length;
+    }
+
+    // 主视觉
     var hero = $('.slot--hero', modal);
     if (hero) {
       var img = $('img', hero);
       var label = $('.slot__label', hero);
-      var src = d.hero || item.image || '';
-      if (img) img.src = src;
-      if (label) label.textContent = '项目主视觉 · ' + (item.title || '');
+      if (img) img.src = imgs.length ? imgs[0].src : '';
+      if (label) label.textContent = '项目主视觉 · ' + (p.title || '');
       hero.classList.remove('is-filled');
     }
 
+    // 图集
     var strip = $('#modalStrip');
     if (strip) {
-      strip.innerHTML = (d.strip || [])
-        .map(function (src, i) {
-          return slotHTML(src, '图集 ' + (i + 1) + ' · 占位', '');
+      strip.innerHTML = imgs
+        .map(function (im, i) {
+          return (
+            '<button class="slot slot--strip" type="button" data-lightbox="' +
+            p.id +
+            '-' +
+            i +
+            '">' +
+            '<img src="' +
+            im.src +
+            '" alt="' +
+            (im.cap || '') +
+            '" loading="lazy" />' +
+            '<span class="slot__label">' +
+            (im.cap || '') +
+            '</span>' +
+            '</button>'
+          );
         })
         .join('');
+    }
+
+    // 设计说明
+    var notes = $('#modalNotes');
+    if (notes) {
+      var ns = p.notes || [];
+      notes.innerHTML = ns.length
+        ? '<h4 class="mini-head">设计说明</h4>' +
+          ns
+            .map(function (n) {
+              return (
+                '<div class="note"><h5>' +
+                (n.title || '') +
+                '</h5><p>' +
+                (n.body || '') +
+                '</p></div>'
+              );
+            })
+            .join('')
+        : '';
+      notes.hidden = !ns.length;
     }
 
     wireSlots(modal);
@@ -354,6 +467,7 @@
   function openModal(index) {
     if (!modal) return;
     modalState.items = projectItems();
+    if (!modalState.items.length) return;
     modalState.index = (index + modalState.items.length) % modalState.items.length;
     fillModal(modalState.items[modalState.index], modalState.index, modalState.items.length);
     modal.hidden = false;
@@ -365,6 +479,11 @@
 
   function closeModal() {
     if (!modal) return;
+    $$('video', modal).forEach(function (v) {
+      try {
+        v.pause();
+      } catch (e) {}
+    });
     modal.hidden = true;
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('is-locked');
@@ -569,7 +688,7 @@
 
       var lb = e.target.closest('[data-lightbox]');
       if (lb) {
-        lbList = (DATA.works || []).concat(DATA.posters || []);
+        lbList = allImages();
         var i = 0;
         lbList.forEach(function (it, n) {
           if (it.id === lb.dataset.lightbox) i = n;
@@ -1084,7 +1203,6 @@
     applyProfile();
     renderFeatured();
     renderGroups();
-    renderPosters();
     renderFilters();
     renderSkills();
     renderTimeline();

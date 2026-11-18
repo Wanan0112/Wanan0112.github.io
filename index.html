@@ -283,21 +283,14 @@
           <header class="sec-head" data-reveal>
             <span class="sec-head__num">02</span>
             <h2 class="sec-head__title split">WORKS</h2>
-            <p class="sec-head__desc">全部作品 · 按专业方向分类</p>
+            <p class="sec-head__desc">全部作品 · 严格对应「作品集网站入选作品」文件夹结构</p>
           </header>
 
           <!-- 分类筛选 -->
           <div class="filters" id="filters" role="tablist" aria-label="作品分类" data-reveal></div>
 
-          <!-- 按专业方向分组的全部作品 -->
+          <!-- 按一级目录 / 二级目录分组的全部作品 -->
           <div class="groups" id="boardAll"></div>
-
-          <!-- 主题海报设计（展板作品，单独成区） -->
-          <h3 class="board-label board-label--major" data-reveal>
-            主题海报设计
-            <span class="board-label__n">展览与综合课程 · 展板</span>
-          </h3>
-          <div class="board board--poster" id="boardPoster"></div>
         </div>
 
         <div class="gallery__edge gallery__edge--bottom" aria-hidden="true"></div>
@@ -329,6 +322,9 @@
             </p>
             <p class="about__p" data-reveal>
               熟练使用 3ds Max、ZBrush、Substance Painter、TopoGun、Unreal Engine 等工具，擅长<span class="mark">几何造型与 PBR 材质</span>制作；参与过心绘万象场景设计比赛《恋语花坊》，并完成绘本 IP、信息可视化、交互装置与展览策划等课程实践。
+            </p>
+            <p class="about__p" data-reveal>
+              本站作品严格按「作品集网站入选作品」文件夹的一级与二级目录分类整理，每个项目都附上了源文件夹路径、展示视频与设计说明，方便逐件对照查看。
             </p>
 
             <div class="about__tags" id="skillTags" data-reveal></div>
@@ -478,7 +474,8 @@
 
         <div class="modal__body">
           <div class="modal__text">
-            <p class="modal__index" id="modalIndex">Project 1:</p>
+            <p class="modal__index" id="modalIndex">项目 1 / 11</p>
+            <p class="modal__path" id="modalPath">作品集网站入选作品 / …</p>
             <p class="modal__client" id="modalClient">个人创作</p>
             <h3 class="modal__title" id="modalTitle">项目名称</h3>
             <p class="modal__subtitle" id="modalSubtitle">项目副标题 / 一句话描述</p>
@@ -496,9 +493,13 @@
               <img src="assets/images/works/featured-01.jpg" alt="项目主视觉" />
               <span class="slot__label">项目主视觉</span>
             </figure>
+            <div class="modal__videos" id="modalVideos" hidden></div>
             <div class="modal__strip" id="modalStrip"></div>
           </div>
         </div>
+
+        <!-- 设计说明 -->
+        <div class="modal__notes" id="modalNotes" hidden></div>
 
         <div class="modal__nav">
           <button class="btn btn--ghost" type="button" id="modalPrev">← 上一个项目</button>
@@ -530,6 +531,7 @@
 
     <div class="toast" id="toast" hidden role="status"></div>
 
+    <script src="assets/js/assets.js"></script>
     <script src="assets/js/data.js"></script>
     <script src="assets/js/main.js"></script>
   </body>

@@ -3,7 +3,10 @@
    ------------------------------------------------------------
    唯一需要你维护内容的文件，页面结构由 main.js 自动渲染。
    ratio = 图片宽高比（宽 ÷ 高），排版时保持图片不变形、不裁切。
-   图片目录：assets/images/ （cover / portrait / works）
+   作品分类严格对应桌面「作品集网站入选作品」文件夹结构：
+     一级目录 = categories[].cat
+     二级目录 = projects[].title（folder 字段为原始文件夹路径）
+   图片与视频清单见 assets/js/assets.js（由 scripts 自动生成）。
    ============================================================ */
 
 window.SITE_DATA = {
@@ -26,179 +29,266 @@ window.SITE_DATA = {
   /* ---------- 关键词跑马灯 ---------- */
   marquee: ['三维模型', '场景地编', 'PBR 材质', '视觉设计', '信息可视化', '交互装置', '绘本 IP'],
 
-  /* ---------- 分类筛选 ---------- */
-  filters: ['全部', '三维模型', '虚幻引擎', '交互装置', '信息可视化', '绘本 IP'],
+  /* ---------- 分类筛选（对应一级目录） ---------- */
+  filters: ['全部', '三维模型作品', '虚幻引擎作品', '交互装置设计', '信息可视化设计', '绘本IP设计', '展板'],
 
-  /* ---------- 全部作品的分组顺序 ---------- */
-  groups: [
-    { cat: '三维模型', label: '三维模型设计' },
-    { cat: '虚幻引擎', label: '虚幻引擎设计' },
-    { cat: '交互装置', label: '交互装置设计' },
-    { cat: '信息可视化', label: '信息可视化设计' },
-    { cat: '绘本 IP', label: '绘本 IP 设计' },
+  /* ---------- 一级目录（与源文件夹一一对应） ---------- */
+  categories: [
+    { cat: '三维模型作品', label: '三维模型作品', desc: '雕刻造型、硬表面结构与角色场景模型', projects: ['stone-knife', 'hard-surface-box', 'robot-chef'] },
+    { cat: '虚幻引擎作品', label: '虚幻引擎作品', desc: '引擎内的室内空间与自然林地场景', projects: ['ue-interior', 'ue-forest'] },
+    { cat: '交互装置设计', label: '交互装置设计', desc: '装置本体、硬件互动与动态展演', projects: ['tapestry', 'swarm-wave'] },
+    { cat: '信息可视化设计', label: '信息可视化设计', desc: '数字媒介转译、数据叙事与动态海报', projects: ['true-color', 'ember-poster'] },
+    { cat: '绘本IP设计', label: '绘本 IP 设计', desc: '故事创意、角色设定与绘本内页', projects: ['colorful-world'] },
+    { cat: '展板', label: '展板', desc: '展览与课程展板合集，共 15 张', projects: ['boards'] },
+  ],
+
+  /* ---------- 二级项目（每个对应源文件夹里的一个子文件夹） ---------- */
+  projects: [
+    {
+      id: 'stone-knife',
+      title: '雕刻_石头刀',
+      subtitle: '以火山岩为母题的风格化武器雕刻，原画 → 高模 → 低模 → 材质 → 渲染全流程',
+      category: '三维模型作品',
+      folder: '作品集网站入选作品 / 三维模型作品 / 雕刻_石头刀',
+      year: '2025',
+      meta: '雕刻造型 · PBR 材质',
+      assets: 'stone-knife',
+      desc: '以火山岩与熔岩裂纹为母题的风格化武器雕刻练习。先绘制高模原画确定形体与层理，再在 ZBrush 中雕刻高低模并于 3ds Max 整理拓扑与 UV，最后用 Substance Painter 绘制熔岩裂纹与岩石层理的自定义材质，输出多角度渲染与材质、高模截图。',
+      facts: [
+        { k: '角色', v: '独立完成' },
+        { k: '时间', v: '2025' },
+        { k: '工具', v: '3ds Max / ZBrush / Substance Painter' },
+        { k: '素材', v: '8 张图 · 原画与截图' },
+      ],
+      notes: [
+        { title: '制作流程', body: '原画定形 → ZBrush 高模雕刻 → 3ds Max 低模拓扑与 UV → Substance Painter 材质绘制 → 多角度渲染输出。每个环节都留档了对应截图，便于回看形体与材质的对应关系。' },
+        { title: '材质要点', body: '以熔岩裂纹与岩石层理为两组主要纹理层：底层是冷灰岩面，裂纹用自发光叠加矿物颗粒提亮，粗糙度随积灰与磨损变化，避免整块石材看起来过于均匀。' },
+      ],
+    },
+    {
+      id: 'hard-surface-box',
+      title: '硬表面_箱子',
+      subtitle: '工业废料箱硬表面建模练习：结构分件、铰链细节与旧化材质叠加',
+      category: '三维模型作品',
+      folder: '作品集网站入选作品 / 三维模型作品 / 硬表面_箱子',
+      year: '2025',
+      meta: '硬表面 · 旧化材质',
+      assets: 'hard-surface-box',
+      desc: '以工业废料箱为原型的硬表面练习，重点解决箱体分件、铰链与提手等结构细节，以及锈迹、掉漆与污渍在旧化材质中的叠加关系，最终输出 16 张场景渲染、5 张箱体渲染与一张法线贴图。',
+      facts: [
+        { k: '角色', v: '独立完成' },
+        { k: '时间', v: '2025' },
+        { k: '工具', v: '3ds Max / Substance Painter' },
+        { k: '素材', v: '24 张图 · 渲染与贴图' },
+      ],
+      notes: [
+        { title: '结构拆解', body: '箱体拆为箱身、盖板、铰链、提手与锁扣五个部分，各部件独立 UV 后统一到同一套贴图比例，便于后续替换与复用。' },
+        { title: '旧化逻辑', body: '锈迹从缝隙与边角开始蔓延，掉漆优先出现在面法线朝上的区域，油污与灰尘叠加在水平朝上的面，最后用污液遮罩统一压暗整体明度，让脏污有方向感而不是随机噪点。' },
+      ],
+    },
+    {
+      id: 'robot-chef',
+      title: '机器人厨师（大厂测试）',
+      subtitle: '面向企业招聘测试题完成的角色场景模型：造型、贴图与材质全流程交付',
+      category: '三维模型作品',
+      folder: '作品集网站入选作品 / 三维模型作品 / 机器人厨师（大厂测试）',
+      year: '2026',
+      meta: '场景模型 · 角色测试题',
+      assets: 'robot-chef',
+      desc: '针对企业场景模型测试题完成的角色模型，独立完成高模雕刻、低模拓扑、UV 拆分与 PBR 贴图制作，并输出主视觉与正视图展示图，以及一套完整的通道贴图（AO / 基础色 / 自发光 / 金属度 / 法线 / 粗糙度）。',
+      facts: [
+        { k: '角色', v: '独立完成' },
+        { k: '工具', v: '3ds Max / ZBrush / Substance Painter' },
+        { k: '交付', v: '主视觉 · 正视图 · 6 张通道贴图' },
+        { k: '素材', v: '10 张图' },
+      ],
+      notes: [
+        { title: '制作说明', body: '高模阶段以硬表面与软装结合的方式处理厨师机器人的机械结构与布料细节；低模阶段整理出适合游戏引擎的面数与 UV 布局；材质阶段输出标准 PBR 通道，引擎可直接使用。' },
+        { title: '贴图规范', body: '基础色、金属度、粗糙度、法线与 AO 分开输出并统一到 1024 分辨率，自发光单独成图，方便在引擎里按需开关，避免后期反复返工。' },
+      ],
+    },    {
+      id: 'ue-interior',
+      title: '朱宸熠室内',
+      subtitle: 'Unreal Engine 室内空间场景，聚焦材质层次与暖冷灯光对比（亦为心绘万象参赛作品《恋语花坊》的空间主体）',
+      category: '虚幻引擎作品',
+      folder: '作品集网站入选作品 / 虚幻引擎作品 / 朱宸熠室内',
+      year: '2025',
+      meta: 'Unreal Engine · 室内场景',
+      assets: 'ue-interior',
+      desc: '在 Unreal Engine 中搭建的室内空间场景，从体块与家具布局、材质与贴图到灯光氛围与后期调色均在引擎内完成；场景以暖色主光配合冷色补光塑造空间层次，并输出了 4K 渲染降采样的视频片段。',
+      facts: [
+        { k: '角色', v: '场景设计与制作' },
+        { k: '时间', v: '2025' },
+        { k: '工具', v: 'Unreal Engine 5 / Photoshop' },
+        { k: '素材', v: '8 张渲染 · 1 段视频' },
+      ],
+      notes: [
+        { title: '场景搭建', body: '先以体块确定空间结构与动线，再逐层铺设家具与陈设资产；材质上区分木、织物与金属三类主材质，控制高光与粗糙度差异，避免画面整体发灰。' },
+        { title: '灯光氛围', body: '用一盏暖色主光塑造视觉重心，冷色环境光压暗阴影区域，再通过体积雾与轻微泛光强化空间进深；最终以 4K 渲染视频呈现材质在动态光照下的表现。' },
+      ],
+    },
+    {
+      id: 'ue-forest',
+      title: '朱宸熠树林UE',
+      subtitle: '自然林地场景：程序化植被控制分布，体积光塑造林间层次',
+      category: '虚幻引擎作品',
+      folder: '作品集网站入选作品 / 虚幻引擎作品 / 朱宸熠树林UE',
+      year: '2025',
+      meta: 'Unreal Engine · 自然场景',
+      assets: 'ue-forest',
+      desc: '在 Unreal Engine 中搭建的自然林地场景，用程序化植被与地形工具控制分布密度，再通过体积雾与定向光塑造林间层次，让视线自然收束到画面中心。',
+      facts: [
+        { k: '角色', v: '独立完成' },
+        { k: '时间', v: '2025' },
+        { k: '工具', v: 'Unreal Engine 5 / World Creator' },
+        { k: '素材', v: '5 张渲染 · 1 段视频' },
+      ],
+      notes: [
+        { title: '植被布点', body: '先用地形工具生成坡度与湿度遮罩，再按遮罩分层撒播乔木、灌木与地被，避免植被均匀铺满导致视线涣散。' },
+        { title: '光照层次', body: '以低角度定向光拉出长影，叠加体积雾形成光柱，远处提高雾浓度压缩空间尺度，突出主视线尽头的亮点。' },
+      ],
+    },
+    {
+      id: 'tapestry',
+      title: '《电子绦虫》装置艺术设计',
+      subtitle: '以「电子绦虫」为题的行为逻辑装置：从装置本体到展板数据表达',
+      category: '交互装置设计',
+      folder: '作品集网站入选作品 / 交互装置设计 / 《电子绦虫》装置艺术设计',
+      year: '2025',
+      meta: '装置艺术 · 行为逻辑',
+      assets: 'tapestry',
+      desc: '「电子绦虫」交互装置艺术设计：从装置本体造型、行为逻辑设定到展板上的数据表达方式，完整呈现一个会随观众靠近而改变运动状态的电子装置，并附两段装置展示视频。',
+      facts: [
+        { k: '角色', v: '概念与设计' },
+        { k: '类型', v: '装置艺术 · 行为逻辑' },
+        { k: '素材', v: '3 张图 · 2 段视频 · 1 张展板' },
+      ],
+      notes: [
+        { title: '装置设定', body: '以「绦虫」为形态母题，装置由多节可动单元串接而成；观众靠近时各单元的摆动幅度与频率同步改变，形成被注视而收紧、被远离而舒展的行为反馈。' },
+        { title: '展板表达', body: '展板以数据可视化的方式呈现装置的行为逻辑：把感应阈值、单元数量与响应曲线画成图表，让观众在看到装置的同时理解它如何工作。' },
+      ],
+    },
+    {
+      id: 'swarm-wave',
+      title: '群生·共振之浪（蜂浪）',
+      subtitle: '竹编蜂巢 × 30 组舵机的交互式动态装置，《物理与硬件互动基础》结课作品',
+      category: '交互装置设计',
+      folder: '作品集网站入选作品 / 交互装置设计 / 朱宸熠、向新尧_物理与硬件互动基础_结课文件',
+      year: '2025',
+      meta: '交互装置 · 蜂浪',
+      assets: 'swarm-wave',
+      desc: '与向新尧合作的《物理与硬件互动基础》结课作品：以竹编蜂巢为结构载体，在其上安置 30 个 SG90 舵机并接入独立电源与驱动板，通过编程调控摆动幅度与频率，复刻蜂群振翼与潮水起伏的仿生动态，并结合动态光影与感应交互形成可互动的实体装置。',
+      facts: [
+        { k: '角色', v: '硬件搭建与程序控制（合作完成）' },
+        { k: '工具', v: 'Python / 舵机驱动板 / 竹编' },
+        { k: '类型', v: '交互装置 · 仿生动态' },
+        { k: '素材', v: '54 秒展示视频 · 设计说明文档' },
+      ],
+      notes: [
+        { title: '设计说明（原文）', body: '蜂浪装置以竹编蜂巢结构为基础载体，在竹编基底之上安置30个SG90舵机，搭配两块舵机驱动板与独立外接电源，稳定驱动全部舵机组完成动作，依托编程调控单元摆动幅度与频率，复刻蜂群振翼涌动、潮水起伏的仿生动态。作品将传统竹编蜂巢肌理与现代机械动力结合，独立单元有序振动汇聚成整体浪潮，具象展现个体集结构筑群体力量的生命逻辑。' },
+        { title: '光影与交互', body: '装置搭配动态光影系统，光线随结构摆动不断切换明暗层次，柔化机械冷硬质感，赋予结构自然灵动的气韵。装置搭载感应交互机制，观众靠近时，阵列律动随之调整节奏，实现人与作品的实时互动。本次创作立足科技艺术视角，打通自然生命形态、机械运行秩序与光影视觉美学，以可触摸、可观赏、可互动的实体装置，探讨传统手工艺与现代工业技术的交融碰撞，引导观者重新审视自然肌理，感受机械仿生之下独有的生命力与秩序美感。' },
+      ],
+    },    {
+      id: 'true-color',
+      title: '《本色共生》',
+      subtitle: '苏州本色美术馆遗存文脉的数字媒介转译：展板、AR 展示与动态影像',
+      category: '信息可视化设计',
+      folder: '作品集网站入选作品 / 信息可视化设计 / 袁上恒、朱宸熠_《本色共生》_苏州本色美术馆遗存文脉的数字媒介转译',
+      year: '2025',
+      meta: '数字媒介转译 · 团队协作',
+      assets: 'true-color',
+      desc: '与袁上恒合作完成的《本色共生》信息可视化作品，以数字媒介转译的方式重新讲述苏州本色美术馆的遗存文脉：从展板上的数据图表，到可交互的 AR 展示界面，再到动态影像，形成一套完整的视觉叙事。',
+      facts: [
+        { k: '角色', v: '视觉设计与动态制作（合作完成）' },
+        { k: '团队', v: '袁上恒、朱宸熠' },
+        { k: '类型', v: '信息可视化 · 数字媒介转译' },
+        { k: '素材', v: '作品信息图 · 动态展示视频 · 2 张展板' },
+      ],
+      notes: [
+        { title: '转译思路', body: '以「本色」为线索，把建筑的留存、时间的痕迹与观者的流动串成一条叙事线：数据图表负责呈现事实，AR 界面负责让观众回到现场，动态影像负责给出情绪。' },
+        { title: '视觉规范', body: '整体采用低饱和的展陈色调与细线网格，保证展板、AR 与动态影像三种媒介在同一套视觉语言下成立。' },
+      ],
+    },
+    {
+      id: 'ember-poster',
+      title: '记忆余烬',
+      subtitle: '音画交互动态海报：以「余烬」隐喻那些被时间燃尽却仍有温度的记忆',
+      category: '信息可视化设计',
+      folder: '作品集网站入选作品 / 信息可视化设计 / 朱宸熠_2024001121_工程文件夹',
+      year: '2025',
+      meta: '动态海报 · 音画交互',
+      assets: 'ember-poster',
+      desc: '以「余烬」为隐喻的音画交互动态海报作品，在 TouchDesigner 中完成：将钢琴声音的频率、节奏、音量与延音映射为波纹密度、粒子生成频率、扩散强度与粒子时长，使画面与音乐形成同步呼吸的节奏感。',
+      facts: [
+        { k: '角色', v: '概念 · 音画映射 · 动态制作' },
+        { k: '工具', v: 'TouchDesigner' },
+        { k: '类型', v: '动态海报 · 音画交互' },
+        { k: '素材', v: '2 张信息图 · 2 段主题视频' },
+      ],
+      notes: [
+        { title: '余烬隐喻', body: '余烬，是火焰逝去后的残留物，它不再热烈，却仍旧温热；不再耀眼，却依然发光。本作品将「余烬」作为隐喻，表达那些被时间冲刷却未被彻底遗忘的记忆，它们如微光般潜藏在心底，在某个瞬间因一段旋律而悄然浮现。画面通过粒子的漂浮与波纹的漾漾，营造出清冷、留白、伸缩与宿命感并存的视觉氛围。' },
+        { title: '视觉语言', body: '粒子与微光——象征记忆的碎片在黑暗中闪烁、漂浮；波纹扩散——如同投入心湖的石子，记忆层层荡漾开来；漩涡与回响——表达记忆被卷入深处又再度浮现的循环；流动形态——模拟余烬在风中飘散、聚合、再消散的动态。' },
+        { title: '情感表达', body: '整体色调以黑、灰与微光为主，营造出冷静、克制而深沉的情绪。视觉语言克制而留白，强调时间感与呼吸感，让观者在音乐与画面中感受到记忆的余温与消散，唤起内心深处的共鸣与思考。' },
+        { title: '音画交融', body: '作品通过分析钢琴声音的多个维度，将声音数据转化为视觉元素的变化：频率驱动波纹密度，节奏驱动粒子生成频率，音量驱动波纹扩散强度，延音驱动粒子持续时间；强音触发更强烈的波纹扩散与粒子爆发，轻柔则带来更缓慢的流动与微光浮现。' },
+      ],
+    },    {
+      id: 'colorful-world',
+      title: '《五彩缤纷的世界》',
+      subtitle: '绘本 IP 创作：三原色种族与「褪色怪物」的寓言，12 张内页 + 完整剧本',
+      category: '绘本IP设计',
+      folder: '作品集网站入选作品 / 绘本IP设计 / 朱宸熠_故事创意_结课文件夹',
+      year: '2025',
+      meta: '绘本 IP · 故事创意',
+      assets: 'colorful-world',
+      desc: '故事创意课程结课作品《五彩缤纷的世界》：以红、黄、蓝三个原色种族各自为政的孤岛世界为起点，用「褪色怪物」的入侵推动三族走向联盟，最终落在「最漂亮的颜色不是独自闪耀的颜色，而是和其他颜色在一起的颜色」。',
+      facts: [
+        { k: '角色', v: '故事创意与绘本绘制' },
+        { k: '类型', v: '绘本 IP · 分镜与内页' },
+        { k: '素材', v: '12 张内页 · 完整剧本' },
+      ],
+      notes: [
+        { title: '角色设定', body: '火团子族：圆润红色团子生物，体表流动暗纹，激动时迸火星；弹跳移动，落地留痕；说话短促高声。咸蛋黄族：半透明金黄凝胶，体内蛋黄状核心，情绪变化会改变亮度；可流动、分裂聚合；语速快慢随性格变化。蓝泡泡族：半透明蓝色泡泡，内部旋转漩涡，情绪波动表面起涟漪；无声漂浮；言语稀少、停顿漫长。' },
+        { title: '剧情概要', body: '第一幕「三原鼎立」：纯白虚空中红黄蓝三滴颜料坠落成三座色彩孤岛，三族因恐惧与骄傲而从不往来。第二幕「褪色降临」：吞噬色彩的灰色雾气扩张成褪色怪物，三色巡逻队首次交手却节节败退。第三幕「三原同盟」：三族首领在废墟相遇，察觉怪物害怕「没见过的颜色」，遂以混色生成橙、绿、紫三种新色击退敌人。第四幕「缤纷世界」：灰色消散，大地长出万千新生色彩，三色幼崽互相融合出棱镜色，镜头拉远落在「献给所有曾经害怕『不一样』的我们」。' },
+        { title: '创作要点', body: '剧本按四幕结构推进，每幕以「外景／内景」「日景／恒暮」的场次标注组织镜头；火乐、蜜果果、蓝豆三位首领的台词节奏刻意不同——急促、跳跃、迟缓，用听觉差异区分角色性格。' },
+      ],
+    },
+    {
+      id: 'boards',
+      title: '展板作品合集',
+      subtitle: '展览、综合课程与主题创作产出的 15 张展板',
+      category: '展板',
+      folder: '作品集网站入选作品 / 展板',
+      year: '2024 - 2025',
+      meta: '展览展板 · 15 张',
+      assets: 'boards',
+      desc: '集中呈现各课程与主题创作中产出的展板作品，涵盖三维场景概念、世界观设定、信息可视化、交互装置与数字媒介转译等方向。',
+      facts: [
+        { k: '类型', v: '展板设计' },
+        { k: '数量', v: '15 张' },
+        { k: '形式', v: '竖版展板 · 信息图表' },
+      ],
+      notes: [
+        { title: '展板说明', body: '展板以「主视觉 + 过程拆解 + 信息图表」为基本结构：上部用一张最能代表项目的画面抓住视线，中部用流程图与线稿解释推导过程，下部用数据图表与文字补齐背景信息。' },
+      ],
+    },
   ],
 
   /* ---------- 精选作品（沉浸场景里的悬浮卡片） ---------- */
   featured: [
-    {
-      id: 'f1',
-      title: '风格化石头刀',
-      client: '个人练习 · 雕刻造型',
-      category: '三维模型',
-      year: '2025',
-      image: 'assets/images/works/featured-01.jpg',
-      ratio: 2.321,
-      shape: 'wide',
-      rot: '-3deg',
-      detail: {
-        subtitle: '以火山岩为母题的风格化武器雕刻练习，从高模形体到 PBR 材质全流程自建',
-        desc: '从岩石原画出发，先用 ZBrush 雕刻出高低模形体，再在 3ds Max 中整理拓扑与 UV，最后用 Substance Painter 绘制熔岩裂纹与岩石层理的自定义材质，并输出三视图与多角度渲染。',
-        facts: [
-          { k: '角色', v: '独立完成' },
-          { k: '时间', v: '2025' },
-          { k: '工具', v: '3ds Max / ZBrush / Substance Painter' },
-          { k: '类型', v: '风格化雕刻 · PBR 材质' },
-        ],
-        hero: 'assets/images/works/detail-01.jpg',
-        strip: [
-          'assets/images/works/detail-01-a.jpg',
-          'assets/images/works/detail-01-b.jpg',
-          'assets/images/works/detail-01-c.jpg',
-        ],
-      },
-    },
-    {
-      id: 'f2',
-      title: '硬表面工业箱体',
-      client: '个人练习 · 硬表面建模',
-      category: '三维模型',
-      year: '2025',
-      image: 'assets/images/works/featured-02.jpg',
-      ratio: 2.321,
-      shape: 'wide',
-      rot: '2.5deg',
-      detail: {
-        subtitle: '带磨损与锈迹的工业箱体，硬表面结构与旧化材质的练习',
-        desc: '以工业废料箱为原型做硬表面练习，重点解决结构分件、铰链与提手细节，以及旧化材质中锈迹、掉漆与污渍的叠加，最终输出多视角展示图。',
-        facts: [
-          { k: '角色', v: '独立完成' },
-          { k: '时间', v: '2025' },
-          { k: '工具', v: '3ds Max / Substance Painter' },
-          { k: '类型', v: '硬表面 · 旧化材质' },
-        ],
-        hero: 'assets/images/works/featured-02.jpg',
-        strip: [
-          'assets/images/works/work-3d-03.jpg',
-          'assets/images/works/work-3d-04.jpg',
-          'assets/images/works/work-3d-01.jpg',
-        ],
-      },
-    },
-    {
-      id: 'f3',
-      title: '自然森林场景',
-      client: '个人练习 · Unreal Engine',
-      category: '虚幻引擎',
-      year: '2025',
-      image: 'assets/images/works/featured-03.jpg',
-      ratio: 2.055,
-      shape: 'wide',
-      rot: '2deg',
-      detail: {
-        subtitle: '以自然林地为主题的场景搭建，重点处理植被层次、体积光与湿地反射',
-        desc: '在 Unreal Engine 中搭建自然林地场景，用程序化植被与地形工具控制分布密度，再通过体积雾与定向光塑造林间层次，让视线自然收束到画面中心。',
-        facts: [
-          { k: '角色', v: '独立完成' },
-          { k: '时间', v: '2025' },
-          { k: '工具', v: 'Unreal Engine 5 / World Creator' },
-          { k: '类型', v: '游戏场景 · 植被与光照' },
-        ],
-        hero: 'assets/images/works/featured-03.jpg',
-        strip: [
-          'assets/images/works/work-ue-01.jpg',
-          'assets/images/works/work-ue-02.jpg',
-          'assets/images/works/work-ue-04.jpg',
-        ],
-      },
-    },
-    {
-      id: 'f4',
-      title: '恋语花坊',
-      client: '心绘万象 · 场景设计比赛',
-      category: '虚幻引擎',
-      year: '2025.07',
-      image: 'assets/images/works/featured-04.jpg',
-      ratio: 2.252,
-      shape: 'wide',
-      rot: '-2deg',
-      detail: {
-        subtitle: '叠纸「心绘万象」场景设计创意大赛参赛作品，以花店空间为载体的室内场景',
-        desc: '为叠纸「心绘万象」场景设计创意大赛创作的花店空间，主题是「会说话的植物」；从概念设定到资产摆放、灯光与材质调试均在引擎内完成，作品上线后累计热度近 8000。',
-        facts: [
-          { k: '角色', v: '场景设计与制作' },
-          { k: '时间', v: '2025.07 - 2025.08' },
-          { k: '工具', v: 'Unreal Engine 5 / Photoshop' },
-          { k: '成绩', v: '作品热度近 8000' },
-        ],
-        hero: 'assets/images/works/featured-04.jpg',
-        strip: [
-          'assets/images/works/work-ue-03.jpg',
-          'assets/images/works/work-ue-04.jpg',
-          'assets/images/works/work-ue-02.jpg',
-        ],
-      },
-    },
-  ],
-
-  /* ---------- 全部作品（按专业方向分类排版） ---------- */
-  works: [
-    { id: 'w3d2', title: '石头刀 · 多视图与材质', category: '三维模型', meta: 'PBR 材质', image: 'assets/images/works/work-3d-02.jpg', ratio: 3.19 },
-    { id: 'w3d3', title: '硬表面工业箱体', category: '三维模型', meta: '硬表面建模', image: 'assets/images/works/work-3d-03.jpg', ratio: 1 },
-    { id: 'w3d4', title: '机器人厨师', category: '三维模型', meta: '大厂测试题', image: 'assets/images/works/work-3d-04.jpg', ratio: 2.321 },
-    { id: 'w3d1', title: '风格化石头刀', category: '三维模型', meta: '雕刻造型', image: 'assets/images/works/work-3d-01.jpg', ratio: 0.6 },
-    { id: 'wue1', title: '森林场景 · 视角二', category: '虚幻引擎', meta: 'Unreal Engine', image: 'assets/images/works/work-ue-01.jpg', ratio: 2.055 },
-    { id: 'wue2', title: '森林场景 · 视角三', category: '虚幻引擎', meta: 'Unreal Engine', image: 'assets/images/works/work-ue-02.jpg', ratio: 2.055 },
-    { id: 'wue3', title: '恋语花坊 · 室内空间', category: '虚幻引擎', meta: '心绘万象参赛作品', image: 'assets/images/works/work-ue-03.jpg', ratio: 2.252 },
-    { id: 'wue4', title: '恋语花坊 · 光照与陈设', category: '虚幻引擎', meta: 'Unreal Engine', image: 'assets/images/works/work-ue-04.jpg', ratio: 1.778 },
-    { id: 'wid2', title: '电子绦虫 · 硬件交互', category: '交互装置', meta: '传感器交互', image: 'assets/images/works/work-id-02.jpg', ratio: 1.334 },
-    { id: 'wid3', title: '电子绦虫 · 动态呈现', category: '交互装置', meta: '实时渲染', image: 'assets/images/works/work-id-03.jpg', ratio: 1.334 },
-    { id: 'wid1', title: '电子绦虫 · 装置全景', category: '交互装置', meta: '装置艺术', image: 'assets/images/works/work-id-01.jpg', ratio: 0.75 },
-    { id: 'wvz1', title: '本色共生', category: '信息可视化', meta: '苏州本色美术馆', image: 'assets/images/works/work-viz-01.jpg', ratio: 1.366 },
-    { id: 'wvz2', title: '记忆余烬 · 动态海报', category: '信息可视化', meta: '动态海报', image: 'assets/images/works/work-viz-02.jpg', ratio: 1 },
-    { id: 'wvz3', title: '记忆余烬 · 动态海报 II', category: '信息可视化', meta: '音画交互', image: 'assets/images/works/work-viz-03.jpg', ratio: 1 },
-    { id: 'wbk1', title: '五彩缤纷的世界 · 扉页', category: '绘本 IP', meta: '绘本创作', image: 'assets/images/works/work-book-01.jpg', ratio: 1.4 },
-    { id: 'wbk2', title: '五彩缤纷的世界 · 黄色世界', category: '绘本 IP', meta: '绘本创作', image: 'assets/images/works/work-book-02.jpg', ratio: 1.401 },
-    { id: 'wbk3', title: '五彩缤纷的世界 · 蓝色世界', category: '绘本 IP', meta: '绘本创作', image: 'assets/images/works/work-book-03.jpg', ratio: 1.401 },
-    { id: 'wbk4', title: '五彩缤纷的世界 · 元素交锋', category: '绘本 IP', meta: '绘本创作', image: 'assets/images/works/work-book-04.jpg', ratio: 1.4 },
-    { id: 'wbk5', title: '五彩缤纷的世界 · 彩虹终章', category: '绘本 IP', meta: '绘本创作', image: 'assets/images/works/work-book-05.jpg', ratio: 1.4 },
-  ],
-
-  /* ---------- 主题海报设计（展板作品，单独成区） ---------- */
-  posters: [
-    { id: 'p01', title: '记忆余烬', meta: '信息可视化展板', image: 'assets/images/works/poster-01.jpg', ratio: 0.667 },
-    { id: 'p02', title: '辉煌心景农场', meta: '园区规划展板', image: 'assets/images/works/poster-02.jpg', ratio: 0.667 },
-    { id: 'p03', title: '本色共生', meta: '数字媒介转译', image: 'assets/images/works/poster-03.jpg', ratio: 0.666 },
-    { id: 'p04', title: '电子绦虫', meta: '装置艺术展板', image: 'assets/images/works/poster-04.jpg', ratio: 0.671 },
-    { id: 'p05', title: '本色共生 · AR 新交互', meta: '交互展示', image: 'assets/images/works/poster-05.jpg', ratio: 0.664 },
-    { id: 'p06', title: '钱塘江潮汐可视化', meta: '数据叙事', image: 'assets/images/works/poster-06.jpg', ratio: 0.56 },
-    { id: 'p07', title: '桃花源山人景', meta: '空间设计展板', image: 'assets/images/works/poster-07.jpg', ratio: 0.692 },
-    { id: 'p08', title: '潮涌钱塘', meta: '水文数据展板', image: 'assets/images/works/poster-08.jpg', ratio: 0.562 },
-    { id: 'p09', title: 'Frida Kahlo', meta: '视觉设计海报', image: 'assets/images/works/poster-09.jpg', ratio: 0.707 },
-    { id: 'p10', title: '诗意长河', meta: '景观手绘展板', image: 'assets/images/works/poster-10.jpg', ratio: 0.667 },
-    { id: 'p11', title: '群生 · 共振之浪', meta: '交互装置展板', image: 'assets/images/works/poster-11.jpg', ratio: 0.706 },
-    { id: 'p12', title: '致 · 能量回响', meta: '科幻视觉展板', image: 'assets/images/works/poster-12.jpg', ratio: 0.667 },
-  ],
-
-  /* ---------- 技能标签 ---------- */
+    { id: 'f1', project: 'stone-knife', image: 'assets/images/works/featured-01.jpg', ratio: 2.321, shape: 'wide', rot: '-3deg' },
+    { id: 'f2', project: 'hard-surface-box', image: 'assets/images/works/featured-02.jpg', ratio: 2.321, shape: 'wide', rot: '2.5deg' },
+    { id: 'f3', project: 'ue-forest', image: 'assets/images/works/featured-03.jpg', ratio: 2.055, shape: 'wide', rot: '2deg' },
+    { id: 'f4', project: 'ue-interior', image: 'assets/images/works/featured-04.jpg', ratio: 2.252, shape: 'wide', rot: '-2deg' },
+  ],  /* ---------- 技能标签 ---------- */
   skills: [
     '3ds Max', 'ZBrush', 'Substance Painter', 'TopoGun', 'Unreal Engine',
-    'Photoshop', 'KeyShot', 'RizomUV', 'SketchUp', 'CAD',
+    'Photoshop', 'KeyShot', 'RizomUV', 'TouchDesigner', 'Python',
   ],
 
   /* ---------- 履历时间线 ---------- */
   timeline: [
     { year: '2024.09 - 2028.06', text: '湖北美术学院 · 艺术与科技专业（GPA 3.7/4.0）' },
-    { year: '2025.07 - 2025.08', text: '心绘万象场景设计比赛 · 《恋语花坊》' },
+    { year: '2025.07 - 2025.08', text: '心绘万象场景设计比赛 · 《恋语花坊》（室内场景作品）' },
     { year: '2025.09 - 2025.10', text: '空间与建构课程 · 婚礼设计《红光殿堂》' },
   ],
 
