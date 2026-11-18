@@ -154,7 +154,7 @@ textarea {
   mix-blend-mode: multiply;
 }
 
-/* ---------- 02.1 IP 小精灵背景装饰 ---------- */
+/* ---------- 02.1 IP 小精灵背景装饰 + 互动 ---------- */
 .ip-decor {
   position: fixed;
   inset: 0;
@@ -163,43 +163,252 @@ textarea {
   overflow: hidden;
 }
 
+/* 定位层：摆位 + 拖拽位移 */
 .ip-decor__item {
   position: absolute;
-  display: block;
   width: clamp(70px, 6.4vw, 104px);
-  height: auto;
-  filter: drop-shadow(0 8px 14px rgba(35, 65, 76, 0.22));
-  animation: ip-float 9s ease-in-out infinite;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  transform: translate3d(var(--ix, 0px), var(--iy, 0px), 0) rotate(var(--it, 0deg));
+  transition: transform 0.6s cubic-bezier(0.22, 1.35, 0.36, 1);
   will-change: transform;
 }
 
+/* 动效层：待机动画 / 悬停 / 点击 */
+.ip-decor__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  rotate: var(--lean, 0deg);
+  scale: var(--ip-scale, 1);
+  filter: drop-shadow(0 8px 14px rgba(35, 65, 76, 0.22));
+  transition: filter 0.3s ease;
+  will-change: transform;
+}
+
+/* ---- 站位 ---- */
 .ip-decor__item--red {
   left: 1.2%;
   top: 24%;
-  animation-duration: 8.5s;
 }
 
 .ip-decor__item--yellow {
   right: 1.4%;
   top: 47%;
-  animation-duration: 10.5s;
-  animation-delay: -3.5s;
 }
 
 .ip-decor__item--blue {
   left: 1.6%;
   bottom: 13%;
-  animation-duration: 12s;
-  animation-delay: -6.5s;
 }
 
-@keyframes ip-float {
+/* ---- 待机：三族三种性格 ---- */
+.ip-decor__item--red .ip-decor__img {
+  animation: ip-idle-red 2.9s ease-in-out infinite;
+}
+
+.ip-decor__item--yellow .ip-decor__img {
+  animation: ip-idle-yellow 5.2s ease-in-out infinite;
+}
+
+.ip-decor__item--blue .ip-decor__img {
+  animation: ip-idle-blue 6.6s ease-in-out infinite;
+}
+
+/* ---- 悬停 / 鼠标靠近：注意力被吸引 ---- */
+.ip-decor__item:hover .ip-decor__img,
+.ip-decor__item.is-near .ip-decor__img {
+  --ip-scale: 1.12;
+  filter: drop-shadow(0 14px 20px rgba(35, 65, 76, 0.3));
+}
+
+.ip-decor__item--red:hover .ip-decor__img,
+.ip-decor__item--red.is-near .ip-decor__img {
+  animation: ip-react-red 0.44s ease-in-out infinite;
+}
+
+.ip-decor__item--yellow:hover .ip-decor__img,
+.ip-decor__item--yellow.is-near .ip-decor__img {
+  animation: ip-react-yellow 0.95s ease-in-out infinite;
+}
+
+.ip-decor__item--blue:hover .ip-decor__img,
+.ip-decor__item--blue.is-near .ip-decor__img {
+  animation: ip-react-blue 1.7s ease-in-out infinite;
+}
+
+/* ---- 点击：挤压回弹 ---- */
+.ip-decor__item.is-pop .ip-decor__img {
+  animation: ip-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ---- 拖拽 ---- */
+.ip-decor__item.is-drag {
+  cursor: grabbing;
+  transition: none;
+}
+
+.ip-decor__item.is-drag .ip-decor__img {
+  animation: none;
+  --ip-scale: 1.16;
+}
+
+/* ---- 名字 / 台词气泡 ---- */
+.ip-decor__bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 12px);
+  transform: translate(-50%, 8px) scale(0.86);
+  padding: 6px 12px 7px;
+  border: 1.5px solid var(--ink);
+  border-radius: 14px 14px 14px 4px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 3px 4px 0 rgba(35, 65, 76, 0.16);
+  transition: opacity 0.24s ease, transform 0.24s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.ip-decor__bubble::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  bottom: -7px;
+  width: 10px;
+  height: 10px;
+  background: var(--paper);
+  border-right: 1.5px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+  transform: rotate(45deg);
+}
+
+.ip-decor__item:hover .ip-decor__bubble,
+.ip-decor__item.is-say .ip-decor__bubble {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+/* ---- 点击迸出的粒子 ---- */
+.ip-spark {
+  position: fixed;
+  z-index: 6;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: ip-spark 0.9s cubic-bezier(0.22, 0.7, 0.3, 1) forwards;
+}
+
+.ip-spark--ring {
+  background: transparent !important;
+  border: 2px solid currentColor;
+}
+
+@keyframes ip-idle-red {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
+    transform: translateY(0) rotate(0deg) scale(1, 1);
+  }
+  20% {
+    transform: translateY(-3px) rotate(-2deg) scale(1.03, 0.97);
+  }
+  40% {
+    transform: translateY(1px) rotate(2deg) scale(0.98, 1.02);
+  }
+  60% {
+    transform: translateY(-2px) rotate(-1.5deg) scale(1.02, 0.98);
+  }
+  80% {
+    transform: translateY(1px) rotate(1deg) scale(0.99, 1.01);
+  }
+}
+
+@keyframes ip-react-red {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3.5deg) scale(1.05, 0.95);
   }
   50% {
-    transform: translate3d(0, -15px, 0) rotate(-2.5deg);
+    transform: translateY(-5px) rotate(3.5deg) scale(0.96, 1.05);
+  }
+}
+
+@keyframes ip-idle-yellow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1.6deg) scale(1, 1);
+  }
+  50% {
+    transform: translateY(-11px) rotate(1.8deg) scale(1.04, 0.95);
+  }
+}
+
+@keyframes ip-react-yellow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg) scale(1.08, 0.9);
+  }
+  50% {
+    transform: translateY(-6px) rotate(4deg) scale(0.93, 1.08);
+  }
+}
+
+@keyframes ip-idle-blue {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-15px) scale(1.05, 0.95);
+  }
+}
+
+@keyframes ip-react-blue {
+  0%,
+  100% {
+    transform: translateY(0) scale(1.14, 0.88);
+  }
+  50% {
+    transform: translateY(-8px) scale(0.9, 1.12);
+  }
+}
+
+@keyframes ip-pop {
+  0% {
+    transform: scale(1);
+  }
+  28% {
+    transform: scale(0.8, 1.22) translateY(-8px);
+  }
+  52% {
+    transform: scale(1.2, 0.84) translateY(5px);
+  }
+  74% {
+    transform: scale(0.94, 1.07) translateY(-2px);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes ip-spark {
+  0% {
+    transform: translate(0, 0) scale(0.4);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(1.05) rotate(var(--spin));
+    opacity: 0;
   }
 }
 

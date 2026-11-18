@@ -87,11 +87,42 @@
 
     <!-- ============================================================
          IP 小精灵背景装饰（火团子 / 咸蛋黄 / 蓝泡泡）
+         · 待机动画性格化 · 悬停反应 · 点击爆点 · 可拖拽
          ============================================================ -->
-    <div class="ip-decor" aria-hidden="true">
-      <img class="ip-decor__item ip-decor__item--red" src="assets/images/ip/ip-red.png" alt="" />
-      <img class="ip-decor__item ip-decor__item--yellow" src="assets/images/ip/ip-yellow.png" alt="" />
-      <img class="ip-decor__item ip-decor__item--blue" src="assets/images/ip/ip-blue.png" alt="" />
+    <div class="ip-decor">
+      <div
+        class="ip-decor__item ip-decor__item--red"
+        role="img"
+        aria-label="IP 形象：火团子族"
+        data-name="火团子族"
+        data-say="别惹我！再盯着我就要炸毛啦！"
+        data-spark="#e2564a"
+      >
+        <img class="ip-decor__img" src="assets/images/ip/ip-red.png" alt="" />
+        <span class="ip-decor__bubble" aria-hidden="true"></span>
+      </div>
+      <div
+        class="ip-decor__item ip-decor__item--yellow"
+        role="img"
+        aria-label="IP 形象：咸蛋黄族"
+        data-name="咸蛋黄族"
+        data-say="咸香蛋黄，Q 弹弹～"
+        data-spark="#f0b73c"
+      >
+        <img class="ip-decor__img" src="assets/images/ip/ip-yellow.png" alt="" />
+        <span class="ip-decor__bubble" aria-hidden="true"></span>
+      </div>
+      <div
+        class="ip-decor__item ip-decor__item--blue"
+        role="img"
+        aria-label="IP 形象：蓝泡泡族"
+        data-name="蓝泡泡族"
+        data-say="啵——！泡泡破裂中～"
+        data-spark="#8fc4ea"
+      >
+        <img class="ip-decor__img" src="assets/images/ip/ip-blue.png" alt="" />
+        <span class="ip-decor__bubble" aria-hidden="true"></span>
+      </div>
     </div>
 
     <!-- ============================================================

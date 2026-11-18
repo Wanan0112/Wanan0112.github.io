@@ -8,6 +8,8 @@
    5. 滚动进场动画
    6. 导航（移动端菜单 / 当前区块高亮）
    7. 表单提示 / 回到顶部
+   8. 动效（开场 / 视差 / 逐字 / 光标…）
+   9. IP 小精灵互动（靠近 / 悬停 / 点击 / 拖拽）
    ============================================================ */
 
 (function () {
@@ -859,7 +861,7 @@
       tx = e.clientX;
       ty = e.clientY;
       cur.classList.add('is-on');
-      var hot = e.target.closest && e.target.closest('a, button, .art, .polaroid, input, textarea, select');
+      var hot = e.target.closest && e.target.closest('a, button, .art, .polaroid, .ip-decor__item, input, textarea, select');
       cur.classList.toggle('is-hot', !!hot);
     });
 
@@ -889,6 +891,172 @@
     initTilt();
     initMagnetic();
     initCursor();
+  }
+
+  /* ---------- 9. IP 小精灵互动 ----------
+     待机性格（CSS） + 鼠标靠近 + 悬停气泡 + 点击爆点 + 拖拽
+  ------------------------------------------------ */
+  function initIpMascots() {
+    var items = $$('.ip-decor__item');
+    if (!items.length) return;
+
+    var NEAR_RADIUS = 210;
+
+    // 点击时迸出的粒子
+    function spawnSparks(item) {
+      var r = item.getBoundingClientRect();
+      var cx = r.left + r.width / 2;
+      var cy = r.top + r.height / 2;
+      var color = item.getAttribute('data-spark') || '#e2564a';
+      var ring = item.classList.contains('ip-decor__item--blue');
+      var count = 8;
+
+      for (var i = 0; i < count; i++) {
+        var p = document.createElement('span');
+        p.className = 'ip-spark' + (ring ? ' ip-spark--ring' : '');
+        p.style.left = cx + 'px';
+        p.style.top = cy + 'px';
+        p.style.background = color;
+        p.style.color = color;
+        var a = (Math.PI * 2 * i) / count + Math.random() * 0.7;
+        var dist = 38 + Math.random() * 34;
+        p.style.setProperty('--dx', (Math.cos(a) * dist).toFixed(1) + 'px');
+        p.style.setProperty('--dy', (Math.sin(a) * dist).toFixed(1) + 'px');
+        p.style.setProperty('--spin', (Math.random() * 200 - 100).toFixed(0) + 'deg');
+        p.style.animationDelay = i * 18 + 'ms';
+        document.body.appendChild(p);
+        (function (el) {
+          setTimeout(function () {
+            if (el.parentNode) el.parentNode.removeChild(el);
+          }, 1300);
+        })(p);
+      }
+    }
+
+    items.forEach(function (item) {
+      var bubble = $('.ip-decor__bubble', item);
+      var dragging = false;
+      var dragged = false;
+      var lastDrag = 0;
+      var startX = 0;
+      var startY = 0;
+      var baseX = 0;
+      var baseY = 0;
+
+      // 台词气泡
+      function say(text) {
+        if (!bubble) return;
+        bubble.textContent = text || '';
+        item.classList.add('is-say');
+        clearTimeout(item._sayTimer);
+        item._sayTimer = setTimeout(function () {
+          item.classList.remove('is-say');
+          bubble.textContent = '';
+        }, 2600);
+      }
+
+      // 点击：挤压回弹 + 迸出粒子 + 说话
+      function pop() {
+        item.classList.remove('is-pop');
+        void item.offsetWidth; // 强制重排以重播动画
+        item.classList.add('is-pop');
+        setTimeout(function () {
+          item.classList.remove('is-pop');
+        }, 620);
+        spawnSparks(item);
+        say(item.getAttribute('data-say'));
+      }
+
+      // 悬停显示名字
+      item.addEventListener('pointerenter', function () {
+        if (bubble && !item.classList.contains('is-say')) {
+          bubble.textContent = item.getAttribute('data-name') || '';
+        }
+      });
+
+      item.addEventListener('pointerleave', function () {
+        if (bubble && !item.classList.contains('is-say')) bubble.textContent = '';
+      });
+
+      // 按下：准备拖拽
+      item.addEventListener('pointerdown', function (e) {
+        if (e.button !== undefined && e.button !== 0) return;
+        dragging = true;
+        dragged = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        baseX = parseFloat(item.style.getPropertyValue('--ix')) || 0;
+        baseY = parseFloat(item.style.getPropertyValue('--iy')) || 0;
+        item.classList.add('is-drag');
+        if (item.setPointerCapture) {
+          try {
+            item.setPointerCapture(e.pointerId);
+          } catch (err) {}
+        }
+      });
+
+      // 拖拽中：跟随指针并按方向倾斜
+      item.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        var dx = e.clientX - startX;
+        var dy = e.clientY - startY;
+        if (Math.abs(dx) > 4 || Math.abs(dy) > 4) dragged = true;
+
+        var r = item.getBoundingClientRect();
+        var nx = baseX + dx;
+        var ny = baseY + dy;
+        nx = Math.max(-r.width * 0.7, Math.min(window.innerWidth - r.width * 0.3, nx));
+        ny = Math.max(-r.height * 0.7, Math.min(window.innerHeight - r.height * 0.3, ny));
+
+        item.style.setProperty('--ix', nx.toFixed(1) + 'px');
+        item.style.setProperty('--iy', ny.toFixed(1) + 'px');
+        item.style.setProperty('--it', Math.max(-16, Math.min(16, dx * 0.07)).toFixed(2) + 'deg');
+      });
+
+      // 松手：弹回原位
+      function endDrag() {
+        if (!dragging) return;
+        dragging = false;
+        item.classList.remove('is-drag');
+        if (dragged) {
+          lastDrag = Date.now();
+          item.style.setProperty('--ix', '0px');
+          item.style.setProperty('--iy', '0px');
+          item.style.setProperty('--it', '0deg');
+        }
+      }
+
+      item.addEventListener('pointerup', endDrag);
+      item.addEventListener('pointercancel', endDrag);
+      item.addEventListener('lostpointercapture', endDrag);
+
+      item.addEventListener('click', function () {
+        if (Date.now() - lastDrag < 280) return; // 刚拖拽完不触发点击
+        pop();
+      });
+    });
+
+    // 鼠标靠近：被注意到（歪头看向光标）
+    // 注：不使用 pointer:fine 作为门槛，鼠标事件本身就说明是鼠标设备；
+    //     元素只有 3 个，直接同步计算即可，不必依赖 requestAnimationFrame
+    function apply(mx, my) {
+      items.forEach(function (item) {
+        var r = item.getBoundingClientRect();
+        var cx = r.left + r.width / 2;
+        var cy = r.top + r.height / 2;
+        var dx = mx - cx;
+        var dy = my - cy;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        var hit = dist < NEAR_RADIUS;
+
+        item.classList.toggle('is-near', hit);
+        item.style.setProperty('--lean', hit ? Math.max(-13, Math.min(13, dx * 0.055)).toFixed(1) + 'deg' : '0deg');
+      });
+    }
+
+    window.addEventListener('mousemove', function (e) {
+      apply(e.clientX, e.clientY);
+    });
   }
 
   /* ---------- 个人信息注入 ---------- */
@@ -932,6 +1100,7 @@
     initBackTop();
     initGlobal();
     initMotion();
+    initIpMascots();
   }
 
   if (document.readyState === 'loading') {
