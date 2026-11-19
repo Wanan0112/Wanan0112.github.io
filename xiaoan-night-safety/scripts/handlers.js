@@ -52,7 +52,9 @@ XA.I18N = {
     musicSource: '音源', sourceLocal: '安星本地歌单', sourceNetease: '跳转网易云音乐', sourceQQ: '跳转 QQ 音乐',
     sourceSheetSub: '选择音源；除本地歌单外均为概念跳转，播放器展示模拟数据。',
     sourceDemoTip: '网页无法读取其他 App 的真实后台播放信息，歌名、歌词、封面和进度均为模拟演示数据。',
-    sourceLocalOn: '已切换到安星本地歌单', sourceNeteaseOn: '正在唤起网易云音乐（概念演示）', sourceQQOn: '正在唤起 QQ 音乐（概念演示）'
+    sourceLocalOn: '已切换到安星本地歌单', sourceNeteaseOn: '正在唤起网易云音乐（概念演示）', sourceQQOn: '正在唤起 QQ 音乐（概念演示）',
+    playlistNight: '夜行歌单', playlistRain: '雨夜白噪音', playlistHint: '点击歌曲立即播放 · 概念演示',
+    setWhiteNoise: '已切换为雨夜白噪音歌单', playTrack: '播放'
   },
   en: {
     nav: 'Navigate', entertainment: 'Companion', community: 'Community', profile: 'Me', sos: 'Emergency',
@@ -107,7 +109,9 @@ XA.I18N = {
     musicSource: 'Source', sourceLocal: 'Anxing local playlist', sourceNetease: 'Open NetEase Cloud Music', sourceQQ: 'Open QQ Music',
     sourceSheetSub: 'Choose a source. Only the local playlist is real; other options are concept redirects with demo data.',
     sourceDemoTip: 'Web pages cannot read real background playback from other apps. Track, lyric, cover and progress are simulated.',
-    sourceLocalOn: 'Switched to Anxing local playlist', sourceNeteaseOn: 'Opening NetEase Cloud Music (demo)', sourceQQOn: 'Opening QQ Music (demo)'
+    sourceLocalOn: 'Switched to Anxing local playlist', sourceNeteaseOn: 'Opening NetEase Cloud Music (demo)', sourceQQOn: 'Opening QQ Music (demo)',
+    playlistNight: 'Night walk playlist', playlistRain: 'Rainy night white noise', playlistHint: 'Tap a track to play · concept demo',
+    setWhiteNoise: 'Switched to rainy night white noise', playTrack: 'Play'
   }
 };
 XA.lang = 'zh';
@@ -128,6 +132,7 @@ XA.applyI18n = function () {
   if (XA.renderDouyinAccount) XA.renderDouyinAccount();
   if (XA.renderDouyinVideos) XA.renderDouyinVideos();
   if (XA.updatePlayer) XA.updatePlayer();
+  if (XA.renderPlaylistCards) XA.renderPlaylistCards();
 };
 XA.setLanguage = function (lang) {
   XA.lang = lang === 'en' ? 'en' : 'zh';
@@ -142,11 +147,25 @@ XA.openSheet = function (html) {
   XA.applyI18n();
 };
 
-XA.tracks = [
-  { title: '夜航', artist: '安星电台 · 夜行歌单', subtitle: '给独行路上的一点温柔', lyric: '路灯把影子拉得很长，风吹散一整天的慌张 · 跟着节拍慢慢走', duration: 372, src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', coverClass: 'cover-night' },
-  { title: '城市微光', artist: '安星电台 · 城市漫游', subtitle: '车流与人声都变得柔软', lyric: '每一盏灯都在替我说晚安，街角的风也学会了放慢脚步', duration: 364, src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', coverClass: 'cover-city-glow' },
-  { title: '雨夜白噪音', artist: 'SoundImage · 环境声', subtitle: '雨声陪伴 · 低压放松', lyric: '街声落在伞上，脚步轻轻，世界只剩下安稳的雨声', duration: 20, src: 'https://soundimage.org/wp-content/uploads/2022/06/Street-Ambience_6-6-22.mp3', coverClass: 'cover-rain' }
-];
+XA.playlists = {
+  night: {
+    name: '夜行歌单',
+    tracks: [
+      { title: '夜航', artist: '安星电台 · 夜行歌单', subtitle: '给独行路上的一点温柔', lyric: '路灯把影子拉得很长，风吹散一整天的慌张 · 跟着节拍慢慢走', duration: 372, src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', coverClass: 'cover-night' },
+      { title: '城市微光', artist: '安星电台 · 城市漫游', subtitle: '车流与人声都变得柔软', lyric: '每一盏灯都在替我说晚安，街角的风也学会了放慢脚步', duration: 364, src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', coverClass: 'cover-city-glow' },
+      { title: '晚风频道', artist: '安星电台 · 慢走节拍', subtitle: '把步调交给晚风', lyric: '不用走得很快，晚风会替你把答案轻轻带来', duration: 321, src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', coverClass: 'cover-rain' }
+    ]
+  },
+  rain: {
+    name: '雨夜白噪音',
+    tracks: [
+      { title: '街声雨夜', artist: 'SoundImage · 环境声', subtitle: '远处车流与伞面雨声', lyric: '街声落在伞上，脚步轻轻，世界只剩下安稳的雨声', duration: 20, src: 'https://soundimage.org/wp-content/uploads/2022/06/Street-Ambience_6-6-22.mp3', coverClass: 'cover-rain' },
+      { title: '屋檐轻雨', artist: '安星白噪音 · 概念音轨', subtitle: '低压放松 · 适合慢走与入睡', lyric: '雨滴沿着屋檐慢慢滑落，把一天的紧绷一点点带走', duration: 20, src: 'https://soundimage.org/wp-content/uploads/2022/06/Street-Ambience_6-6-22.mp3', coverClass: 'cover-rain' }
+    ]
+  }
+};
+XA.activePlaylist = 'night';
+XA.tracks = XA.playlists.night.tracks.slice();
 XA.musicSource = 'local';
 XA.videos = [
   { title: '林间庇护所 · 慢节奏建造', id: '7358621438187718668', author: '抖音精选', tags: '#荒野建造 #解压', coverClass: 'cover-shelter', coverWord: '林间小屋', icon: 'shield' },
@@ -316,6 +335,38 @@ XA.setTrack = function (delta) {
   if (XA.playing) a.play().catch(function () {});
   XA.updatePlayer();
   XA.toast('已切换到《' + XA.tracks[XA.trackIndex].title + '》');
+};
+
+XA.renderPlaylistCards = function () {
+  XA.$$('[data-playlist-card]').forEach(function (el) {
+    el.classList.toggle('active', el.dataset.playlistCard === XA.activePlaylist);
+  });
+};
+XA.openPlaylist = function (key) {
+  var pl = XA.playlists[key];
+  if (!pl) return;
+  XA.openSheet('<h3>' + (XA.lang === 'en' ? (key === 'rain' ? XA.t('playlistRain') : XA.t('playlistNight')) : pl.name) +
+    '</h3><div class="sheet-sub">' + pl.tracks.length + (XA.lang === 'en' ? ' tracks · ' : ' 首 · ') + XA.t('playlistHint') + '</div>' +
+    pl.tracks.map(function (t, i) {
+      return '<button class="playlist-item" data-action="play-playlist-track" data-playlist="' + key + '" data-track-index="' + i + '">' +
+        '<span class="playlist-index">' + String(i + 1).padStart(2, '0') + '</span>' +
+        '<span class="playlist-copy"><b>' + dyEsc(t.title) + '</b><small>' + dyEsc(t.artist) + ' · ' + dyEsc(t.subtitle || '') + '</small></span>' +
+        '<span class="playlist-play">' + ic('play') + '<em>' + XA.t('playTrack') + '</em></span></button>';
+    }).join(''));
+};
+XA.playPlaylistTrack = function (key, index) {
+  var pl = XA.playlists[key];
+  if (!pl || !pl.tracks[index]) return;
+  XA.activePlaylist = key;
+  XA.tracks = pl.tracks.slice();
+  XA.trackIndex = index;
+  XA.progressSec = 0;
+  var a = XA.ensureAudio();
+  a.pause(); a.src = pl.tracks[index].src; a.load();
+  XA.playing = true;
+  a.play().catch(function () { XA.toast(XA.lang === 'en' ? 'Playback was blocked, tap play again' : '音频播放被拦截，请再次点击播放'); });
+  XA.updatePlayer(); XA.renderPlaylistCards(); XA.closeModal();
+  XA.toast('正在播放《' + pl.tracks[index].title + '》' + (key === 'rain' ? ' · ' + XA.t('setWhiteNoise') : ''));
 };
 
 XA.openExternalMusic = function (source) {
@@ -512,6 +563,10 @@ XA.actions = {
     var on = el.textContent.trim() === '已开启';
     el.textContent = on ? '已关闭' : '已开启';
     XA.toast(on ? '眼镜端歌词同步已关闭' : '眼镜端歌词同步已开启');
+  },
+  'open-playlist': function (el) { XA.openPlaylist((el && el.dataset.playlist) || 'night'); },
+  'play-playlist-track': function (el) {
+    XA.playPlaylistTrack((el && el.dataset.playlist) || 'night', parseInt((el && el.dataset.trackIndex) || '0', 10));
   },
   'music-source': function () {
     XA.openSheet('<h3 data-i18n="musicSource">音源</h3><div class="sheet-sub" data-i18n="sourceSheetSub">选择音源；除本地歌单外均为概念跳转，播放器展示模拟数据。</div>' +
@@ -779,7 +834,7 @@ XA.menuSheets = {
   history: ['守护记录', '已完成 18 段安全行程 · 1 次误报取消'],
   privacy: ['隐私与权限', '位置仅使用期间 · 麦克风端侧处理 · 可随时撤回'],
   device: ['AR 眼镜设备', 'XA-0281 已连接 · 电量 82% · 配对信息本地加密'],
-  about: ['关于安星', '安星 · 夜行安全系统 V1.9 · 概念设计原型']
+  about: ['关于安星', '安星 · 夜行安全系统 V1.10 · 概念设计原型']
 };
 
 XA.bindPageEvents = function () {
