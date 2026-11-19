@@ -31,6 +31,77 @@ XA.setTrack = function (delta) {
   XA.toast('已切换到《' + XA.tracks[XA.trackIndex].title + '》');
 };
 
+XA.navSteps = [
+  { title: '前方 30 m 右转进入滨江路', sub: '全程有灯 · 路灯覆盖 86%', dist: '30 m', icon: 'navigation' },
+  { title: '沿滨江路直行 400 m', sub: '监控 12 处 · 近 30 天事件 2 起', dist: '400 m', icon: 'navigation' },
+  { title: '前方路口左转进入花园路', sub: '便利店求助点 · 照明良好', dist: '120 m', icon: 'pin' },
+  { title: '即将到达 滨江花园 · 东南门', sub: '已为你照亮最后五百米', dist: '60 m', icon: 'check' }
+];
+
+XA.startNavigation = function () {
+  var old = XA.$('.nav-session');
+  if (old) old.remove();
+  clearInterval(XA.navTimer);
+  var box = document.createElement('div');
+  box.className = 'nav-session';
+  box.innerHTML =
+    '<div class="nav-map">' +
+      '<svg viewBox="0 0 390 320" preserveAspectRatio="none">' +
+        '<path class="nv-road" d="M-10 260 C90 240 150 180 220 130 S320 80 410 40"/>' +
+        '<path class="nv-road" d="M-10 110 C100 130 190 180 260 250 S330 300 410 310"/>' +
+        '<path class="nv-route" d="M40 300 C110 270 150 205 205 160 S290 110 350 60"/>' +
+      '</svg>' +
+      '<span class="nv-user"></span>' +
+      '<span class="nv-label">' + ic('shield') + ' 安全导航中 · 路线 A</span>' +
+      '<div class="nav-turn"><span class="turn-arrow">' + ic('navigation') + '</span>' +
+        '<div><b id="turnTitle">前方 30 m 右转进入滨江路</b><small id="turnSub">全程有灯 · 路灯覆盖 86%</small></div>' +
+        '<span class="turn-dist" id="turnDist">30 m</span></div>' +
+    '</div>' +
+    '<div class="nav-body">' +
+      '<div class="nav-stats"><div><b id="navRemain">18</b><small>剩余分钟</small></div><div><b id="navDist">1.2</b><small>剩余公里</small></div><div><b>92</b><small>安全分</small></div></div>' +
+      '<div class="nav-steps">' + XA.navSteps.map(function (s, i) {
+        return '<div class="nav-step' + (i === 0 ? ' active' : '') + '"><i></i><span>' + s.title + '</span><b>' + s.dist + '</b></div>';
+      }).join('') + '</div>' +
+      '<div class="nav-actions">' +
+        '<button class="primary-btn" data-action="end-nav" style="flex:1;width:auto">' + ic('check') + '结束导航</button>' +
+        '<button class="square-btn" data-action="nav-share">' + ic('share') + '</button>' +
+        '<button class="sos-mini" data-action="sos">SOS</button>' +
+      '</div>' +
+    '</div>';
+  XA.$('#phone').appendChild(box);
+  requestAnimationFrame(function () { box.classList.add('open'); });
+
+  var i = 0;
+  function paint() {
+    var step = XA.navSteps[i];
+    var set = function (sel, val) { var el = XA.$(sel, box); if (el) el.textContent = val; };
+    set('#turnTitle', step.title);
+    set('#turnSub', step.sub);
+    set('#turnDist', step.dist);
+    set('#navRemain', Math.max(1, 18 - i * 4));
+    set('#navDist', Math.max(0.1, 1.2 - i * 0.3).toFixed(1));
+    var arrow = XA.$('.turn-arrow .ico', box);
+    if (arrow) arrow.style.transform = i === 2 ? 'rotate(-90deg)' : (i === 3 ? 'rotate(0)' : 'rotate(45deg)');
+    XA.$$('.nav-step', box).forEach(function (el, j) {
+      el.classList.toggle('done', j < i);
+      el.classList.toggle('active', j === i);
+    });
+  }
+  paint();
+  XA.navTimer = setInterval(function () {
+    i++;
+    if (i >= XA.navSteps.length) {
+      clearInterval(XA.navTimer);
+      XA.toast('已到达滨江花园 · 行程记录已保存');
+      XA.actions['end-nav']();
+      return;
+    }
+    paint();
+    XA.toast(XA.navSteps[i].title);
+  }, 4000);
+  XA.toast('安全导航已开始 · 小安陪你走夜路');
+};
+
 XA.actions = {
   notifications: function () {
     XA.openSheet('<h3>守护通知</h3><div class="sheet-sub">安全消息优先送达</div>' +
@@ -39,11 +110,23 @@ XA.actions = {
       '<div class="option-row">' + ic('glasses') + '<span><b>AR 眼镜电量 82%</b><small>18 分钟前 · 设备状态正常</small></span></div>');
   },
   search: function () {
-    XA.openSheet('<h3>搜索目的地</h3><div class="sheet-sub">选择后会同步更新路线分析</div>' +
-      ['滨江花园', '家', '公司', '健身房'].map(function (n) {
+    var names = ['滨江花园', '家', '公司', '健身房', '西溪公园', '地铁文三路站'];
+    XA.openSheet('<h3>搜索目的地</h3><div class="sheet-sub">输入关键词，选择后会同步更新路线分析</div>' +
+      '<input id="searchInput" class="sheet-input" style="min-height:auto;height:44px" placeholder="搜索地点或常用地址" autocomplete="off">' +
+      '<div id="searchResults">' + names.map(function (n) {
         return '<button class="option-row" data-pick="' + n + '">' + ic('pin') + '<span><b>' + n + '</b><small>步行可达 · 夜间路线已计算</small></span>' + ic('chevron') + '</button>';
-      }).join('') +
+      }).join('') + '</div>' +
       '<button class="primary-btn" data-action="close-pick">使用当前位置附近推荐</button>');
+    var input = XA.$('#searchInput');
+    if (input) {
+      input.addEventListener('input', function () {
+        var q = input.value.trim();
+        XA.$$('#searchResults [data-pick]').forEach(function (el) {
+          el.style.display = (!q || el.dataset.pick.indexOf(q) !== -1) ? '' : 'none';
+        });
+      });
+      setTimeout(function () { input.focus(); }, 260);
+    }
     XA.$$('[data-pick]').forEach(function (el) {
       el.addEventListener('click', function () {
         XA.setDestination(el.dataset.pick);
@@ -80,15 +163,14 @@ XA.actions = {
       '<div class="option-row">' + ic('check') + '<span><b>已为你避开暗巷</b><small>路线经过 12 处监控、3 个便利店求助点</small></span></div>' +
       '<button class="primary-btn" data-action="accept-advice">好的，走滨江路</button>');
   },
-  'start-nav': function () {
-    XA.openSheet('<h3>安全导航已开启</h3><div class="sheet-sub">路线 A · 滨江路主线 · 预计 18 分钟</div>' +
-      '<div class="option-row">' + ic('navigation') + '<span><b>前方 30 m 右转进入滨江路</b><small>全程有灯 · 路灯覆盖 86% · 监控 12 处</small></span></div>' +
-      '<div class="option-row">' + ic('shield') + '<span><b>小安正在陪你</b><small>实时事件播报已开启 · 位置仅行程级共享</small></span></div>' +
-      '<div class="option-row">' + ic('music') + '<span><b>环境声保留</b><small>导航播报优先，音乐自动降低音量</small></span></div>' +
-      '<button class="primary-btn" data-action="end-nav">结束导航</button>');
-    XA.toast('安全导航已开始 · 小安陪你走夜路');
+  'start-nav': function () { XA.startNavigation(); },
+  'end-nav': function () {
+    var nav = XA.$('.nav-session');
+    if (nav) { nav.classList.remove('open'); setTimeout(function () { nav.remove(); }, 360); }
+    clearInterval(XA.navTimer);
+    XA.toast('导航已结束 · 行程记录已保存');
   },
-  'end-nav': function () { XA.closeModal(); XA.toast('导航已结束 · 行程记录已保存'); },
+  'nav-share': function () { XA.actions['share-trip'](); },
   'share-trip': function () {
     XA.openSheet('<h3>分享行程</h3><div class="sheet-sub">仅分享行程级信息，不暴露实时精确轨迹</div>' +
       '<div class="option-row">' + ic('users') + '<span><b>紧急联系人（3 位）</b><small>妈妈、阿哲、物业管家</small></span></div>' +
@@ -132,7 +214,15 @@ XA.actions = {
   video: function () { XA.toast('视频已静音后台播放 · 导航播报优先'); },
   'community-search': function () { XA.toast('社区搜索：夜路、路灯、AR 眼镜'); },
   topic: function () { XA.toast('话题已展开 · 夜路故事征集'); },
-  'story-more': function () { XA.toast('已减少此类内容推荐'); },
+  'story-more': function () {
+    XA.openSheet('<h3>故事操作</h3><div class="sheet-sub">社区内容需要审核与举报，保护分享者隐私</div>' +
+      '<button class="option-row" data-action="story-hide">' + ic('close') + '<span><b>不感兴趣</b><small>减少此类内容推荐</small></span></button>' +
+      '<button class="option-row" data-action="story-report">' + ic('warning') + '<span><b>举报内容</b><small>提交后由社区审核处理</small></span></button>' +
+      '<button class="option-row" data-action="story-copy">' + ic('share') + '<span><b>复制分享链接</b><small>不包含具体住址与实时位置</small></span></button>');
+  },
+  'story-hide': function () { XA.closeModal(); XA.toast('已减少此类内容推荐'); },
+  'story-report': function () { XA.closeModal(); XA.toast('举报已提交 · 感谢你守护社区'); },
+  'story-copy': function () { XA.closeModal(); XA.toast('分享链接已复制（演示）'); },
   publish: function () {
     XA.openSheet('<h3>发布夜行故事</h3><div class="sheet-sub">默认模糊具体住址与时间，保护分享者</div>' +
       '<textarea class="sheet-input" id="storyInput" placeholder="写下你的夜路故事…"></textarea>' +
@@ -190,6 +280,15 @@ XA.menuSheets = {
 XA.bindPageEvents = function () {
   var cancelBtn = XA.$('[data-action="cancel-alarm"]');
   if (cancelBtn) XA.hold(cancelBtn, 2000, function () { XA.cancelAlarm(); });
+
+  var homeNav = XA.$('.home-sheet [data-action="start-nav"]');
+  if (homeNav) XA.hold(homeNav, 1200, function () { XA.actions['share-trip'](); });
+  XA.$$('.route-card').forEach(function (el) {
+    XA.hold(el, 1000, function () {
+      var fav = el.classList.toggle('favorite');
+      XA.toast(fav ? '已收藏为我的安全路线' : '已取消收藏');
+    });
+  });
 
   document.addEventListener('click', function (e) {
     var menu = e.target.closest('[data-menu]');
