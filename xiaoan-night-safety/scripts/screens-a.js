@@ -59,10 +59,10 @@ XA_SCREENS.home = `
   </div>
 
   <div class="side-drawer" id="sideDrawer">
-    <div class="drawer-head"><b>小安 · 夜行安全</b><small>夜间守护</small><button data-action="close-drawer">${ic('close')}</button></div>
+    <div class="drawer-head"><b>安星 · 夜行安全</b><small>夜间守护</small><button data-action="close-drawer">${ic('close')}</button></div>
     <button data-tab="home">${ic('navigation')}安全导航</button>
     <button data-action="open-route">${ic('route')}路线分析</button>
-    <button data-tab="entertainment">${ic('music')}夜间娱乐</button>
+    <button data-tab="entertainment">${ic('music')}夜间伴行</button>
     <button data-tab="community">${ic('users')}社区互助</button>
     <button data-action="open-ar">${ic('glasses')}AR 眼镜</button>
     <button data-tab="profile">${ic('user')}我的</button>
@@ -97,7 +97,7 @@ XA_SCREENS.route = `
 
   <button class="advice-card" data-action="ai-suggest">
     <span class="ai-face small">☺</span>
-    <span><b>小安建议</b> A 线多 3 分钟，换全程有灯与 <em>+28</em> 安全分</span>
+    <span><b>安星建议</b> A 线多 3 分钟，换全程有灯与 <em>+28</em> 安全分</span>
     <small>21:35 更新</small>
   </button>
 
