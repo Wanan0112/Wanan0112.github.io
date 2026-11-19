@@ -34,11 +34,15 @@ XA_SCREENS.entertainment = `
     <span class="lyric-bars"><i></i><i></i><i></i><i></i><i></i></span>
   </div>
 
-  <div class="section-title"><h3 data-i18n="nightVideo">伴行视频</h3><small data-i18n="douyinFeatured">抖音精选</small></div>
+  <div class="section-title"><h3 data-i18n="nightVideo">伴行视频</h3><small data-i18n="videoSubtitle">接入抖音开放能力，APP 内沉浸式刷短视频，不离开安星</small></div>
   <div class="douyin-account glass">
     <span class="dy-logo">${ic('play')}</span>
-    <span><b data-i18n="douyin">抖音</b><small id="douyinAccountSub" data-i18n="douyinLoginSub">登录后可播放抖音精选视频</small></span>
-    <button id="douyinAccountBtn" data-action="douyin-login" data-i18n="douyinLogin">登录抖音</button>
+    <span><b data-i18n="douyinQuickLogin">抖音快捷登录入口</b><small id="douyinAccountSub" data-i18n="douyinLoginSub">登录后可播放抖音精选视频</small></span>
+    <button id="douyinAccountBtn" data-action="douyin-login" data-i18n="douyinLogin">登录抖音账号</button>
+  </div>
+  <div class="douyin-toolbar">
+    <div class="dy-tabs"><button class="active" data-action="douyin-tab" data-tab-type="featured" data-i18n="douyinFeatured">抖音精选</button><button data-action="douyin-tab" data-tab-type="favorites" data-i18n="douyinCustom">我的收藏</button></div>
+    <button class="dy-refresh" data-action="douyin-refresh">${ic('settings')}<span data-i18n="refreshVideos">换一批</span></button>
   </div>
   <div class="douyin-grid" id="douyinVideoGrid"></div>
   <button class="douyin-add" data-action="douyin-add">${ic('plus')}<span data-i18n="douyinAdd">添加我的抖音视频</span>${ic('chevron')}</button>
@@ -152,7 +156,7 @@ XA_SCREENS.profile = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">安星 · 夜行安全系统 V1.7 · 概念设计原型</p>
+  <p class="version">安星 · 夜行安全系统 V1.8 · 概念设计原型</p>
 </section>`;
 
 XA_SCREENS.settings = `
@@ -198,5 +202,5 @@ XA_SCREENS.settings = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">安星 · 夜行安全系统 V1.7 · 概念设计原型</p>
+  <p class="version">安星 · 夜行安全系统 V1.8 · 概念设计原型</p>
 </section>`;
