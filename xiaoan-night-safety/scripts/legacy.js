@@ -39,7 +39,7 @@
     if (!home) return;
     home.classList.remove('state-default', 'state-route', 'state-nav');
     home.classList.add('state-' + state);
-    XA.$('#phone').classList.toggle('no-tabbar', true);
+    XA.$('#phone').classList.toggle('no-tabbar', state !== 'default');
     if (state === 'default') {
       var search = XA.$('.home-search [data-destination]');
       if (search) search.textContent = '搜索目的地、公交站';
@@ -667,7 +667,6 @@
   XA.go = function (screen, noHistory) {
     origGo(screen, noHistory);
     if (screen === 'home') {
-      XA.$('#phone').classList.add('no-tabbar');
       if (!noHistory) resetHome();
     }
     if (screen === 'route') setTimeout(function () {
