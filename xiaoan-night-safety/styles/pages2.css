@@ -146,6 +146,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;heigh
 .playlist.p2>span:first-child .ico{color:#b6ecef}
 .playlist b{font-size:11px;margin-top:4px}.playlist small{font-size:8px;color:#a6b1c1}
 .playlist .pl{position:absolute;right:10px;bottom:10px;color:rgba(255,255,255,.7)}
+.playlist.active{border-color:rgba(127,240,212,.32);box-shadow:inset 0 0 0 1px rgba(127,240,212,.14)}
+.playlist>.ico:last-child{position:absolute;right:10px;bottom:10px;width:12px;height:12px;color:rgba(255,255,255,.55)}
+.playlist-item{display:flex;align-items:center;gap:10px;width:100%;padding:11px 10px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line);margin-bottom:8px;text-align:left}
+.playlist-index{width:26px;height:26px;border-radius:9px;background:rgba(127,240,212,.1);color:var(--mint);font-size:9px;display:flex;align-items:center;justify-content:center;flex:none}
+.playlist-copy{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.playlist-copy b{font-size:11px}.playlist-copy small{font-size:8px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.playlist-play{display:flex;align-items:center;gap:5px;color:var(--amber);font-size:8px;flex:none}
+.playlist-play .ico{width:13px;height:13px;fill:currentColor;stroke:none}
+.playlist-play em{font-style:normal}
 
 /* 05 社区互助 */
 [data-screen="community"]{padding-left:var(--safe);padding-right:var(--safe);background:#05070d}
