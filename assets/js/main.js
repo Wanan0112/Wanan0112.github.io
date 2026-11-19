@@ -18,40 +18,6 @@
   var DATA = window.SITE_DATA || {};
   var ASSETS = window.SITE_ASSETS || {};
 
-  // 作品卡上的小精灵：每隔两张卡放一个，三族轮换，沿用背景小精灵的互动
-  var MASCOTS = {
-    red: { name: '火团子族', say: '别惹我！再盯着我就要炸毛啦！', spark: '#e2564a' },
-    yellow: { name: '咸蛋黄族', say: '咸香蛋黄，Q 弹弹～', spark: '#f0b73c' },
-    blue: { name: '蓝泡泡族', say: '啵——！泡泡破裂中～', spark: '#8fc4ea' },
-  };
-  var MASCOT_THEMES = ['red', 'yellow', 'blue'];
-  var decorCount = 0;
-
-  function cardMascot() {
-    var i = decorCount++;
-    if (i % 3 !== 0) return '';
-    var theme = MASCOT_THEMES[(i / 3) % MASCOT_THEMES.length];
-    var m = MASCOTS[theme];
-    return (
-      '<span class="ip-decor__item ip-decor__item--card ip-decor__item--' +
-      theme +
-      '" role="img" aria-label="' +
-      m.name +
-      '" data-name="' +
-      m.name +
-      '" data-say="' +
-      m.say +
-      '" data-spark="' +
-      m.spark +
-      '">' +
-      '<img class="ip-decor__img" src="assets/images/ip/ip-' +
-      theme +
-      '.png" alt="" />' +
-      '<span class="ip-decor__bubble" aria-hidden="true"></span>' +
-      '</span>'
-    );
-  }
-
   var $ = function (sel, root) {
     return (root || document).querySelector(sel);
   };
@@ -166,7 +132,6 @@
     var wrap = $('#boardAll');
     if (!wrap) return;
     var cats = DATA.categories || [];
-    decorCount = 0;
     wrap.innerHTML = cats
       .map(function (cat) {
         var items = (cat.projects || []).map(projectById).filter(Boolean);
@@ -302,7 +267,6 @@
                 '</span>' +
                 '<span class="pcard__cta">查看作品详情 →</span>' +
                 '</div>' +
-                cardMascot() +
                 '</button>'
               );
             })
@@ -1204,7 +1168,6 @@
       // 按下：准备拖拽
       item.addEventListener('pointerdown', function (e) {
         if (e.button !== undefined && e.button !== 0) return;
-        if (item.classList.contains('ip-decor__item--card')) e.stopPropagation();
         dragging = true;
         dragged = false;
         startX = e.clientX;
@@ -1254,8 +1217,7 @@
       item.addEventListener('pointercancel', endDrag);
       item.addEventListener('lostpointercapture', endDrag);
 
-      item.addEventListener('click', function (e) {
-        if (item.classList.contains('ip-decor__item--card')) e.stopPropagation();
+      item.addEventListener('click', function () {
         if (Date.now() - lastDrag < 280) return; // 刚拖拽完不触发点击
         pop();
       });

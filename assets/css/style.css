@@ -203,22 +203,6 @@ textarea {
   bottom: 13%;
 }
 
-/* 作品卡上的间歇小精灵：复用背景小精灵的互动，只改尺寸与站位 */
-.ip-decor__item.ip-decor__item--card {
-  width: clamp(54px, 5vw, 72px);
-  right: -18px;
-  top: 30%;
-  left: auto;
-  bottom: auto;
-  z-index: 6;
-}
-
-.ip-decor__item--card .ip-decor__bubble {
-  font-size: 10px;
-  padding: 4px 8px 5px;
-  bottom: calc(100% + 6px);
-}
-
 /* ---- 待机：三族三种性格 ---- */
 .ip-decor__item--red .ip-decor__img {
   animation: ip-idle-red 2.9s ease-in-out infinite;
