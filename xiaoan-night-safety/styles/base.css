@@ -37,7 +37,7 @@ button{background:none;border:0;padding:0;cursor:pointer}
 .phone{position:relative;width:390px;height:844px;flex:none;border-radius:46px;background:var(--ink);overflow:hidden;
   border:9px solid #161b24;box-shadow:0 40px 90px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.08),inset 0 0 0 1px rgba(255,255,255,.04)}
 .phone::before{content:"";position:absolute;top:9px;left:50%;transform:translateX(-50%);width:104px;height:22px;background:#060911;border-radius:0 0 15px 15px;z-index:99}
-.phone.no-tabbar .tabbar{transform:translateY(110%)}
+.phone.no-tabbar .tabbar{transform:translateY(110%);opacity:0;visibility:hidden;pointer-events:none}
 .status-bar{position:absolute;top:0;left:0;right:0;height:44px;z-index:80;display:flex;align-items:center;justify-content:space-between;padding:12px 26px 0;font-size:13px;font-weight:700;letter-spacing:.02em;pointer-events:none}
 .status-right{display:flex;align-items:center;gap:6px}
 .sig{width:16px;height:12px;fill:currentColor}
