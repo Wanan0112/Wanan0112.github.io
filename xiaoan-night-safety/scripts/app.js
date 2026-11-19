@@ -37,7 +37,7 @@ XA.go = function (screen, noHistory) {
   XA.current = screen;
   XA.$$('.screen').forEach(function (el) { el.classList.toggle('active', el.dataset.screen === screen); });
   XA.$$('.tab').forEach(function (el) { el.classList.toggle('active', el.dataset.tab === screen); });
-  XA.$('#phone').classList.toggle('no-tabbar', ['route', 'sos', 'ar'].indexOf(screen) !== -1);
+  XA.$('#phone').classList.toggle('no-tabbar', ['route', 'sos', 'ar', 'settings'].indexOf(screen) !== -1);
   var active = XA.$('.screen.active');
   if (active && active.scrollTop !== undefined) active.scrollTop = 0;
 };
