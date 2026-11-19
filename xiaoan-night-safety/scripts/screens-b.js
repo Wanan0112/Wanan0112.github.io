@@ -1,7 +1,7 @@
 XA_SCREENS.entertainment = `
 <section class="screen scroll-screen" data-screen="entertainment">
   <header class="page-head flat">
-    <div class="head-title left"><h2>娱乐</h2><small>夜路很长，让声音陪你走</small></div>
+    <div class="head-title left"><h2 data-i18n="entertainment">娱乐</h2><small data-i18n="entertainmentSub">夜路很长，让声音陪你走</small></div>
     <button class="icon-btn" data-action="ar-entry">${ic('glasses')}</button>
   </header>
   <button class="glasses-card glass" data-action="ar-entry">
@@ -11,13 +11,13 @@ XA_SCREENS.entertainment = `
   </button>
 
   <div class="player-card glass">
-    <div class="player-top"><span class="playing-tag">${ic('music')} 正在播放 · 后台播放</span><span class="hires">HI-RES</span></div>
+    <div class="player-top"><span class="playing-tag">${ic('music')} <span data-i18n="musicPlaying">正在播放 · 后台播放</span></span><span class="hires">HI-RES</span></div>
     <div class="track-row">
       <div class="track-info"><h3 id="trackTitle">夜航</h3><small id="trackArtist">小安电台 · 夜行歌单</small><p id="trackLyric">路灯把影子拉得很长</p></div>
       <div class="vinyl" id="vinyl"><span><b>夜航</b><small>小安电台</small></span></div>
     </div>
     <div class="progress"><span id="trackProgress" style="width:32%"></span></div>
-    <div class="progress-time"><span id="trackCurrent">1:42</span><span>3:28</span></div>
+    <div class="progress-time"><span id="trackCurrent">1:42</span><span id="trackDuration">6:12</span></div>
     <div class="player-controls">
       <button data-action="prev">${ic('prev')}</button>
       <button class="play-btn" data-action="play">${ic('play')}</button>
@@ -34,13 +34,20 @@ XA_SCREENS.entertainment = `
     <span class="lyric-bars"><i></i><i></i><i></i><i></i><i></i></span>
   </div>
 
-  <div class="section-title"><h3>继续观看</h3><small>视频支持后台播放</small></div>
-  <button class="video-card" data-action="video">
-    <img src="assets/video-night.jpg" alt="夜行杭州视频封面">
+  <div class="section-title"><h3 data-i18n="nightVideo">夜行影像</h3><small data-i18n="onlineVideo">免费素材 · 点击播放</small></div>
+  <button class="video-card" data-action="video" data-video="0">
+    <img src="assets/video-night.jpg" alt="雨夜街道视频封面">
     <span class="video-play">${ic('play')}</span>
-    <span class="video-info"><b>夜行杭州 · 城市有光</b><small>12:36 / 24:00 · 继续播放</small></span>
+    <span class="video-info"><b>雨夜归途 · 城市有光</b><small data-i18n="onlineVideo">Pexels 免费素材 · 点击播放</small></span>
     <span class="video-progress"></span>
-    <span class="video-saved">已缓存 · 无网络可播</span>
+    <span class="video-saved">在线播放 · 建议 Wi-Fi</span>
+  </button>
+  <button class="video-card video-card-2" data-action="video" data-video="1">
+    <img src="assets/ar-preview.jpg" alt="城市夜景视频封面">
+    <span class="video-play">${ic('play')}</span>
+    <span class="video-info"><b>夜色城市 · 车流延时</b><small data-i18n="onlineVideo">Pexels 免费素材 · 点击播放</small></span>
+    <span class="video-progress"></span>
+    <span class="video-saved">在线播放 · 建议 Wi-Fi</span>
   </button>
 
   <div class="playlists">
@@ -52,7 +59,7 @@ XA_SCREENS.entertainment = `
 XA_SCREENS.community = `
 <section class="screen scroll-screen" data-screen="community">
   <header class="page-head flat">
-    <div class="head-title left"><h2>社区</h2><small>真实夜行经验，彼此照亮</small></div>
+    <div class="head-title left"><h2 data-i18n="community">社区</h2><small data-i18n="communitySub">真实夜行经验，彼此照亮</small></div>
     <button class="icon-btn" data-action="community-search">${ic('search')}</button>
     <span class="avatar">安</span>
   </header>
@@ -92,7 +99,7 @@ XA_SCREENS.ar = `
 <section class="screen scroll-screen" data-screen="ar">
   <header class="page-head">
     <button class="icon-btn" data-back="entertainment">${ic('back')}</button>
-    <div class="head-title"><h2>小安 AR</h2><small>眼镜控制台 · XA-0281</small></div>
+    <div class="head-title"><h2>小安 AR</h2><small><span data-i18n="arSub">眼镜控制台</span> · XA-0281</small></div>
     <button class="icon-btn" data-action="ar-settings">${ic('settings')}</button>
   </header>
   <div class="ar-device glass">
@@ -133,18 +140,26 @@ XA_SCREENS.ar = `
 
 XA_SCREENS.profile = `
 <section class="screen scroll-screen" data-screen="profile">
-  <header class="page-head flat"><div class="head-title left"><h2>我的</h2><small>守护设置与夜行记录</small></div><button class="icon-btn" data-action="settings">${ic('settings')}</button></header>
+  <header class="page-head flat"><div class="head-title left"><h2 data-i18n="profile">我的</h2><small data-i18n="profileSub">守护设置与夜行记录</small></div><button class="icon-btn" data-action="settings">${ic('settings')}</button></header>
   <div class="profile-card glass"><span class="profile-avatar">安</span><span><b>小安用户</b><small>已连续守护 3 晚 · 杭州</small></span><span class="level">夜行者 Lv.3</span></div>
   <div class="stats-row"><div><b>18</b><small>安全行程</small></div><div><b>92</b><small>平均安全分</small></div><div><b>3</b><small>紧急联系人</small></div></div>
   <div class="menu-group">
-    <button data-menu="contacts"><span class="menu-ico mint">${ic('users')}</span>紧急联系人<small>3 位</small>${ic('chevron')}</button>
-    <button data-menu="routes"><span class="menu-ico amber">${ic('route')}</span>我的安全路线<small>2 条</small>${ic('chevron')}</button>
-    <button data-menu="history"><span class="menu-ico blue">${ic('clock')}</span>守护记录${ic('chevron')}</button>
+    <button data-menu="contacts"><span class="menu-ico mint">${ic('users')}</span><span data-i18n="contacts">紧急联系人</span><small>3 位</small>${ic('chevron')}</button>
+    <button data-menu="routes"><span class="menu-ico amber">${ic('route')}</span><span data-i18n="routes">我的安全路线</span><small>2 条</small>${ic('chevron')}</button>
+    <button data-menu="history"><span class="menu-ico blue">${ic('clock')}</span><span data-i18n="history">守护记录</span>${ic('chevron')}</button>
   </div>
+  <div class="section-title profile-section"><h3 data-i18n="settings">设置</h3><small data-i18n="settingsSub">守护偏好与账号</small></div>
   <div class="menu-group">
-    <button data-menu="privacy"><span class="menu-ico mint">${ic('lock')}</span>隐私与权限<small>位置 · 麦克风</small>${ic('chevron')}</button>
-    <button data-menu="device"><span class="menu-ico amber">${ic('glasses')}</span>AR 眼镜设备<small>已连接</small>${ic('chevron')}</button>
-    <button data-menu="about"><span class="menu-ico blue">${ic('shield')}</span>关于小安${ic('chevron')}</button>
+    <button data-menu="about"><span class="menu-ico blue">${ic('shield')}</span><span data-i18n="about">关于小安</span>${ic('chevron')}</button>
+    <button data-menu="privacy"><span class="menu-ico mint">${ic('lock')}</span><span data-i18n="privacy">隐私与权限</span><small>位置 · 麦克风</small>${ic('chevron')}</button>
+    <button data-action="settings"><span class="menu-ico amber">${ic('settings')}</span><span data-i18n="appearance">外观与主题</span><small data-i18n="themeName">薄荷夜色</small>${ic('chevron')}</button>
+    <button data-action="account-security"><span class="menu-ico mint">${ic('lock')}</span><span data-i18n="accountSecurity">账号与安全</span><small data-i18n="deviceBound">已绑定设备</small>${ic('chevron')}</button>
+    <button data-action="language"><span class="menu-ico blue">${ic('glasses')}</span><span data-i18n="language">管理语言</span><small data-i18n="languageName">简体中文</small>${ic('chevron')}</button>
+    <button data-menu="device"><span class="menu-ico amber">${ic('glasses')}</span><span data-i18n="device">AR 眼镜设备</span><small>已连接</small>${ic('chevron')}</button>
   </div>
-  <p class="version">小安 · 夜行安全系统 V1.0 · 概念设计原型</p>
+  <div class="menu-group account-actions">
+    <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
+    <button data-action="logout-account" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
+  </div>
+  <p class="version">小安 · 夜行安全系统 V1.3 · 概念设计原型</p>
 </section>`;
