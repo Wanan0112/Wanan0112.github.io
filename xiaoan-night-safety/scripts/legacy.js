@@ -181,7 +181,8 @@
       '<div class="setting-line"><span><b>危险语音提醒</b><small>接近照明不足区域时播报一句话</small></span><button class="toggle ' + (s.voice ? 'on' : '') + '" data-toggle="voice"><i></i></button></div>';
     XA.openSheet(html);
   }
-  XA.actions.settings = function () { openSettings(); };
+  XA.actions.settings = function () { XA.go('settings'); };
+  XA.actions['settings-appearance'] = function () { openSettings(); };
   XA.actions['risk-popover'] = function () {
     var p = XA.$('#riskPopover'), m = XA.$('#mapModePop');
     if (m) m.classList.remove('open');
@@ -207,6 +208,17 @@
 
   /* ---------------- 登录 ---------------- */
   XA.account = { loggedIn: false, phone: '', nickname: '小安用户', code: '' };
+  XA.privacy = { allowHomepage: true, hidePurchases: false, location: true, analytics: false };
+  function loadPrivacy() {
+    try {
+      var p = JSON.parse(localStorage.getItem('xa_privacy'));
+      if (p) Object.assign(XA.privacy, p);
+    } catch (e) {}
+  }
+  function savePrivacy() {
+    try { localStorage.setItem('xa_privacy', JSON.stringify(XA.privacy)); } catch (e) {}
+  }
+  XA.savePrivacy = savePrivacy;
   function loadAccount() {
     try {
       var a = JSON.parse(localStorage.getItem('xa_account'));
@@ -272,7 +284,7 @@
         '<div class="acct-field"><label>当前昵称</label><input class="acct-field-input" value="' + XA.account.nickname + '" readonly></div>' +
         '<div class="acct-field"><label>新昵称</label><input class="login-input" id="acctNewName" maxlength="12" placeholder="最多 12 个字"></div>' +
         '<button class="primary-btn" data-action="save-nickname">保存昵称</button>' +
-        '<button class="login-skip" data-action="logout-account">退出登录</button>');
+        '<button class="login-skip" data-action="logout-confirm">退出登录</button>');
     } else openLogin();
   };
   XA.actions['send-code'] = function () {
@@ -789,6 +801,7 @@
   XA.init();
   loadSettings();
   loadAccount();
+  loadPrivacy();
   var savedLang = 'zh';
   try { savedLang = localStorage.getItem('xa_language') || 'zh'; } catch (e) {}
   XA.setLanguage(savedLang);
