@@ -119,12 +119,17 @@ window.SITE_ASSETS = {
       { src: 'assets/videos/tapestry-b.mp4', poster: 'assets/videos/poster-tapestry-b.jpg', cap: '装置展示片段二' },],
   },
   'swarm-wave': {
-    images: [      { src: 'assets/images/works/interactive/swarm-wave/02.jpg', cap: '装置静帧 22s', ratio: 1.7766 },
-{ src: 'assets/images/works/interactive/swarm-wave/01.jpg', cap: '装置静帧 6s', ratio: 1.7766 },
-      { src: 'assets/images/works/interactive/swarm-wave/03.jpg', cap: '装置静帧 42s', ratio: 1.7766 },],
-    rail: [      { src: 'assets/images/works/interactive/swarm-wave/02.jpg', cap: '装置静帧 22s', ratio: 1.7766 },
-{ src: 'assets/images/works/interactive/swarm-wave/01.jpg', cap: '装置静帧 6s', ratio: 1.7766 },
-      { src: 'assets/images/works/interactive/swarm-wave/03.jpg', cap: '装置静帧 42s', ratio: 1.7766 },],
+    images: [
+      { src: 'assets/images/works/interactive/swarm-wave/cover.jpg', cap: '装置主视觉 · 蜂浪', ratio: 0.75 },
+      { src: 'assets/images/works/interactive/swarm-wave/02.jpg', cap: '装置静帧 22s', ratio: 1.7766 },
+      { src: 'assets/images/works/interactive/swarm-wave/01.jpg', cap: '装置静帧 6s', ratio: 1.7766 },
+      { src: 'assets/images/works/interactive/swarm-wave/03.jpg', cap: '装置静帧 42s', ratio: 1.7766 },
+    ],
+    rail: [
+      { src: 'assets/images/works/interactive/swarm-wave/cover.jpg', cap: '装置主视觉 · 蜂浪', ratio: 0.75 },
+      { src: 'assets/images/works/interactive/swarm-wave/02.jpg', cap: '装置静帧 22s', ratio: 1.7766 },
+      { src: 'assets/images/works/interactive/swarm-wave/01.jpg', cap: '装置静帧 6s', ratio: 1.7766 },
+    ],
     videos: [{ src: 'assets/videos/swarm-wave.mp4', poster: 'assets/videos/poster-swarm-wave.jpg', cap: '蜂浪装置展示视频（54 秒完整演示）' },],
   },
   'true-color': {
@@ -140,12 +145,13 @@ window.SITE_ASSETS = {
   },
   'ember-poster': {
     images: [
+      { src: 'assets/videos/poster-ember-1.jpg', cap: '动态海报一 · 黑底主视觉', ratio: 1 },
       { src: 'assets/images/works/viz/ember-poster/01.jpg', cap: '动态海报一信息图', ratio: 1 },
       { src: 'assets/images/works/viz/ember-poster/02.jpg', cap: '动态海报二信息图', ratio: 1 },
     ],
     rail: [
-      { src: 'assets/images/works/viz/ember-poster/01.jpg', cap: '动态海报一信息图', ratio: 1 },
-      { src: 'assets/images/works/viz/ember-poster/02.jpg', cap: '动态海报二信息图', ratio: 1 },
+      { src: 'assets/videos/poster-ember-1.jpg', cap: '动态海报一 · 黑底主视觉', ratio: 1 },
+      { src: 'assets/videos/poster-ember-2.jpg', cap: '动态海报二 · 黑底主视觉', ratio: 1 },
     ],
     videos: [{ src: 'assets/videos/ember-poster-1.mp4', poster: 'assets/videos/poster-ember-1.jpg', cap: '动态海报一 · 音画交互演示' },
       { src: 'assets/videos/ember-poster-2.mp4', poster: 'assets/videos/poster-ember-2.jpg', cap: '动态海报二 · 音画交互演示' },],

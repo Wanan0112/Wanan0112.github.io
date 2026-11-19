@@ -17,14 +17,19 @@
 
   var DATA = window.SITE_DATA || {};
   var ASSETS = window.SITE_ASSETS || {};
-  var IP_IMG = {
-    red: 'assets/images/ip/ip-red.png',
-    yellow: 'assets/images/ip/ip-yellow.png',
-    blue: 'assets/images/ip/ip-blue.png',
-  };
-  function ipImg(theme) {
-    return IP_IMG[theme] || IP_IMG.red;
+
+  // 主题边框装饰：不用小精灵形象，只取三个种族的元素特征
+  // red = 火团子的火焰，yellow = 咸蛋黄的粘液，blue = 蓝泡泡的泡泡
+  function edgeDecor(theme) {
+    var kind = theme === 'yellow' || theme === 'blue' ? theme : 'red';
+    var n = kind === 'blue' ? 6 : 5;
+    var parts = '';
+    for (var i = 0; i < n; i++) {
+      parts += '<i></i>';
+    }
+    return '<span class="edge-decor edge-decor--' + kind + '" aria-hidden="true">' + parts + '</span>';
   }
+
   var $ = function (sel, root) {
     return (root || document).querySelector(sel);
   };
@@ -193,9 +198,7 @@
                 '" alt="' +
                 (im.cap || p.title || '') +
                 '" loading="lazy" />' +
-                '<img class="rail__ip" src="' +
-                ipImg(cat.theme) +
-                '" alt="" aria-hidden="true" />' +
+                edgeDecor(cat.theme) +
                 '<span class="rail__tip"><em>' +
                 (p.category || '') +
                 '</em>' +
@@ -277,9 +280,7 @@
                 '</span>' +
                 '<span class="pcard__cta">查看作品详情 →</span>' +
                 '</div>' +
-                '<img class="pcard__ip" src="' +
-                ipImg(cat.theme) +
-                '" alt="" aria-hidden="true" />' +
+                edgeDecor(cat.theme) +
                 '</button>'
               );
             })
