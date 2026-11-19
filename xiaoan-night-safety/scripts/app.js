@@ -55,6 +55,8 @@ XA.openSheet = function (html) {
   layer.innerHTML = '<div class="modal-backdrop" data-close="1"></div><div class="sheet">' +
     '<div class="drag-handle"></div><button class="sheet-close" data-close="1">' + ic('close') + '</button>' + html + '</div>';
   layer.classList.add('open');
+  var phone = XA.$('#phone');
+  if (phone) phone.classList.add('modal-open');
   XA.bindSheetGestures();
 };
 
@@ -94,6 +96,8 @@ XA.closeModal = function () {
   var frame = layer && layer.querySelector('iframe');
   if (frame) frame.src = 'about:blank';
   layer.classList.remove('open');
+  var phone = XA.$('#phone');
+  if (phone) phone.classList.remove('modal-open');
   setTimeout(function () { if (!layer.classList.contains('open')) layer.innerHTML = ''; }, 320);
 };
 
