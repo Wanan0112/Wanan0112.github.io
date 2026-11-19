@@ -1,0 +1,65 @@
+/* 移植功能：主题 / 登录 / 真实地图 / 设置 */
+
+html[data-theme="amber"]{--mint:#ffc46b;--mint2:#ff9b6b;--amber:#ff9b6b;--blue:#ffd0a3}
+html[data-theme="aurora"]{--mint:#8fb8ff;--mint2:#b9a2ff;--amber:#b9a2ff;--blue:#7ff0d4}
+
+.home-map,.route-map,.nav-map{isolation:isolate}
+.home-map{z-index:0}
+.route-map,.nav-map{z-index:0}
+.xa-leaflet{position:absolute;inset:0;z-index:1;background:#080d14}
+.leaflet-container{font-family:inherit;background:#080d14;outline:none}
+.leaflet-control-attribution,.leaflet-control-zoom{display:none!important}
+.home-map .xa-leaflet{opacity:.8;filter:saturate(.45) brightness(.38)}
+.home-map::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(5,7,13,.28),rgba(5,7,13,.72))}
+.home-map.map-ready .map-blocks,.home-map.map-ready .map-lines,.home-map.map-ready .map-lights,.home-map.map-ready .map-node{opacity:.16;transition:opacity .5s}
+.route-map .xa-leaflet{border-radius:20px;opacity:.9;filter:saturate(.6) brightness(.62)}
+.route-map.map-ready .route-mapsvg{opacity:.12}
+.nav-map .xa-leaflet{opacity:.86;filter:saturate(.5) brightness(.46)}
+.nav-map::after{content:"";position:absolute;inset:0;z-index:401;pointer-events:none;background:linear-gradient(180deg,rgba(5,7,13,.08),rgba(5,7,13,.35))}
+.nav-map .nav-turn,.nav-map .nv-label,.nav-map .nv-user{z-index:500}
+
+.xa-me-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;transform:rotate(var(--heading,0deg));transition:transform .25s}
+.xa-me-icon svg{width:34px;height:34px;filter:drop-shadow(0 0 8px rgba(127,240,212,.8))}
+.xa-sweep{width:100%;height:100%;border-radius:50%;background:conic-gradient(from 0deg,rgba(127,240,212,.38),rgba(127,240,212,.03) 32%,transparent 45%);animation:xaSweep 3.2s linear infinite}
+.xa-point{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:50%}
+@keyframes xaSweep{to{transform:rotate(360deg)}}
+
+/* 主题设置 */
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+.seg button{padding:8px 11px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);font-size:10px}
+.seg button.on{background:var(--mint);border-color:transparent;color:#06251f;font-weight:700}
+.color-row{display:flex;gap:7px;align-items:center;margin:6px 0 10px}
+.color-dot{width:24px;height:24px;border-radius:50%;border:2px solid transparent;box-shadow:0 0 8px currentColor}
+.color-dot.on{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.18),0 0 10px currentColor}
+.setting-line{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.setting-line:last-child{border:0}
+.setting-line span{display:flex;flex-direction:column}
+.setting-line b{font-size:11px;font-weight:600}
+.setting-line small{font-size:9px;color:var(--dim)}
+.toggle{width:40px;height:23px;border-radius:13px;background:rgba(255,255,255,.12);position:relative;flex:none;transition:background .25s}
+.toggle i{position:absolute;left:3px;top:3px;width:17px;height:17px;border-radius:50%;background:#dbe4ee;transition:transform .25s}
+.toggle.on{background:var(--mint)}
+.toggle.on i{transform:translateX(17px);background:#06251f}
+.acct-field{margin:10px 0}
+.acct-field label{display:block;font-size:9px;color:var(--dim);margin-bottom:5px}
+.acct-field input{width:100%;height:42px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);padding:0 12px;outline:none}
+.acct-field input:focus{border-color:rgba(127,240,212,.5)}
+
+/* 登录界面 */
+.login-screen{position:absolute;inset:0;z-index:190;display:flex;flex-direction:column;padding:calc(82px + env(safe-area-inset-top)) 26px calc(28px + env(safe-area-inset-bottom));background:radial-gradient(420px 360px at 50% 20%,rgba(35,58,64,.5),transparent 70%),#05070d;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .35s,transform .35s,visibility .35s}
+.login-screen.open{opacity:1;visibility:visible;transform:none}
+.login-logo{width:86px;height:86px;border-radius:25px;object-fit:cover;box-shadow:0 18px 44px rgba(0,0,0,.5),0 0 34px rgba(255,196,107,.14)}
+.login-title{font-size:26px;font-weight:700;margin-top:22px}
+.login-sub{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.7}
+.login-form{margin-top:26px}
+.login-label{font-size:9px;color:var(--dim);margin:14px 0 6px;display:block}
+.login-input{width:100%;height:48px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--line);padding:0 14px;outline:none;font-size:13px;letter-spacing:.04em}
+.login-input:focus{border-color:rgba(127,240,212,.55);box-shadow:0 0 0 3px rgba(127,240,212,.07)}
+.login-code-row{display:flex;gap:8px}
+.login-code-row .login-input{flex:1}
+.code-btn{width:108px;border-radius:14px;border:1px solid rgba(255,196,107,.35);color:var(--amber);font-size:10px;background:rgba(255,196,107,.08)}
+.login-btn{display:block;width:100%;margin-top:26px;height:52px;border-radius:16px;background:linear-gradient(100deg,#83f5da,#6ce0c8);color:#06251f;font-weight:700;font-size:14px;box-shadow:0 10px 24px rgba(84,225,196,.2)}
+html[data-theme="amber"] .login-btn{background:linear-gradient(100deg,#ffd79a,#ff9b6b)}
+html[data-theme="aurora"] .login-btn{background:linear-gradient(100deg,#a8c9ff,#7ff0d4)}
+.login-skip{display:block;width:100%;margin-top:16px;text-align:center;color:var(--dim);font-size:10px}
+.login-foot{margin-top:auto;text-align:center;font-size:8px;color:#445064;line-height:1.8}
