@@ -127,7 +127,7 @@
 .route-list{padding:0 var(--safe);display:flex;flex-direction:column;gap:9px}
 .route-card{display:flex;align-items:center;gap:10px;width:100%;min-height:92px;padding:11px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);text-align:left;transition:all .25s;position:relative}
 .route-card.selected{background:linear-gradient(100deg,rgba(127,240,212,.1),rgba(127,240,212,.025));border-color:rgba(127,240,212,.38);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 8px 20px rgba(0,0,0,.2)}
-.route-letter{width:32px;height:32px;border-radius:11px;background:rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex:none}
+.route-letter{width:32px;height:32px;border-radius:11px;background:rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex:none;position:relative}
 .selected .route-letter{background:var(--mint);color:#08221c}
 .route-letter small{font-size:6px;font-weight:500}
 .route-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
