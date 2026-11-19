@@ -1,20 +1,20 @@
 XA_SCREENS.entertainment = `
 <section class="screen scroll-screen" data-screen="entertainment">
   <header class="page-head flat">
-    <div class="head-title left"><h2 data-i18n="entertainment">娱乐</h2><small data-i18n="entertainmentSub">夜路很长，让声音陪你走</small></div>
+    <div class="head-title left"><h2 data-i18n="entertainment">伴行</h2><small data-i18n="entertainmentSub">夜路很长，让声音陪你走</small></div>
     <button class="icon-btn" data-action="ar-entry">${ic('glasses')}</button>
   </header>
   <button class="glasses-card glass" data-action="ar-entry">
     <span class="g-logo">${ic('glasses')}</span>
-    <span><b>小安 AR 眼镜</b><small><i class="online-dot"></i>已连接 · 电量 82%</small></span>
+    <span><b>安星 AR 眼镜</b><small><i class="online-dot"></i>已连接 · 电量 82%</small></span>
     <span class="g-modes">眼镜端 歌词 ${ic('chevron')}</span>
   </button>
 
   <div class="player-card glass">
     <div class="player-top"><span class="playing-tag">${ic('music')} <span data-i18n="musicPlaying">正在播放 · 后台播放</span></span><span class="hires">HI-RES</span></div>
     <div class="track-row">
-      <div class="track-info"><h3 id="trackTitle">夜航</h3><small id="trackArtist">小安电台 · 夜行歌单</small><p id="trackLyric">路灯把影子拉得很长</p></div>
-      <div class="vinyl" id="vinyl"><span><b>夜航</b><small>小安电台</small></span></div>
+      <div class="track-info"><h3 id="trackTitle">夜航</h3><small id="trackArtist">安星电台 · 夜行歌单</small><p id="trackLyric">路灯把影子拉得很长</p></div>
+      <div class="vinyl" id="vinyl"><span><b>夜航</b><small>安星电台</small></span></div>
     </div>
     <div class="progress"><span id="trackProgress" style="width:32%"></span></div>
     <div class="progress-time"><span id="trackCurrent">1:42</span><span id="trackDuration">6:12</span></div>
@@ -69,21 +69,21 @@ XA_SCREENS.community = `
   </div>
 
   <button class="topic-banner" data-action="topic">
-    <span class="topic-copy"><small>本期话题 · NIGHT WALK</small><b>夜路故事征集</b><em>分享你的夜行瞬间，赢小安 AR 眼镜</em><span>去分享 ${ic('chevron')}</span></span>
+    <span class="topic-copy"><small>本期话题 · NIGHT WALK</small><b>夜路故事征集</b><em>分享你的夜行瞬间，赢安星 AR 眼镜</em><span>去分享 ${ic('chevron')}</span></span>
     <span class="moon-badge">${ic('moon')}</span>
   </button>
 
-  <div class="section-title"><h3>小安好物</h3><small>社区专享 · 夜行装备</small></div>
+  <div class="section-title"><h3>安星好物</h3><small>社区专享 · 夜行装备</small></div>
   <div class="goods-grid">
-    <button class="good-card" data-goods="AR 眼镜"><span class="hot">HOT</span><span class="good-img">${ic('glasses')}</span><b>小安 AR 眼镜</b><small>3D 导航 · 夜视增强</small><span class="price">¥1,299 <i>12期免息</i></span></button>
-    <button class="good-card" data-goods="随行警报器"><span class="new">NEW</span><span class="good-img red">${ic('siren')}</span><b>小安随行警报器</b><small>120dB · 一键声光</small><span class="price">¥199 <i>已售 2.3k</i></span></button>
+    <button class="good-card" data-goods="AR 眼镜"><span class="hot">HOT</span><span class="good-img">${ic('glasses')}</span><b>安星 AR 眼镜</b><small>3D 导航 · 夜视增强</small><span class="price">¥1,299 <i>12期免息</i></span></button>
+    <button class="good-card" data-goods="随行警报器"><span class="new">NEW</span><span class="good-img red">${ic('siren')}</span><b>安星随行警报器</b><small>120dB · 一键声光</small><span class="price">¥199 <i>已售 2.3k</i></span></button>
   </div>
 
   <div class="section-title"><h3>真实夜行故事</h3><small>1,204 条分享 ${ic('chevron')}</small></div>
   <div class="story-feed" id="storyFeed">
     <article class="story-card" data-cat="local">
       <header><span class="avatar green">晚</span><span><b>林晚</b><small>夜行 3 年 · 杭州</small></span><span class="real-tag">真实经历</span><button class="more-btn" data-action="story-more">•••</button></header>
-      <p>加班到十一点，走滨江路全程有灯。小安一路提醒前方施工，还帮我叫了车。原来夜路也可以很安心。</p>
+      <p>加班到十一点，走滨江路全程有灯。安星一路提醒前方施工，还帮我叫了车。原来夜路也可以很安心。</p>
       <img src="assets/story-road.jpg" alt="夜间滨江路">
       <footer><span>${ic('pin')}滨江路 · 21:18</span><span class="story-actions"><button class="like" data-action="like"><span class="like-ico">${ic('heart')}</span><b>128</b></button><button>${ic('comment')}<b>32</b></button><button>${ic('share')}分享</button></span></footer>
     </article>
@@ -99,11 +99,11 @@ XA_SCREENS.ar = `
 <section class="screen scroll-screen" data-screen="ar">
   <header class="page-head">
     <button class="icon-btn" data-back="entertainment">${ic('back')}</button>
-    <div class="head-title"><h2>小安 AR</h2><small><span data-i18n="arSub">眼镜控制台</span> · XA-0281</small></div>
+    <div class="head-title"><h2>安星 AR</h2><small><span data-i18n="arSub">眼镜控制台</span> · XA-0281</small></div>
     <button class="icon-btn" data-action="ar-settings">${ic('settings')}</button>
   </header>
   <div class="ar-device glass">
-    <div class="ar-device-top"><span class="g-logo sm">${ic('glasses')}</span><span><b>小安 AR 眼镜</b><small>夜行增强版 · 镜架 XA-0281</small></span><span class="connected">已连接</span></div>
+    <div class="ar-device-top"><span class="g-logo sm">${ic('glasses')}</span><span><b>安星 AR 眼镜</b><small>夜行增强版 · 镜架 XA-0281</small></span><span class="connected">已连接</span></div>
     <div class="ar-preview">
       <img src="assets/ar-preview.jpg" alt="AR 眼镜实时镜片画面">
       <button class="ar-full" data-action="ar-full">1080P ⛶</button>
@@ -141,7 +141,7 @@ XA_SCREENS.ar = `
 XA_SCREENS.profile = `
 <section class="screen scroll-screen" data-screen="profile">
   <header class="page-head flat"><div class="head-title left"><h2 data-i18n="profile">我的</h2><small data-i18n="profileSub">守护设置与夜行记录</small></div><button class="icon-btn" data-action="settings">${ic('settings')}</button></header>
-  <div class="profile-card glass"><span class="profile-avatar">安</span><span><b>小安用户</b><small>已连续守护 3 晚 · 杭州</small></span><span class="level">夜行者 Lv.3</span></div>
+  <div class="profile-card glass"><span class="profile-avatar">安</span><span><b>安星用户</b><small>已连续守护 3 晚 · 杭州</small></span><span class="level">夜行者 Lv.3</span></div>
   <div class="stats-row"><div><b>18</b><small>安全行程</small></div><div><b>92</b><small>平均安全分</small></div><div><b>3</b><small>紧急联系人</small></div></div>
   <div class="menu-group">
     <button data-menu="contacts"><span class="menu-ico mint">${ic('users')}</span><span data-i18n="contacts">紧急联系人</span><small>3 位</small>${ic('chevron')}</button>
@@ -159,7 +159,7 @@ XA_SCREENS.profile = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">小安 · 夜行安全系统 V1.5 · 概念设计原型</p>
+  <p class="version">安星 · 夜行安全系统 V1.6 · 概念设计原型</p>
 </section>`;
 
 XA_SCREENS.settings = `
@@ -172,7 +172,7 @@ XA_SCREENS.settings = `
 
   <div class="settings-hero glass">
     <span class="profile-avatar">安</span>
-    <span><b>小安用户</b><small data-i18n="settingsSub">守护偏好与账号</small></span>
+    <span><b>安星用户</b><small data-i18n="settingsSub">守护偏好与账号</small></span>
     <span class="level">Lv.3</span>
   </div>
 
@@ -195,7 +195,7 @@ XA_SCREENS.settings = `
   <div class="settings-block">
     <div class="settings-block-head"><span class="settings-block-ico amber">${ic('glasses')}</span><span><b data-i18n="otherSettings">其他设置</b><small data-i18n="otherSub">关于、设备与帮助</small></span></div>
     <div class="menu-group">
-      <button data-menu="about"><span class="menu-ico blue">${ic('shield')}</span><span data-i18n="about">关于小安</span>${ic('chevron')}</button>
+      <button data-menu="about"><span class="menu-ico blue">${ic('shield')}</span><span data-i18n="about">关于安星</span>${ic('chevron')}</button>
       <button data-menu="device"><span class="menu-ico amber">${ic('glasses')}</span><span data-i18n="device">AR 眼镜设备</span><small>已连接</small>${ic('chevron')}</button>
       <button data-action="feedback"><span class="menu-ico mint">${ic('comment')}</span><span data-i18n="feedback">问题反馈</span><small data-i18n="contactService">联系在线客服</small>${ic('chevron')}</button>
     </div>
@@ -205,5 +205,5 @@ XA_SCREENS.settings = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">小安 · 夜行安全系统 V1.5 · 概念设计原型</p>
+  <p class="version">安星 · 夜行安全系统 V1.6 · 概念设计原型</p>
 </section>`;
