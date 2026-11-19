@@ -18,16 +18,10 @@
   var DATA = window.SITE_DATA || {};
   var ASSETS = window.SITE_ASSETS || {};
 
-  // 主题边框装饰：不用小精灵形象，只取三个种族的元素特征
-  // red = 火团子的火焰，yellow = 咸蛋黄的粘液，blue = 蓝泡泡的泡泡
+  // 手绘涂鸦边框：中间留白、四边密集小图案，素材见 assets/images/borders/
   function edgeDecor(theme) {
     var kind = theme === 'yellow' || theme === 'blue' ? theme : 'red';
-    var n = kind === 'blue' ? 6 : 5;
-    var parts = '';
-    for (var i = 0; i < n; i++) {
-      parts += '<i></i>';
-    }
-    return '<span class="edge-decor edge-decor--' + kind + '" aria-hidden="true">' + parts + '</span>';
+    return '<span class="edge-decor edge-decor--' + kind + '" aria-hidden="true"></span>';
   }
 
   var $ = function (sel, root) {
