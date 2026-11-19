@@ -34,21 +34,14 @@ XA_SCREENS.entertainment = `
     <span class="lyric-bars"><i></i><i></i><i></i><i></i><i></i></span>
   </div>
 
-  <div class="section-title"><h3 data-i18n="nightVideo">夜行影像</h3><small data-i18n="onlineVideo">免费素材 · 点击播放</small></div>
-  <button class="video-card" data-action="video" data-video="0">
-    <img src="assets/video-night.jpg" alt="雨夜街道视频封面">
-    <span class="video-play">${ic('play')}</span>
-    <span class="video-info"><b>雨夜归途 · 城市有光</b><small data-i18n="onlineVideo">Pexels 免费素材 · 点击播放</small></span>
-    <span class="video-progress"></span>
-    <span class="video-saved">在线播放 · 建议 Wi-Fi</span>
-  </button>
-  <button class="video-card video-card-2" data-action="video" data-video="1">
-    <img src="assets/ar-preview.jpg" alt="城市夜景视频封面">
-    <span class="video-play">${ic('play')}</span>
-    <span class="video-info"><b>夜色城市 · 车流延时</b><small data-i18n="onlineVideo">Pexels 免费素材 · 点击播放</small></span>
-    <span class="video-progress"></span>
-    <span class="video-saved">在线播放 · 建议 Wi-Fi</span>
-  </button>
+  <div class="section-title"><h3 data-i18n="nightVideo">伴行视频</h3><small data-i18n="douyinFeatured">抖音精选</small></div>
+  <div class="douyin-account glass">
+    <span class="dy-logo">${ic('play')}</span>
+    <span><b data-i18n="douyin">抖音</b><small id="douyinAccountSub" data-i18n="douyinLoginSub">登录后可播放抖音精选视频</small></span>
+    <button id="douyinAccountBtn" data-action="douyin-login" data-i18n="douyinLogin">登录抖音</button>
+  </div>
+  <div class="douyin-grid" id="douyinVideoGrid"></div>
+  <button class="douyin-add" data-action="douyin-add">${ic('plus')}<span data-i18n="douyinAdd">添加我的抖音视频</span>${ic('chevron')}</button>
 
   <div class="playlists">
     <button class="playlist p1" data-track="夜行歌单"><span>${ic('music')}</span><b>夜行歌单</b><small>32 首 · 陪你走完这段路</small>${ic('play','pl')}</button>
@@ -159,7 +152,7 @@ XA_SCREENS.profile = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">安星 · 夜行安全系统 V1.6 · 概念设计原型</p>
+  <p class="version">安星 · 夜行安全系统 V1.7 · 概念设计原型</p>
 </section>`;
 
 XA_SCREENS.settings = `
@@ -205,5 +198,5 @@ XA_SCREENS.settings = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">安星 · 夜行安全系统 V1.6 · 概念设计原型</p>
+  <p class="version">安星 · 夜行安全系统 V1.7 · 概念设计原型</p>
 </section>`;
