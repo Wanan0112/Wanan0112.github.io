@@ -126,7 +126,7 @@
       .join('');
   }
 
-  // 全部作品：横向流动相片带（严格按「一级目录 → 二级目录」分组）
+  // 全部作品：严格按一级目录分组；每个二级项目只出现一次
   function renderGroups() {
     var wrap = $('#boardAll');
     if (!wrap) return;
@@ -136,38 +136,13 @@
         var items = (cat.projects || []).map(projectById).filter(Boolean);
         if (!items.length) return '';
 
-        // 该分类下所有项目的代表图（轨道卡片）
-        var cards = [];
-        var seq = 0;
-        items.forEach(function (p) {
-          var rail = projectAssets(p).rail || [];
-          rail.forEach(function (im) {
-            cards.push(
-              '<button class="rail__card" type="button" data-project="' +
-              p.id +
-              '" style="--i:' +
-              seq +
-              '">' +
-              '<img src="' +
-              im.src +
-              '" alt="' +
-              (p.title || '') +
-              ' · ' +
-              (im.cap || '') +
-              '" loading="lazy" />' +
-              '<span class="rail__tip"><em>' +
-              (p.category || '') +
-              '</em>' +
-              (p.title || '') +
-              '<i>' +
-              (im.cap || '') +
-              '</i></span>' +
-              '</button>'
-            );
-            seq++;
-          });
+        // 去重：同一个项目只在一栏里出现一次
+        var seen = {};
+        items = items.filter(function (p) {
+          if (seen[p.id]) return false;
+          seen[p.id] = 1;
+          return true;
         });
-        if (!cards.length) return '';
 
         var vcount = 0;
         var picount = 0;
@@ -177,12 +152,9 @@
           picount += (a.images || []).length;
         });
 
-        return (
-          '<section class="rail-group" data-cat="' +
-          cat.cat +
-          '">' +
-          '<div class="rail-group__head">' +
-          '<h3 class="board-label" data-reveal>' +
+        var head =
+          '<div class="work-group__head" data-reveal>' +
+          '<h3 class="board-label">' +
           cat.label +
           ' <span class="board-label__n">' +
           items.length +
@@ -191,18 +163,109 @@
           ' 张图' +
           (vcount ? ' · ' + vcount + ' 段视频' : '') +
           '</span></h3>' +
-          '<p class="work-cat__desc" data-reveal>' +
+          '<p class="work-cat__desc">' +
           (cat.desc || '') +
           '</p>' +
-          '</div>' +
-          '<div class="rail" data-rail>' +
-          '<div class="rail__viewport">' +
-          '<div class="rail__track">' +
-          '<div class="rail__set">' +
-          cards.join('') +
-          '</div>' +
-          '</div>' +
-          '</div>' +
+          '</div>';
+
+        // 展板：保留横向相片带（15 张展板各为独立作品）
+        if (cat.cat === '展板') {
+          var railCards = [];
+          var seq = 0;
+          items.forEach(function (p) {
+            (projectAssets(p).rail || []).forEach(function (im) {
+              railCards.push(
+                '<button class="rail__card" type="button" data-project="' +
+                p.id +
+                '" style="--i:' +
+                seq +
+                '">' +
+                '<img src="' +
+                im.src +
+                '" alt="' +
+                (im.cap || p.title || '') +
+                '" loading="lazy" />' +
+                '<span class="rail__tip"><em>' +
+                (p.category || '') +
+                '</em>' +
+                (p.title || '') +
+                '<i>' +
+                (im.cap || '') +
+                '</i></span>' +
+                '</button>'
+              );
+              seq++;
+            });
+          });
+          return (
+            '<section class="work-group rail-group" data-cat="' +
+            cat.cat +
+            '">' +
+            head +
+            '<div class="rail" data-rail>' +
+            '<div class="rail__viewport">' +
+            '<div class="rail__track">' +
+            '<div class="rail__set">' +
+            railCards.join('') +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</section>'
+          );
+        }
+
+        // 其他分类：一个作品一张卡，点击查看完整内容
+        return (
+          '<section class="work-group" data-cat="' +
+          cat.cat +
+          '">' +
+          head +
+          '<div class="proj-grid" style="--cols:' +
+          Math.min(items.length, 3) +
+          '">' +
+          items
+            .map(function (p) {
+              var a = projectAssets(p);
+              var cover = (a.rail && a.rail[0]) || (a.images && a.images[0]) || {};
+              var vc = (a.videos || []).length;
+              return (
+                '<button class="pcard" type="button" data-project="' +
+                p.id +
+                '">' +
+                '<div class="pcard__media" style="--ar:' +
+                (cover.ratio || 1.5) +
+                '">' +
+                '<img src="' +
+                (cover.src || '') +
+                '" alt="' +
+                (p.title || '') +
+                '" loading="lazy" />' +
+                '<span class="pcard__badge">' +
+                (a.images || []).length +
+                ' 张图' +
+                (vc ? ' · ' + vc + ' 视频' : '') +
+                '</span>' +
+                '</div>' +
+                '<div class="pcard__body">' +
+                '<span class="pcard__cat">' +
+                (p.category || '') +
+                '</span>' +
+                '<h4 class="pcard__title">' +
+                (p.title || '') +
+                '</h4>' +
+                '<p class="pcard__sub">' +
+                (p.subtitle || '') +
+                '</p>' +
+                '<span class="pcard__path">' +
+                (p.folder || '') +
+                '</span>' +
+                '<span class="pcard__cta">查看作品详情 →</span>' +
+                '</div>' +
+                '</button>'
+              );
+            })
+            .join('') +
           '</div>' +
           '</section>'
         );
@@ -657,8 +720,8 @@
         b.classList.toggle('is-active', b === btn);
       });
       var key = btn.dataset.filter;
-      // 只筛选分类作品轨道
-      $$('.rail-group').forEach(function (group) {
+      // 筛选一级目录分组（含展板相片带）
+      $$('.work-group').forEach(function (group) {
         var match = key === '全部' || (group.dataset.cat || '') === key;
         group.style.display = match ? '' : 'none';
       });
