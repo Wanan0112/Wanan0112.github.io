@@ -20,7 +20,7 @@ XA_SCREENS.home = `
   </div>
 
   <button class="home-search" data-action="search">
-    ${ic('search')}<span data-destination>搜索目的地、公交站</span>${ic('mic','mic')}
+    ${ic('search')}<span data-destination data-i18n="searchHint">搜索目的地、公交站</span>${ic('mic','mic')}
   </button>
 
   <div class="home-floats">
@@ -37,9 +37,9 @@ XA_SCREENS.home = `
   </div>
 
   <div class="map-mode-pop" id="mapModePop">
-    <div class="rp-head"><b>地图设置</b><button data-action="close-map-mode">${ic('close')}</button></div>
-    <small>视角</small><div class="seg"><button data-map-mode="2d" class="on">2D</button><button data-map-mode="3d">3D</button></div>
-    <small>底图</small><div class="seg"><button data-base-map="standard" class="on">标准</button><button data-base-map="satellite">卫星</button></div>
+    <div class="rp-head"><b data-i18n="mapSettings">地图设置</b><span class="rp-head-actions"><button class="map-cancel" data-action="close-map-mode" data-i18n="cancel">取消</button><button data-action="close-map-mode" aria-label="关闭">${ic('close')}</button></span></div>
+    <small data-i18n="view">视角</small><div class="seg"><button data-map-mode="2d" class="on">2D</button><button data-map-mode="3d">3D</button></div>
+    <small data-i18n="basemap">底图</small><div class="seg"><button data-base-map="standard" class="on" data-i18n="standard">标准</button><button data-base-map="satellite" data-i18n="satellite">卫星</button></div>
   </div>
 
   <div class="route-panel" id="routePanel">
@@ -73,7 +73,7 @@ XA_SCREENS.route = `
 <section class="screen" data-screen="route">
   <header class="page-head">
     <button class="icon-btn" data-back="home">${ic('back')}</button>
-    <div class="head-title"><h2>路线安全分析</h2><small>已按安全优先排序</small></div>
+    <div class="head-title"><h2 data-i18n="routeAnalysis">路线安全分析</h2><small data-i18n="routeSub">已按安全优先排序</small></div>
     <button class="icon-btn" data-action="share-trip">${ic('share')}</button>
   </header>
   <div class="route-dest">${ic('route')}<span>到 <b data-destination>滨江花园</b> · 东南门</span><span class="sep">|</span><span>3 条路线</span></div>
