@@ -37,13 +37,18 @@ XA.I18N = {
     clearHistory: '清空', recommendPlaces: '推荐地点', recommendHint: '附近安全且高评分的去处',
     swipeUpTip: '上滑查看附近推荐地点', nearbySafe: '安全优先 · 附近守护点', nearbyTop: '附近高分去处',
     searchSheetSub: '输入关键词搜索真实地点，或使用下方地址',
-    douyin: '抖音', douyinLogin: '登录抖音', douyinLoggedIn: '已登录抖音', douyinLoginSub: '登录后可播放抖音精选视频',
+    douyin: '抖音', douyinLogin: '登录抖音账号', douyinLoggedIn: '已登录抖音账号', douyinLoginSub: '登录后可播放抖音精选视频',
     douyinPhone: '手机号', douyinCode: '验证码', douyinGetCode: '获取验证码', douyinLoginBtn: '登录并继续',
     douyinQr: '扫码登录', douyinQrTip: '请使用抖音 App 扫描二维码（演示）', douyinLoginRequired: '请先登录抖音账号',
     douyinFeatured: '抖音精选', douyinAdd: '添加我的抖音视频', douyinAddSub: '粘贴抖音视频长链接或 19 位视频 ID',
     douyinAddBtn: '添加并收藏', douyinOpen: '在抖音打开', douyinNoCustom: '还没有添加自己的视频',
-    douyinLogout: '退出抖音', douyinPlayTip: '视频由抖音官方播放器提供；若平台限制显示，请在抖音打开。',
-    douyinCustom: '我的收藏'
+    douyinLogout: '退出抖音', douyinPlayTip: '视频播放全程留在安星，底部 SOS 始终可用。',
+    douyinCustom: '我的收藏', videoSubtitle: '接入抖音开放能力，APP 内沉浸式刷短视频，不离开安星',
+    douyinQuickLogin: '抖音快捷登录入口', refreshVideos: '换一批', videoSafety: '导航中 · 安全分 92 · 感知开启',
+    swipeVideo: '上滑看下一个', prevVideo: '上一个', nextVideo: '下一个',
+    syncFavorites: '同步我的收藏', syncLikes: '同步我的喜欢', pasteLink: '粘贴视频链接添加',
+    syncFavoritesTip: '演示同步：将用户收藏 / 喜欢列表中的视频加入伴行页。真实环境需抖音 OAuth 授权。',
+    noFavorites: '还没有同步收藏视频', videoLoadFail: '视频加载失败，请重试或切换下一条'
   },
   en: {
     nav: 'Navigate', entertainment: 'Companion', community: 'Community', profile: 'Me', sos: 'Emergency',
@@ -88,8 +93,13 @@ XA.I18N = {
     douyinQr: 'QR sign-in', douyinQrTip: 'Scan this QR code in the Douyin app (demo)', douyinLoginRequired: 'Please sign in to Douyin first',
     douyinFeatured: 'Douyin picks', douyinAdd: 'Add my Douyin video', douyinAddSub: 'Paste a full Douyin video link or 19-digit video ID',
     douyinAddBtn: 'Add & save', douyinOpen: 'Open in Douyin', douyinNoCustom: 'No saved videos yet',
-    douyinLogout: 'Sign out', douyinPlayTip: 'Powered by the official Douyin player. If playback is restricted, open it in Douyin.',
-    douyinCustom: 'My collection'
+    douyinLogout: 'Sign out', douyinPlayTip: 'Videos stay inside Anxing. The bottom SOS button is always available.',
+    douyinCustom: 'My collection', videoSubtitle: 'Powered by Douyin. Watch immersive short videos without leaving Anxing.',
+    douyinQuickLogin: 'Quick sign-in with Douyin', refreshVideos: 'Refresh', videoSafety: 'Navigating · Safety 92 · Sensing on',
+    swipeVideo: 'Swipe up for next', prevVideo: 'Previous', nextVideo: 'Next',
+    syncFavorites: 'Sync my favorites', syncLikes: 'Sync my liked videos', pasteLink: 'Add by pasting a link',
+    syncFavoritesTip: 'Demo sync: adds videos from favorites / likes. Real sync requires Douyin OAuth.',
+    noFavorites: 'No saved videos yet', videoLoadFail: 'Video failed to load. Retry or switch to the next one.'
   }
 };
 XA.lang = 'zh';
@@ -129,11 +139,25 @@ XA.tracks = [
   { title: '雨夜白噪音', artist: 'SoundImage · 环境声', lyric: '街声落在伞上，脚步轻轻', duration: 20, src: 'https://soundimage.org/wp-content/uploads/2022/06/Street-Ambience_6-6-22.mp3' }
 ];
 XA.videos = [
-  { title: '夜骑陆家嘴外滩 · 江边夜景', id: '7358621438187718668', author: '抖音精选', note: '#夜骑打卡 #江边夜景', cover: 'assets/video-night.jpg' },
-  { title: '城市夜色 · 灯光漫游', id: '7583346692204924160', author: '抖音精选', note: '#城市夜景 #出行陪伴', cover: 'assets/ar-preview.jpg' }
+  { title: '林间庇护所 · 慢节奏建造', id: '7358621438187718668', author: '抖音精选', tags: '#荒野建造 #解压', coverClass: 'cover-shelter', coverWord: '林间小屋', icon: 'shield' },
+  { title: '深夜食堂 · 一碗热汤面', id: '7583346692204924160', author: '抖音精选', tags: '#吃播 #深夜治愈', coverClass: 'cover-food', coverWord: '热气腾腾', icon: 'pin' },
+  { title: '手工皂切割 · 超解压 ASMR', id: '7358621438187718668', author: '抖音精选', tags: '#解压 #ASMR', coverClass: 'cover-asmr', coverWord: '一刀下去', icon: 'music' },
+  { title: '雨落帐篷 · 篝火露营', id: '7583346692204924160', author: '抖音精选', tags: '#露营 #雨声白噪音', coverClass: 'cover-camp', coverWord: '雨夜篝火', icon: 'glasses' },
+  { title: 'AI 爽剧 · 雨夜逆袭', id: '7358621438187718668', author: '抖音精选', tags: '#AI短剧 #爽剧', coverClass: 'cover-drama', coverWord: '反转来袭', icon: 'play' },
+  { title: '猫咪打盹 · 治愈陪伴', id: '7583346692204924160', author: '抖音精选', tags: '#萌宠 #治愈', coverClass: 'cover-cat', coverWord: '慢一点', icon: 'users' },
+  { title: '木作小屋 · 一钉一木', id: '7358621438187718668', author: '抖音精选', tags: '#木工 #手作', coverClass: 'cover-wood', coverWord: '慢慢造', icon: 'settings' },
+  { title: '霓虹散步 · 城市灯光', id: '7583346692204924160', author: '抖音精选', tags: '#城市漫游 #灯光', coverClass: 'cover-city', coverWord: '温柔夜色', icon: 'navigation' }
 ];
+XA.videoOrder = XA.videos.map(function (_, i) { return i; });
+XA.videoTab = 'featured';
+XA._videoFeed = XA.videos.slice();
 XA.douyin = { loggedIn: false, phone: '', nickname: '抖音用户', code: '' };
 XA.douyinVideos = [];
+XA.douyinFavoritesDemo = [
+  { title: '我的收藏 · 木屋建造合集', id: '7358621438187718668', author: '我的喜欢', tags: '#收藏 #建造', coverClass: 'cover-wood', coverWord: '我的收藏', icon: 'shield' },
+  { title: '我的收藏 · 夜宵治愈瞬间', id: '7583346692204924160', author: '我的喜欢', tags: '#收藏 #美食', coverClass: 'cover-food', coverWord: '我的喜欢', icon: 'pin' },
+  { title: '我的收藏 · 解压手工课', id: '7358621438187718668', author: '我的收藏', tags: '#收藏 #手工', coverClass: 'cover-asmr', coverWord: '慢慢看', icon: 'music' }
+];
 function dyEsc(s) {
   return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
@@ -165,15 +189,64 @@ XA.renderDouyinAccount = function () {
 XA.renderDouyinVideos = function () {
   var grid = XA.$('#douyinVideoGrid');
   if (!grid) return;
-  var all = XA.videos.concat(XA.douyinVideos || []);
-  grid.innerHTML = all.map(function (v, i) {
-    var mine = i >= XA.videos.length;
-    return '<button class="douyin-card" data-action="video" data-video="' + i + '">' +
-      '<img src="' + (v.cover || 'assets/story-road.jpg') + '" alt="' + dyEsc(v.title) + '">' +
+  var mine = XA.videoTab === 'favorites';
+  var list = mine ? (XA.douyinVideos || []) : XA.videoOrder.map(function (i) { return XA.videos[i]; }).filter(Boolean);
+  XA._videoFeed = list;
+  if (!list.length) {
+    grid.innerHTML = '<button class="dy-empty" data-action="douyin-add">' + ic('play') +
+      '<b data-i18n="noFavorites">还没有同步收藏视频</b><small data-i18n="syncFavoritesTip">演示同步：将用户收藏 / 喜欢列表中的视频加入伴行页。</small></button>';
+    return;
+  }
+  grid.innerHTML = list.map(function (v, i) {
+    return '<button class="douyin-card" data-action="video" data-video="' + i + '" data-source="' + (mine ? 'favorites' : 'featured') + '">' +
+      '<span class="dy-cover ' + (v.coverClass || 'cover-default') + '"><span class="dy-cover-ico">' + ic(v.icon || 'play') + '</span>' +
+      '<span class="dy-cover-word">' + dyEsc(v.coverWord || '放松一下') + '</span></span>' +
       '<span class="dy-play">' + ic('play') + '</span>' +
-      '<span class="dy-info"><b>' + dyEsc(v.title) + '</b><small>' + dyEsc(v.author || '抖音') + ' · ' + dyEsc(v.note || '') + '</small></span>' +
+      '<span class="dy-info"><b>' + dyEsc(v.title) + '</b><small>' + dyEsc(v.tags || v.author || '') + '</small></span>' +
       '<span class="dy-badge' + (mine ? ' mine' : '') + '">' + (mine ? XA.t('douyinCustom') : XA.t('douyinFeatured')) + '</span></button>';
   }).join('');
+  XA.$$('[data-action="douyin-tab"]').forEach(function (el) {
+    el.classList.toggle('active', el.dataset.tabType === XA.videoTab);
+  });
+};
+XA.refreshFeaturedVideos = function () {
+  XA.videoOrder = XA.videos.map(function (_, i) { return i; });
+  for (var i = XA.videoOrder.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = XA.videoOrder[i]; XA.videoOrder[i] = XA.videoOrder[j]; XA.videoOrder[j] = t;
+  }
+  XA.videoTab = 'featured';
+  XA.renderDouyinVideos();
+};
+XA.currentVideoIndex = 0;
+XA.openVideo = function (index) {
+  var list = XA._videoFeed || XA.videos;
+  var i = Math.max(0, Math.min(list.length - 1, Number(index) || 0));
+  var v = list[i];
+  if (!v) return;
+  XA.currentVideoIndex = i;
+  XA.openSheet('<div class="video-safety">' + ic('shield') + '<span data-i18n="videoSafety">导航中 · 安全分 92 · 感知开启</span><span class="video-live">LIVE</span></div>' +
+    '<div class="douyin-player-wrap" id="douyinPlayerWrap">' +
+    '<div class="douyin-player"><iframe src="https://open.douyin.com/player/video?vid=' + dyEsc(v.id) + '&autoplay=0" frameborder="0" referrerpolicy="unsafe-url" allowfullscreen loading="lazy"></iframe></div>' +
+    '<button class="dy-nav prev" data-action="video-nav" data-step="-1">' + ic('back') + '<span data-i18n="prevVideo">上一个</span></button>' +
+    '<button class="dy-nav next" data-action="video-nav" data-step="1">' + ic('chevron') + '<span data-i18n="nextVideo">下一个</span></button></div>' +
+    '<div class="video-sheet-meta"><b>' + dyEsc(v.title) + '</b><small>' + dyEsc(v.tags || v.author || '') + '</small></div>' +
+    '<div class="video-sheet-actions">' +
+    '<button data-action="video-nav" data-step="-1">' + ic('back') + '<span data-i18n="prevVideo">上一个</span></button>' +
+    '<button data-action="video-nav" data-step="1">' + ic('play') + '<span data-i18n="swipeVideo">上滑看下一个</span></button></div>' +
+    '<p class="sheet-note">' + XA.t('douyinPlayTip') + '</p>');
+  var sheet = XA.$('#modalLayer .sheet');
+  if (sheet) sheet.classList.add('video-sheet');
+  var wrap = XA.$('#douyinPlayerWrap');
+  if (wrap) {
+    var startY = 0;
+    wrap.addEventListener('pointerdown', function (e) { startY = e.clientY; });
+    wrap.addEventListener('pointerup', function (e) {
+      var dy = e.clientY - startY;
+      if (dy < -50) XA.actions['video-nav']({ dataset: { step: '1' } });
+      else if (dy > 50) XA.actions['video-nav']({ dataset: { step: '-1' } });
+    });
+  }
 };
 XA.trackIndex = 0;
 XA.progressSec = 102;
@@ -379,7 +452,7 @@ XA.actions = {
       '<button class="primary-btn" data-action="shared">确认分享行程</button>');
   },
   shared: function () { XA.closeModal(); XA.toast('行程已分享给 3 位紧急联系人'); },
-  sos: function () { XA.showSosConfirm(); },
+  sos: function () { XA.closeModal(); XA.showSosConfirm(); },
   'sos-guide': function () {
     XA.openSheet('<h3>求助与兜底</h3><div class="sheet-sub">所有自动动作可取消、可解释、可关闭</div>' +
       '<div class="option-row">' + ic('phone') + '<span><b>无法自动呼叫 110</b><small>会显示“请点击拨号”，不做虚假承诺</small></span></div>' +
@@ -415,13 +488,24 @@ XA.actions = {
       XA.actions['douyin-login']();
       return;
     }
-    var list = XA.videos.concat(XA.douyinVideos || []);
-    var v = list[parseInt((el && el.dataset.video) || '0', 10)] || list[0];
-    XA.openSheet('<h3>' + dyEsc(v.title) + '</h3><div class="sheet-sub">' + dyEsc(v.author || '抖音') + ' · ' + dyEsc(v.note || '') + '</div>' +
-      '<div class="douyin-player"><iframe src="https://open.douyin.com/player/video?vid=' + dyEsc(v.id) + '&autoplay=0" frameborder="0" referrerpolicy="unsafe-url" allowfullscreen loading="lazy"></iframe></div>' +
-      '<button class="option-row" data-action="douyin-open" data-id="' + dyEsc(v.id) + '">' + ic('share') +
-      '<span><b data-i18n="douyinOpen">在抖音打开</b><small>' + dyEsc(v.id) + '</small></span></button>' +
-      '<p class="sheet-note">' + XA.t('douyinPlayTip') + '</p>');
+    XA.openVideo(parseInt((el && el.dataset.video) || '0', 10));
+  },
+  'video-nav': function (el) {
+    var step = parseInt((el && el.dataset.step) || '1', 10);
+    var next = XA.currentVideoIndex + step;
+    var len = (XA._videoFeed || []).length;
+    if (!len) return;
+    if (next < 0) next = len - 1;
+    if (next >= len) next = 0;
+    XA.openVideo(next);
+  },
+  'douyin-tab': function (el) {
+    XA.videoTab = (el && el.dataset.tabType === 'favorites') ? 'favorites' : 'featured';
+    XA.renderDouyinVideos();
+  },
+  'douyin-refresh': function () {
+    XA.refreshFeaturedVideos();
+    XA.toast(XA.lang === 'en' ? 'Fresh videos loaded' : '已为你换一批放松视频');
   },
   'douyin-login': function () {
     if (XA.douyin.loggedIn) {
@@ -480,7 +564,27 @@ XA.actions = {
     XA.toast('已退出抖音（演示）');
   },
   'douyin-add': function () {
-    XA.openSheet('<h3 data-i18n="douyinAdd">添加我的抖音视频</h3><div class="sheet-sub" data-i18n="douyinAddSub">粘贴抖音视频长链接或 19 位视频 ID</div>' +
+    if (!XA.douyin.loggedIn) {
+      XA.toast(XA.t('douyinLoginRequired'));
+      XA.actions['douyin-login']();
+      return;
+    }
+    XA.openSheet('<h3 data-i18n="douyinAdd">添加我的抖音视频</h3><div class="sheet-sub" data-i18n="syncFavoritesTip">演示同步：将用户收藏 / 喜欢列表中的视频加入伴行页。</div>' +
+      '<button class="option-row" data-action="douyin-sync" data-sync="favorites">' + ic('shield') + '<span><b data-i18n="syncFavorites">同步我的收藏</b><small>3 条 · 户外 / 美食 / 手工</small></span></button>' +
+      '<button class="option-row" data-action="douyin-sync" data-sync="likes">' + ic('play') + '<span><b data-i18n="syncLikes">同步我的喜欢</b><small>3 条 · 治愈 / 放松 / 轻剧情</small></span></button>' +
+      '<button class="option-row" data-action="douyin-add-link">' + ic('plus') + '<span><b data-i18n="pasteLink">粘贴视频链接添加</b><small data-i18n="douyinAddSub">粘贴抖音视频长链接或 19 位视频 ID</small></span></button>');
+  },
+  'douyin-sync': function (el) {
+    var type = (el && el.dataset.sync === 'likes') ? 'likes' : 'favorites';
+    XA.douyinVideos = XA.douyinFavoritesDemo.map(function (v, i) {
+      return Object.assign({}, v, { title: (type === 'likes' ? '我的喜欢 · ' : '我的收藏 · ') + v.title.replace(/^我的(收藏|喜欢)\s*·\s*/, ''), id: i % 2 === 0 ? '7358621438187718668' : '7583346692204924160' });
+    });
+    XA.videoTab = 'favorites';
+    XA.saveDouyinVideos(); XA.renderDouyinVideos(); XA.closeModal();
+    XA.toast(type === 'likes' ? '已同步我的喜欢' : '已同步我的收藏');
+  },
+  'douyin-add-link': function () {
+    XA.openSheet('<h3 data-i18n="pasteLink">粘贴视频链接添加</h3><div class="sheet-sub" data-i18n="douyinAddSub">粘贴抖音视频长链接或 19 位视频 ID</div>' +
       '<input class="login-input" id="douyinLink" placeholder="https://www.douyin.com/video/…">' +
       '<label class="login-label">标题</label><input class="login-input" id="douyinTitle" placeholder="例如：夜骑西湖">' +
       '<button class="primary-btn" data-action="douyin-save" data-i18n="douyinAddBtn">添加并收藏</button>' +
@@ -491,14 +595,11 @@ XA.actions = {
     var title = ((XA.$('#douyinTitle') || {}).value || '').trim();
     var id = XA.parseDouyinId(raw);
     if (!id) { XA.toast('未识别视频 ID，请粘贴完整链接或 19 位数字'); return; }
-    XA.douyinVideos.unshift({ title: title || '我的抖音视频 · ' + id.slice(-6), id: id, author: XA.douyin.nickname, note: XA.t('douyinCustom'), cover: 'assets/story-road.jpg' });
+    XA.douyinVideos.unshift({ title: title || '我的抖音视频 · ' + id.slice(-6), id: id, author: XA.douyin.nickname, tags: XA.t('douyinCustom'), coverClass: 'cover-default', coverWord: '我的视频', icon: 'play' });
     XA.douyinVideos = XA.douyinVideos.slice(0, 12);
+    XA.videoTab = 'favorites';
     XA.saveDouyinVideos(); XA.renderDouyinVideos(); XA.closeModal();
     XA.toast('视频已加入我的收藏');
-  },
-  'douyin-open': function (el) {
-    var id = (el && el.dataset.id) || '';
-    if (id) window.open('https://www.douyin.com/video/' + id, '_blank');
   },
   'community-search': function () { XA.toast('社区搜索：夜路、路灯、AR 眼镜'); },
   topic: function () { XA.toast('话题已展开 · 夜路故事征集'); },
@@ -629,7 +730,7 @@ XA.menuSheets = {
   history: ['守护记录', '已完成 18 段安全行程 · 1 次误报取消'],
   privacy: ['隐私与权限', '位置仅使用期间 · 麦克风端侧处理 · 可随时撤回'],
   device: ['AR 眼镜设备', 'XA-0281 已连接 · 电量 82% · 配对信息本地加密'],
-  about: ['关于安星', '安星 · 夜行安全系统 V1.7 · 概念设计原型']
+  about: ['关于安星', '安星 · 夜行安全系统 V1.8 · 概念设计原型']
 };
 
 XA.bindPageEvents = function () {
