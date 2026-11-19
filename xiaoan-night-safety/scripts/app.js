@@ -55,6 +55,34 @@ XA.openSheet = function (html) {
   layer.innerHTML = '<div class="modal-backdrop" data-close="1"></div><div class="sheet">' +
     '<div class="drag-handle"></div><button class="sheet-close" data-close="1">' + ic('close') + '</button>' + html + '</div>';
   layer.classList.add('open');
+  XA.bindSheetGestures();
+};
+
+XA.bindSheetGestures = function () {
+  var sheet = XA.$('#modalLayer .sheet');
+  if (!sheet) return;
+  var startY = 0, dy = 0, dragging = false;
+  sheet.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'mouse') return;
+    if (sheet.scrollTop > 4 && e.clientY > sheet.getBoundingClientRect().top + 70) return;
+    startY = e.clientY; dy = 0; dragging = true;
+    sheet.classList.add('dragging');
+  });
+  sheet.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    dy = Math.max(0, e.clientY - startY);
+    sheet.style.transform = 'translateY(' + dy + 'px)';
+  });
+  function end() {
+    if (!dragging) return;
+    dragging = false;
+    sheet.classList.remove('dragging');
+    sheet.style.transform = '';
+    if (dy > 90) XA.closeModal();
+    dy = 0;
+  }
+  sheet.addEventListener('pointerup', end);
+  sheet.addEventListener('pointercancel', end);
 };
 
 XA.closeModal = function () {
@@ -76,7 +104,13 @@ XA.hold = function (el, ms, done) {
     if (!start) start = now;
     var p = Math.min(1, (now - start) / ms);
     if (fill) fill.style.width = (p * 100) + '%';
-    if (p >= 1) { active = false; done(); return; }
+    if (p >= 1) {
+      active = false;
+      el.dataset.held = '1';
+      setTimeout(function () { delete el.dataset.held; }, 500);
+      done();
+      return;
+    }
     raf = requestAnimationFrame(step);
   }
   function down() {
@@ -133,6 +167,9 @@ XA.showSosConfirm = function () {
 
 XA.fireAlarm = function () {
   XA.alarm = true;
+  var nav = XA.$('.nav-session');
+  if (nav) nav.remove();
+  clearInterval(XA.navTimer);
   XA.go('sos', true);
   var sec = 3;
   var t = XA.$('#alarmTimer');
@@ -181,6 +218,13 @@ XA.initClock = function () {
 
 XA.bindGlobalEvents = function () {
   document.addEventListener('click', function (e) {
+    var held = e.target.closest('[data-held]');
+    if (held) {
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      delete held.dataset.held;
+      return;
+    }
     var close = e.target.closest('[data-close]');
     if (close) { XA.closeModal(); return; }
     var tab = e.target.closest('[data-tab]');
@@ -208,4 +252,21 @@ XA.init = function () {
   if (XA.bindPageEvents) XA.bindPageEvents();
   var requested = new URLSearchParams(location.search).get('screen');
   XA.go(XA_SCREENS[requested] ? requested : 'home', true);
+  XA.playSplash();
+};
+
+XA.playSplash = function () {
+  var splash = XA.$('#splash');
+  var status = XA.$('#splashStatus');
+  if (!splash) return;
+  var stages = [
+    [650, '正在校准夜路数据…'],
+    [1350, 'AI 小安正在守护…'],
+    [2050, '准备就绪 · 出发吧']
+  ];
+  stages.forEach(function (s) {
+    setTimeout(function () { if (status) status.textContent = s[1]; }, s[0]);
+  });
+  setTimeout(function () { splash.classList.add('done'); }, 2450);
+  setTimeout(function () { if (splash.parentNode) splash.remove(); }, 3200);
 };
