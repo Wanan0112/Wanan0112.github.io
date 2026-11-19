@@ -32,7 +32,11 @@ XA.I18N = {
     contactService: '联系在线客服', serviceTitle: '在线客服', serviceSub: '工作日 9:00–22:00 · 演示会话',
     servicePlaceholder: '输入你想咨询的问题…', sendMessage: '发送', feedbackThanks: '反馈已提交，我们会尽快联系你',
     logoutConfirmTitle: '是否退出登录？', logoutConfirmSub: '退出后将无法同步安全路线与守护记录',
-    confirmLogout: '确认退出', keepLogin: '保持登录'
+    confirmLogout: '确认退出', keepLogin: '保持登录',
+    historySearch: '历史搜索', historyHint: '最多保留 6 条最近搜索', historyEmpty: '暂无历史搜索，试试下方常用地址',
+    clearHistory: '清空', recommendPlaces: '推荐地点', recommendHint: '附近安全且高评分的去处',
+    swipeUpTip: '上滑查看附近推荐地点', nearbySafe: '安全优先 · 附近守护点', nearbyTop: '附近高分去处',
+    searchSheetSub: '输入关键词搜索真实地点，或使用下方地址'
   },
   en: {
     nav: 'Navigate', entertainment: 'Entertain', community: 'Community', profile: 'Me', sos: 'Emergency',
@@ -67,7 +71,11 @@ XA.I18N = {
     contactService: 'Contact live support', serviceTitle: 'Live support', serviceSub: 'Weekdays 9:00–22:00 · demo chat',
     servicePlaceholder: 'Type your question…', sendMessage: 'Send', feedbackThanks: 'Thanks, we will contact you soon',
     logoutConfirmTitle: 'Sign out?', logoutConfirmSub: 'You will not be able to sync routes and guard history',
-    confirmLogout: 'Sign out', keepLogin: 'Stay signed in'
+    confirmLogout: 'Sign out', keepLogin: 'Stay signed in',
+    historySearch: 'Recent searches', historyHint: 'Keeps up to 6 recent places', historyEmpty: 'No recent searches yet. Try the addresses below.',
+    clearHistory: 'Clear', recommendPlaces: 'Recommended nearby', recommendHint: 'Safe and highly rated places near you',
+    swipeUpTip: 'Swipe up for nearby recommendations', nearbySafe: 'Safety first · nearby protection', nearbyTop: 'Top-rated nearby',
+    searchSheetSub: 'Search real places or use the saved addresses below'
   }
 };
 XA.lang = 'zh';
@@ -477,7 +485,7 @@ XA.menuSheets = {
   history: ['守护记录', '已完成 18 段安全行程 · 1 次误报取消'],
   privacy: ['隐私与权限', '位置仅使用期间 · 麦克风端侧处理 · 可随时撤回'],
   device: ['AR 眼镜设备', 'XA-0281 已连接 · 电量 82% · 配对信息本地加密'],
-  about: ['关于小安', '小安 · 夜行安全系统 V1.4 · 概念设计原型']
+  about: ['关于小安', '小安 · 夜行安全系统 V1.5 · 概念设计原型']
 };
 
 XA.bindPageEvents = function () {
