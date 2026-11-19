@@ -16,7 +16,7 @@ XA.I18N = {
     onlineVideo: '免费素材 · 点击播放', onlineTip: '视频来自公开免费素材，仅用于伴行模块演示。关闭弹窗即停止播放。',
     musicPlaying: '正在播放 · 后台播放', weatherFallback: '22° 多云',
     entertainmentSub: '夜路很长，让声音陪你走', communitySub: '真实夜行经验，彼此照亮',
-    arSub: '眼镜控制台', profileSub: '守护设置与夜行记录', nightVideo: '夜行影像',
+    arSub: '眼镜控制台', profileSub: '守护设置与夜行记录', nightVideo: '伴行视频',
     activeNow: 'AI 安星正在守护',
     settingsPageSub: '个性、安全与设备', personalSettings: '个性设置', personalSub: '外观、语言与显示偏好',
     securityPrivacySettings: '安全隐私设置', securityPrivacySub: '权限、账号与访问范围',
@@ -36,7 +36,14 @@ XA.I18N = {
     historySearch: '历史搜索', historyHint: '最多保留 6 条最近搜索', historyEmpty: '暂无历史搜索，试试下方常用地址',
     clearHistory: '清空', recommendPlaces: '推荐地点', recommendHint: '附近安全且高评分的去处',
     swipeUpTip: '上滑查看附近推荐地点', nearbySafe: '安全优先 · 附近守护点', nearbyTop: '附近高分去处',
-    searchSheetSub: '输入关键词搜索真实地点，或使用下方地址'
+    searchSheetSub: '输入关键词搜索真实地点，或使用下方地址',
+    douyin: '抖音', douyinLogin: '登录抖音', douyinLoggedIn: '已登录抖音', douyinLoginSub: '登录后可播放抖音精选视频',
+    douyinPhone: '手机号', douyinCode: '验证码', douyinGetCode: '获取验证码', douyinLoginBtn: '登录并继续',
+    douyinQr: '扫码登录', douyinQrTip: '请使用抖音 App 扫描二维码（演示）', douyinLoginRequired: '请先登录抖音账号',
+    douyinFeatured: '抖音精选', douyinAdd: '添加我的抖音视频', douyinAddSub: '粘贴抖音视频长链接或 19 位视频 ID',
+    douyinAddBtn: '添加并收藏', douyinOpen: '在抖音打开', douyinNoCustom: '还没有添加自己的视频',
+    douyinLogout: '退出抖音', douyinPlayTip: '视频由抖音官方播放器提供；若平台限制显示，请在抖音打开。',
+    douyinCustom: '我的收藏'
   },
   en: {
     nav: 'Navigate', entertainment: 'Companion', community: 'Community', profile: 'Me', sos: 'Emergency',
@@ -55,7 +62,7 @@ XA.I18N = {
     onlineVideo: 'Free clips · Tap to play', onlineTip: 'Videos are public free media for demo only. Closing the sheet stops playback.',
     musicPlaying: 'Now playing · Background', weatherFallback: '22° Cloudy',
     entertainmentSub: 'Long roads sound better together', communitySub: 'Real night walks, shared light',
-    arSub: 'Glasses console', profileSub: 'Safety settings & trip history', nightVideo: 'Night walks in motion',
+    arSub: 'Glasses console', profileSub: 'Safety settings & trip history', nightVideo: 'Companion videos',
     activeNow: 'Anxing is guarding you',
     settingsPageSub: 'Personal, safety & device', personalSettings: 'Personal', personalSub: 'Theme, language & display',
     securityPrivacySettings: 'Safety & privacy', securityPrivacySub: 'Permissions, account & access',
@@ -75,7 +82,14 @@ XA.I18N = {
     historySearch: 'Recent searches', historyHint: 'Keeps up to 6 recent places', historyEmpty: 'No recent searches yet. Try the addresses below.',
     clearHistory: 'Clear', recommendPlaces: 'Recommended nearby', recommendHint: 'Safe and highly rated places near you',
     swipeUpTip: 'Swipe up for nearby recommendations', nearbySafe: 'Safety first · nearby protection', nearbyTop: 'Top-rated nearby',
-    searchSheetSub: 'Search real places or use the saved addresses below'
+    searchSheetSub: 'Search real places or use the saved addresses below',
+    douyin: 'Douyin', douyinLogin: 'Sign in to Douyin', douyinLoggedIn: 'Signed in to Douyin', douyinLoginSub: 'Sign in to play featured Douyin videos',
+    douyinPhone: 'Phone', douyinCode: 'Code', douyinGetCode: 'Get code', douyinLoginBtn: 'Sign in & continue',
+    douyinQr: 'QR sign-in', douyinQrTip: 'Scan this QR code in the Douyin app (demo)', douyinLoginRequired: 'Please sign in to Douyin first',
+    douyinFeatured: 'Douyin picks', douyinAdd: 'Add my Douyin video', douyinAddSub: 'Paste a full Douyin video link or 19-digit video ID',
+    douyinAddBtn: 'Add & save', douyinOpen: 'Open in Douyin', douyinNoCustom: 'No saved videos yet',
+    douyinLogout: 'Sign out', douyinPlayTip: 'Powered by the official Douyin player. If playback is restricted, open it in Douyin.',
+    douyinCustom: 'My collection'
   }
 };
 XA.lang = 'zh';
@@ -93,6 +107,8 @@ XA.applyI18n = function () {
     el.setAttribute('placeholder', XA.t(el.dataset.i18nPlaceholder));
   });
   if (XA.renderAccount) XA.renderAccount();
+  if (XA.renderDouyinAccount) XA.renderDouyinAccount();
+  if (XA.renderDouyinVideos) XA.renderDouyinVideos();
 };
 XA.setLanguage = function (lang) {
   XA.lang = lang === 'en' ? 'en' : 'zh';
@@ -113,9 +129,52 @@ XA.tracks = [
   { title: '雨夜白噪音', artist: 'SoundImage · 环境声', lyric: '街声落在伞上，脚步轻轻', duration: 20, src: 'https://soundimage.org/wp-content/uploads/2022/06/Street-Ambience_6-6-22.mp3' }
 ];
 XA.videos = [
-  { title: '雨夜归途 · 城市有光', src: 'https://videos.pexels.com/video-files/19828393/19828393-hd_1920_1080_24fps.mp4', note: 'Pexels 免费素材 · 雨夜街道' },
-  { title: '夜色城市 · 车流延时', src: 'https://videos.pexels.com/video-files/17499154/17499154-hd_1920_1080_24fps.mp4', note: 'Pexels 免费素材 · 城市夜景' }
+  { title: '夜骑陆家嘴外滩 · 江边夜景', id: '7358621438187718668', author: '抖音精选', note: '#夜骑打卡 #江边夜景', cover: 'assets/video-night.jpg' },
+  { title: '城市夜色 · 灯光漫游', id: '7583346692204924160', author: '抖音精选', note: '#城市夜景 #出行陪伴', cover: 'assets/ar-preview.jpg' }
 ];
+XA.douyin = { loggedIn: false, phone: '', nickname: '抖音用户', code: '' };
+XA.douyinVideos = [];
+function dyEsc(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+XA.loadDouyin = function () {
+  try {
+    var d = JSON.parse(localStorage.getItem('xa_douyin'));
+    if (d) Object.assign(XA.douyin, d);
+    var v = JSON.parse(localStorage.getItem('xa_douyin_videos'));
+    if (Array.isArray(v)) XA.douyinVideos = v.slice(0, 12);
+  } catch (e) {}
+  if (XA.renderDouyinAccount) XA.renderDouyinAccount();
+  if (XA.renderDouyinVideos) XA.renderDouyinVideos();
+};
+XA.saveDouyin = function () { try { localStorage.setItem('xa_douyin', JSON.stringify(XA.douyin)); } catch (e) {} };
+XA.saveDouyinVideos = function () { try { localStorage.setItem('xa_douyin_videos', JSON.stringify(XA.douyinVideos)); } catch (e) {} };
+XA.parseDouyinId = function (text) {
+  var m = String(text || '').match(/(\d{19})/);
+  return m ? m[1] : '';
+};
+XA.renderDouyinAccount = function () {
+  var btn = XA.$('#douyinAccountBtn');
+  if (btn) {
+    btn.textContent = XA.douyin.loggedIn ? XA.t('douyinLoggedIn') + ' · ' + XA.douyin.nickname : XA.t('douyinLogin');
+    btn.classList.toggle('logged', !!XA.douyin.loggedIn);
+  }
+  var sub = XA.$('#douyinAccountSub');
+  if (sub) sub.textContent = XA.douyin.loggedIn ? (XA.douyin.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') + ' · ' + XA.t('douyinFeatured')) : XA.t('douyinLoginSub');
+};
+XA.renderDouyinVideos = function () {
+  var grid = XA.$('#douyinVideoGrid');
+  if (!grid) return;
+  var all = XA.videos.concat(XA.douyinVideos || []);
+  grid.innerHTML = all.map(function (v, i) {
+    var mine = i >= XA.videos.length;
+    return '<button class="douyin-card" data-action="video" data-video="' + i + '">' +
+      '<img src="' + (v.cover || 'assets/story-road.jpg') + '" alt="' + dyEsc(v.title) + '">' +
+      '<span class="dy-play">' + ic('play') + '</span>' +
+      '<span class="dy-info"><b>' + dyEsc(v.title) + '</b><small>' + dyEsc(v.author || '抖音') + ' · ' + dyEsc(v.note || '') + '</small></span>' +
+      '<span class="dy-badge' + (mine ? ' mine' : '') + '">' + (mine ? XA.t('douyinCustom') : XA.t('douyinFeatured')) + '</span></button>';
+  }).join('');
+};
 XA.trackIndex = 0;
 XA.progressSec = 102;
 XA.playing = false;
@@ -351,10 +410,95 @@ XA.actions = {
     XA.toast(on ? '眼镜端歌词同步已关闭' : '眼镜端歌词同步已开启');
   },
   video: function (el) {
-    var v = XA.videos[parseInt((el && el.dataset.video) || '0', 10)] || XA.videos[0];
-    XA.openSheet('<h3>' + v.title + '</h3><div class="sheet-sub">' + v.note + ' · 导航播报优先</div>' +
-      '<video class="xa-video" controls autoplay muted playsinline src="' + v.src + '"></video>' +
-      '<p class="sheet-note">视频来自公开免费素材，仅用于伴行模块演示。关闭弹窗即停止播放。</p>');
+    if (!XA.douyin.loggedIn) {
+      XA.toast(XA.t('douyinLoginRequired'));
+      XA.actions['douyin-login']();
+      return;
+    }
+    var list = XA.videos.concat(XA.douyinVideos || []);
+    var v = list[parseInt((el && el.dataset.video) || '0', 10)] || list[0];
+    XA.openSheet('<h3>' + dyEsc(v.title) + '</h3><div class="sheet-sub">' + dyEsc(v.author || '抖音') + ' · ' + dyEsc(v.note || '') + '</div>' +
+      '<div class="douyin-player"><iframe src="https://open.douyin.com/player/video?vid=' + dyEsc(v.id) + '&autoplay=0" frameborder="0" referrerpolicy="unsafe-url" allowfullscreen loading="lazy"></iframe></div>' +
+      '<button class="option-row" data-action="douyin-open" data-id="' + dyEsc(v.id) + '">' + ic('share') +
+      '<span><b data-i18n="douyinOpen">在抖音打开</b><small>' + dyEsc(v.id) + '</small></span></button>' +
+      '<p class="sheet-note">' + XA.t('douyinPlayTip') + '</p>');
+  },
+  'douyin-login': function () {
+    if (XA.douyin.loggedIn) {
+      XA.openSheet('<h3 data-i18n="douyinLoggedIn">已登录抖音</h3><div class="sheet-sub">' + dyEsc(XA.douyin.nickname) + ' · ' + XA.douyin.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') + '</div>' +
+        '<div class="option-row">' + ic('check') + '<span><b data-i18n="douyinFeatured">抖音精选</b><small data-i18n="douyinLoginSub">登录后可播放抖音精选视频</small></span></div>' +
+        '<button class="primary-btn" data-action="douyin-add" data-i18n="douyinAdd">添加我的抖音视频</button>' +
+        '<button class="login-skip" data-action="douyin-logout" data-i18n="douyinLogout">退出抖音</button>');
+      return;
+    }
+    XA.openSheet('<h3 data-i18n="douyinLogin">登录抖音</h3><div class="sheet-sub" data-i18n="douyinLoginSub">登录后可播放抖音精选视频</div>' +
+      '<label class="login-label" data-i18n="douyinPhone">手机号</label>' +
+      '<input class="login-input" id="douyinPhone" type="tel" maxlength="11" inputmode="numeric" placeholder="请输入 11 位手机号">' +
+      '<label class="login-label" data-i18n="douyinCode">验证码</label>' +
+      '<div class="login-code-row"><input class="login-input" id="douyinCode" type="text" maxlength="4" inputmode="numeric" placeholder="4 位验证码">' +
+      '<button class="code-btn" data-action="douyin-code" data-i18n="douyinGetCode">获取验证码</button></div>' +
+      '<button class="primary-btn" data-action="douyin-do-login" data-i18n="douyinLoginBtn">登录并继续</button>' +
+      '<button class="login-skip" data-action="douyin-qr" data-i18n="douyinQr">扫码登录</button>' +
+      '<p class="sheet-note">演示登录不会连接抖音服务器，账号状态仅保存在本机。</p>');
+  },
+  'douyin-code': function () {
+    var p = ((XA.$('#douyinPhone') || {}).value || '').trim();
+    if (!/^1\d{10}$/.test(p)) { XA.toast('请输入正确的 11 位手机号'); return; }
+    XA.douyin.phone = p;
+    XA.douyin.code = String(Math.floor(1000 + Math.random() * 9000));
+    XA.saveDouyin();
+    XA.toast('验证码（演示）：' + XA.douyin.code);
+  },
+  'douyin-do-login': function () {
+    var p = ((XA.$('#douyinPhone') || {}).value || '').trim();
+    var c = ((XA.$('#douyinCode') || {}).value || '').trim();
+    if (!/^1\d{10}$/.test(p)) { XA.toast('请输入正确的 11 位手机号'); return; }
+    if (!XA.douyin.code || c !== XA.douyin.code) { XA.toast('验证码不正确或请先获取验证码'); return; }
+    XA.douyin.loggedIn = true;
+    XA.douyin.phone = p;
+    XA.douyin.nickname = XA.douyin.nickname || '抖音用户';
+    XA.douyin.code = '';
+    XA.saveDouyin(); XA.renderDouyinAccount(); XA.closeModal();
+    XA.toast('抖音账号已登录（演示）');
+  },
+  'douyin-qr': function () {
+    XA.openSheet('<h3 data-i18n="douyinQr">扫码登录</h3><div class="sheet-sub" data-i18n="douyinQrTip">请使用抖音 App 扫描二维码（演示）</div>' +
+      '<div class="douyin-qr" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>' +
+      '<button class="primary-btn" data-action="douyin-qr-done" data-i18n="douyinLoginBtn">登录并继续</button>' +
+      '<p class="sheet-note">原型使用模拟扫码，仅用于交互演示。</p>');
+  },
+  'douyin-qr-done': function () {
+    XA.douyin.loggedIn = true;
+    XA.douyin.phone = XA.douyin.phone || '13800000000';
+    XA.douyin.nickname = XA.douyin.nickname || '抖音用户';
+    XA.saveDouyin(); XA.renderDouyinAccount(); XA.closeModal();
+    XA.toast('扫码登录成功（演示）');
+  },
+  'douyin-logout': function () {
+    XA.douyin.loggedIn = false; XA.douyin.code = '';
+    XA.saveDouyin(); XA.renderDouyinAccount(); XA.closeModal();
+    XA.toast('已退出抖音（演示）');
+  },
+  'douyin-add': function () {
+    XA.openSheet('<h3 data-i18n="douyinAdd">添加我的抖音视频</h3><div class="sheet-sub" data-i18n="douyinAddSub">粘贴抖音视频长链接或 19 位视频 ID</div>' +
+      '<input class="login-input" id="douyinLink" placeholder="https://www.douyin.com/video/…">' +
+      '<label class="login-label">标题</label><input class="login-input" id="douyinTitle" placeholder="例如：夜骑西湖">' +
+      '<button class="primary-btn" data-action="douyin-save" data-i18n="douyinAddBtn">添加并收藏</button>' +
+      '<p class="sheet-note">短链需先在浏览器打开并复制完整链接，或直接使用视频 ID。</p>');
+  },
+  'douyin-save': function () {
+    var raw = ((XA.$('#douyinLink') || {}).value || '').trim();
+    var title = ((XA.$('#douyinTitle') || {}).value || '').trim();
+    var id = XA.parseDouyinId(raw);
+    if (!id) { XA.toast('未识别视频 ID，请粘贴完整链接或 19 位数字'); return; }
+    XA.douyinVideos.unshift({ title: title || '我的抖音视频 · ' + id.slice(-6), id: id, author: XA.douyin.nickname, note: XA.t('douyinCustom'), cover: 'assets/story-road.jpg' });
+    XA.douyinVideos = XA.douyinVideos.slice(0, 12);
+    XA.saveDouyinVideos(); XA.renderDouyinVideos(); XA.closeModal();
+    XA.toast('视频已加入我的收藏');
+  },
+  'douyin-open': function (el) {
+    var id = (el && el.dataset.id) || '';
+    if (id) window.open('https://www.douyin.com/video/' + id, '_blank');
   },
   'community-search': function () { XA.toast('社区搜索：夜路、路灯、AR 眼镜'); },
   topic: function () { XA.toast('话题已展开 · 夜路故事征集'); },
@@ -485,7 +629,7 @@ XA.menuSheets = {
   history: ['守护记录', '已完成 18 段安全行程 · 1 次误报取消'],
   privacy: ['隐私与权限', '位置仅使用期间 · 麦克风端侧处理 · 可随时撤回'],
   device: ['AR 眼镜设备', 'XA-0281 已连接 · 电量 82% · 配对信息本地加密'],
-  about: ['关于安星', '安星 · 夜行安全系统 V1.6 · 概念设计原型']
+  about: ['关于安星', '安星 · 夜行安全系统 V1.7 · 概念设计原型']
 };
 
 XA.bindPageEvents = function () {
