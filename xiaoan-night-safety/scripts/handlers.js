@@ -1,9 +1,9 @@
 XA.I18N = {
   zh: {
-    nav: '导航', entertainment: '娱乐', community: '社区', profile: '我的', sos: '紧急求助',
+    nav: '导航', entertainment: '伴行', community: '社区', profile: '我的', sos: '紧急求助',
     searchHint: '搜索目的地、公交站', routeAnalysis: '路线安全分析', routeSub: '已按安全优先排序', emergency: '紧急求助',
     settings: '设置', settingsSub: '守护偏好与账号', contacts: '紧急联系人', routes: '我的安全路线', history: '守护记录',
-    about: '关于小安', privacy: '隐私与权限', appearance: '外观与主题', themeName: '薄荷夜色',
+    about: '关于安星', privacy: '隐私与权限', appearance: '外观与主题', themeName: '薄荷夜色',
     accountSecurity: '账号与安全', deviceBound: '已绑定设备', language: '管理语言', languageName: '简体中文',
     device: 'AR 眼镜设备', switchAccount: '切换账号', logout: '退出登录',
     accountSecuritySub: '登录方式、设备与紧急访问', accountLogin: '登录方式', accountPhone: '手机号',
@@ -13,11 +13,11 @@ XA.I18N = {
     remainingKm: '剩余公里', safetyScore: '安全分', endNav: '结束导航', startNav: '开始安全导航',
     search: '搜索目的地', commonAddresses: '常用地址', commonHint: '点击即可快速规划夜间安全路线',
     mapSettings: '地图设置', view: '视角', basemap: '底图', standard: '标准', satellite: '卫星',
-    onlineVideo: '免费素材 · 点击播放', onlineTip: '视频来自公开免费素材，仅用于娱乐模块演示。关闭弹窗即停止播放。',
+    onlineVideo: '免费素材 · 点击播放', onlineTip: '视频来自公开免费素材，仅用于伴行模块演示。关闭弹窗即停止播放。',
     musicPlaying: '正在播放 · 后台播放', weatherFallback: '22° 多云',
     entertainmentSub: '夜路很长，让声音陪你走', communitySub: '真实夜行经验，彼此照亮',
     arSub: '眼镜控制台', profileSub: '守护设置与夜行记录', nightVideo: '夜行影像',
-    activeNow: 'AI 小安正在守护',
+    activeNow: 'AI 安星正在守护',
     settingsPageSub: '个性、安全与设备', personalSettings: '个性设置', personalSub: '外观、语言与显示偏好',
     securityPrivacySettings: '安全隐私设置', securityPrivacySub: '权限、账号与访问范围',
     otherSettings: '其他设置', otherSub: '关于、设备与帮助', feedback: '问题反馈', feedbackSub: '联系客服或提交问题',
@@ -39,10 +39,10 @@ XA.I18N = {
     searchSheetSub: '输入关键词搜索真实地点，或使用下方地址'
   },
   en: {
-    nav: 'Navigate', entertainment: 'Entertain', community: 'Community', profile: 'Me', sos: 'Emergency',
+    nav: 'Navigate', entertainment: 'Companion', community: 'Community', profile: 'Me', sos: 'Emergency',
     searchHint: 'Search destinations or stops', routeAnalysis: 'Route safety', routeSub: 'Sorted by safety first', emergency: 'Emergency',
     settings: 'Settings', settingsSub: 'Preferences & account', contacts: 'Emergency contacts', routes: 'My safe routes', history: 'Guard history',
-    about: "About Xiao'an", privacy: 'Privacy & permissions', appearance: 'Appearance & theme', themeName: 'Mint night',
+    about: "About Anxing", privacy: 'Privacy & permissions', appearance: 'Appearance & theme', themeName: 'Mint night',
     accountSecurity: 'Account & security', deviceBound: 'Device paired', language: 'Language', languageName: 'English',
     device: 'AR glasses', switchAccount: 'Switch account', logout: 'Sign out',
     accountSecuritySub: 'Sign-in method, devices and emergency access', accountLogin: 'Sign-in method', accountPhone: 'Phone number',
@@ -56,7 +56,7 @@ XA.I18N = {
     musicPlaying: 'Now playing · Background', weatherFallback: '22° Cloudy',
     entertainmentSub: 'Long roads sound better together', communitySub: 'Real night walks, shared light',
     arSub: 'Glasses console', profileSub: 'Safety settings & trip history', nightVideo: 'Night walks in motion',
-    activeNow: 'Xiao\u0027an is guarding you',
+    activeNow: 'Anxing is guarding you',
     settingsPageSub: 'Personal, safety & device', personalSettings: 'Personal', personalSub: 'Theme, language & display',
     securityPrivacySettings: 'Safety & privacy', securityPrivacySub: 'Permissions, account & access',
     otherSettings: 'More', otherSub: 'About, device & help', feedback: 'Feedback', feedbackSub: 'Contact support or report an issue',
@@ -236,7 +236,7 @@ XA.startNavigation = function () {
     paint();
     XA.toast(XA.navSteps[i].title);
   }, 4000);
-  XA.toast('安全导航已开始 · 小安陪你走夜路');
+  XA.toast('安全导航已开始 · 安星陪你走夜路');
 };
 
 XA.actions = {
@@ -300,7 +300,7 @@ XA.actions = {
   },
   'accept-advice': function () { XA.closeModal(); XA.selectRoute('A'); XA.go('route'); },
   'ai-suggest': function () {
-    XA.openSheet('<h3>小安 AI</h3><div class="sheet-sub">陪你走夜路 · 短句、具体、不夸张</div>' +
+    XA.openSheet('<h3>安星 AI</h3><div class="sheet-sub">陪你走夜路 · 短句、具体、不夸张</div>' +
       '<div class="option-row">' + ic('navigation') + '<span><b>今晚走滨江路吧</b><small>路灯更亮，比文昌巷多 3 分钟，安全分 +28</small></span></div>' +
       '<div class="option-row">' + ic('check') + '<span><b>已为你避开暗巷</b><small>路线经过 12 处监控、3 个便利店求助点</small></span></div>' +
       '<button class="primary-btn" data-action="accept-advice">好的，走滨江路</button>');
@@ -354,7 +354,7 @@ XA.actions = {
     var v = XA.videos[parseInt((el && el.dataset.video) || '0', 10)] || XA.videos[0];
     XA.openSheet('<h3>' + v.title + '</h3><div class="sheet-sub">' + v.note + ' · 导航播报优先</div>' +
       '<video class="xa-video" controls autoplay muted playsinline src="' + v.src + '"></video>' +
-      '<p class="sheet-note">视频来自公开免费素材，仅用于娱乐模块演示。关闭弹窗即停止播放。</p>');
+      '<p class="sheet-note">视频来自公开免费素材，仅用于伴行模块演示。关闭弹窗即停止播放。</p>');
   },
   'community-search': function () { XA.toast('社区搜索：夜路、路灯、AR 眼镜'); },
   topic: function () { XA.toast('话题已展开 · 夜路故事征集'); },
@@ -384,7 +384,7 @@ XA.actions = {
     article.className = 'story-card';
     article.dataset.cat = 'local';
     article.innerHTML = '<header><span class="avatar green">我</span><span><b>' +
-      (XA.$('[data-pub="anon"]').classList.contains('active') ? '匿名用户' : '小安用户') +
+      (XA.$('[data-pub="anon"]').classList.contains('active') ? '匿名用户' : '安星用户') +
       '</b><small>刚刚 · 杭州</small></span><span class="real-tag">真实经历</span></header><p></p>' +
       '<footer><span>滨江路 · 刚刚</span><span class="story-actions"><button class="like" data-action="like"><span class="like-ico">' +
       ic('heart') + '</span><b>0</b></button><button>' + ic('comment') + '<b>0</b></button><button>' + ic('share') + '分享</button></span></footer>';
@@ -399,7 +399,7 @@ XA.actions = {
     if (b) b.textContent = el.classList.contains('liked') ? (parseInt(b.textContent, 10) + 1) : (parseInt(b.textContent, 10) - 1);
   },
   'ar-settings': function () {
-    XA.openSheet('<h3>眼镜设置</h3><div class="sheet-sub">小安 AR · XA-0281</div>' +
+    XA.openSheet('<h3>眼镜设置</h3><div class="sheet-sub">安星 AR · XA-0281</div>' +
       '<div class="option-row">' + ic('settings') + '<span><b>镜片亮度</b><small>自动 · 根据环境光调节</small></span></div>' +
       '<div class="option-row">' + ic('lock') + '<span><b>设备配对</b><small>本地加密 · 断开后可删除记录</small></span></div>' +
       '<button class="primary-btn" data-action="close-settings">完成</button>');
@@ -448,7 +448,7 @@ XA.actions = {
   },
   'feedback-service': function () {
     XA.openSheet('<h3 data-i18n="serviceTitle">在线客服</h3><div class="sheet-sub" data-i18n="serviceSub">工作日 9:00–22:00 · 演示会话</div>' +
-      '<div class="service-chat" id="serviceChat"><p class="service-msg">小安：你好，我是小安客服。请描述你遇到的问题，我会尽力帮你。</p></div>' +
+      '<div class="service-chat" id="serviceChat"><p class="service-msg">安星：你好，我是安星客服。请描述你遇到的问题，我会尽力帮你。</p></div>' +
       '<div class="service-input-row"><input class="login-input" id="serviceInput" placeholder="' + XA.t('servicePlaceholder') + '" data-i18n-placeholder="servicePlaceholder"><button class="primary-btn" data-action="service-send" data-i18n="sendMessage">发送</button></div>');
     setTimeout(function () { var i = XA.$('#serviceInput'); if (i) i.focus(); }, 260);
   },
@@ -463,7 +463,7 @@ XA.actions = {
     setTimeout(function () {
       var reply = document.createElement('p');
       reply.className = 'service-msg';
-      reply.textContent = XA.lang === 'en' ? 'Xiao’an: Thanks for reporting. We have recorded this demo conversation.' : '小安：已收到，我们会记录这段演示会话并尽快跟进。';
+      reply.textContent = XA.lang === 'en' ? 'Anxing: Thanks for reporting. We have recorded this demo conversation.' : '安星：已收到，我们会记录这段演示会话并尽快跟进。';
       chat.appendChild(reply); chat.scrollTop = chat.scrollHeight;
     }, 600);
   },
@@ -485,7 +485,7 @@ XA.menuSheets = {
   history: ['守护记录', '已完成 18 段安全行程 · 1 次误报取消'],
   privacy: ['隐私与权限', '位置仅使用期间 · 麦克风端侧处理 · 可随时撤回'],
   device: ['AR 眼镜设备', 'XA-0281 已连接 · 电量 82% · 配对信息本地加密'],
-  about: ['关于小安', '小安 · 夜行安全系统 V1.5 · 概念设计原型']
+  about: ['关于安星', '安星 · 夜行安全系统 V1.6 · 概念设计原型']
 };
 
 XA.bindPageEvents = function () {
