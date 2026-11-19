@@ -1,6 +1,6 @@
 :root{
   --ink:#05070d; --ink2:#0a0e17; --ink3:#101622;
-  --mint:#7ff0d4; --amber:#ffc46b; --coral:#ff5b52; --blue:#8fb8ff;
+  --mint:#7ff0d4; --mint2:#6ce0c8; --amber:#ffc46b; --coral:#ff5b52; --blue:#8fb8ff;
   --text:#f2f6fb; --muted:#97a3b6; --dim:#637084;
   --line:rgba(255,255,255,.09); --glass:rgba(17,23,35,.82);
   --r-sm:16px; --r-md:22px; --r-lg:28px;
@@ -55,7 +55,7 @@ button{background:none;border:0;padding:0;cursor:pointer}
 .icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:rgba(16,22,32,.72);display:flex;align-items:center;justify-content:center;position:relative;color:var(--text)}
 .icon-btn .ico{width:18px;height:18px}
 .red-dot{position:absolute;top:7px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--coral);box-shadow:0 0 8px var(--coral)}
-.primary-btn{width:100%;height:56px;border-radius:17px;background:linear-gradient(100deg,#83f5da,#6ce0c8);color:#06251f;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 10px 26px rgba(84,225,196,.22),inset 0 1px 0 rgba(255,255,255,.4)}
+.primary-btn{width:100%;height:56px;border-radius:17px;background:linear-gradient(100deg,var(--mint),var(--mint2));color:#06251f;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 10px 26px rgba(84,225,196,.22),inset 0 1px 0 rgba(255,255,255,.4)}
 .primary-btn small{position:absolute;right:18px;font-size:10px;font-weight:600;opacity:.7}
 .primary-btn .ico{width:17px;height:17px;stroke-width:2}
 .square-btn{width:56px;height:56px;border-radius:17px;border:1px solid var(--line);background:rgba(20,27,39,.9);display:flex;align-items:center;justify-content:center;flex:none}
