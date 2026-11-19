@@ -893,6 +893,7 @@
   loadAccount();
   loadPrivacy();
   loadSearchHistory();
+  XA.loadDouyin();
   var savedLang = 'zh';
   try { savedLang = localStorage.getItem('xa_language') || 'zh'; } catch (e) {}
   XA.setLanguage(savedLang);
