@@ -126,26 +126,7 @@
       .join('');
   }
 
-  // 项目内的一张图片
-  function projectCardHTML(p, img) {
-    return (
-      '<button class="art" type="button" data-project="' +
-      p.id +
-      '">' +
-      slotHTML(img.src, img.cap || '作品图', 'art__slot', img.ratio) +
-      '<div class="art__cap">' +
-      '<span class="art__title">' +
-      (img.cap || '') +
-      '</span>' +
-      '<span class="art__meta">' +
-      (p.title || '') +
-      '</span>' +
-      '</div>' +
-      '</button>'
-    );
-  }
-
-  // 全部作品：严格按「一级目录 → 二级目录」分组
+  // 全部作品：横向流动相片带（严格按「一级目录 → 二级目录」分组）
   function renderGroups() {
     var wrap = $('#boardAll');
     if (!wrap) return;
@@ -154,53 +135,75 @@
       .map(function (cat) {
         var items = (cat.projects || []).map(projectById).filter(Boolean);
         if (!items.length) return '';
+
+        // 该分类下所有项目的代表图（轨道卡片）
+        var cards = [];
+        var seq = 0;
+        items.forEach(function (p) {
+          var rail = projectAssets(p).rail || [];
+          rail.forEach(function (im) {
+            cards.push(
+              '<button class="rail__card" type="button" data-project="' +
+              p.id +
+              '" style="--i:' +
+              seq +
+              '">' +
+              '<img src="' +
+              im.src +
+              '" alt="' +
+              (p.title || '') +
+              ' · ' +
+              (im.cap || '') +
+              '" loading="lazy" />' +
+              '<span class="rail__tip"><em>' +
+              (p.category || '') +
+              '</em>' +
+              (p.title || '') +
+              '<i>' +
+              (im.cap || '') +
+              '</i></span>' +
+              '</button>'
+            );
+            seq++;
+          });
+        });
+        if (!cards.length) return '';
+
+        var vcount = 0;
+        var picount = 0;
+        items.forEach(function (p) {
+          var a = projectAssets(p);
+          vcount += (a.videos || []).length;
+          picount += (a.images || []).length;
+        });
+
         return (
-          '<section class="work-group" data-cat="' +
+          '<section class="rail-group" data-cat="' +
           cat.cat +
           '">' +
+          '<div class="rail-group__head">' +
           '<h3 class="board-label" data-reveal>' +
           cat.label +
           ' <span class="board-label__n">' +
           items.length +
-          ' 个项目</span></h3>' +
+          ' 个项目 · ' +
+          picount +
+          ' 张图' +
+          (vcount ? ' · ' + vcount + ' 段视频' : '') +
+          '</span></h3>' +
           '<p class="work-cat__desc" data-reveal>' +
           (cat.desc || '') +
           '</p>' +
-          items
-            .map(function (p) {
-              var a = projectAssets(p);
-              var imgs = a.images || [];
-              if (!imgs.length) return '';
-              var cols = imgs.length <= 3 ? imgs.length : imgs.length >= 14 ? 6 : 4;
-              var vcount = (a.videos || []).length;
-              return (
-                '<article class="work-project" data-reveal>' +
-                '<header class="work-project__head">' +
-                '<h4 class="work-project__title">' +
-                p.title +
-                '</h4>' +
-                '<span class="work-project__path">' +
-                (p.folder || '') +
-                '</span>' +
-                '<span class="work-project__count">' +
-                imgs.length +
-                ' 张图' +
-                (vcount ? ' · ' + vcount + ' 段视频' : '') +
-                '</span>' +
-                '</header>' +
-                '<div class="board board--row" style="--cols:' +
-                cols +
-                '">' +
-                imgs
-                  .map(function (im) {
-                    return projectCardHTML(p, im);
-                  })
-                  .join('') +
-                '</div>' +
-                '</article>'
-              );
-            })
-            .join('') +
+          '</div>' +
+          '<div class="rail" data-rail>' +
+          '<div class="rail__viewport">' +
+          '<div class="rail__track">' +
+          '<div class="rail__set">' +
+          cards.join('') +
+          '</div>' +
+          '</div>' +
+          '</div>' +
+          '</div>' +
           '</section>'
         );
       })
@@ -654,13 +657,10 @@
         b.classList.toggle('is-active', b === btn);
       });
       var key = btn.dataset.filter;
-      // 只筛选分类作品组，主题海报展板区不参与筛选
-      $$('.work-group').forEach(function (group) {
+      // 只筛选分类作品轨道
+      $$('.rail-group').forEach(function (group) {
         var match = key === '全部' || (group.dataset.cat || '') === key;
         group.style.display = match ? '' : 'none';
-      });
-      $$('#boardPoster .art').forEach(function (art) {
-        art.style.display = '';
       });
     });
   }
@@ -1178,6 +1178,168 @@
     });
   }
 
+  /* ---------- 10. 横向流动作品带 ----------
+     自动漂移 + 滚轮调速 + 拖拽拨动 + 悬停标签 + 点击进详情
+     ------------------------------------------------ */
+  function initRails() {
+    var rails = $$('.rail');
+    if (!rails.length) return;
+
+    var BASE = 0.26; // 基础速度（px / 帧）
+    var MAX = 5.2;
+    var speed = BASE;
+    var target = BASE;
+    var lastWheel = 0;
+    var raf = null;
+
+    function render(rail) {
+      var w = rail._setWidth;
+      if (!w) return;
+      var x = -(rail._offset % w);
+      rail._track.style.transform = 'translate3d(' + x.toFixed(2) + 'px,0,0)';
+    }
+
+    // 复制一份内容直到宽度足够铺满视口，保证无缝循环
+    function fill(rail) {
+      var set = $('.rail__set', rail);
+      if (!set) return;
+      var w = set.offsetWidth || 1;
+      var need = Math.ceil((window.innerWidth + 220) / w) + 1;
+      var copies = Math.max(2, need);
+      var track = set.parentNode;
+      var have = track.children.length;
+      var i;
+      for (i = have; i < copies; i++) {
+        track.appendChild(set.cloneNode(true));
+      }
+      while (track.children.length > copies) {
+        track.removeChild(track.lastChild);
+      }
+      rail._setWidth = set.offsetWidth;
+    }
+
+    rails.forEach(function (rail) {
+      rail._offset = 0;
+      rail._paused = false;
+      rail._dragging = false;
+      rail._track = $('.rail__track', rail);
+      rail._viewport = $('.rail__viewport', rail);
+      fill(rail);
+
+      // 卡片上下错落，形成丝带般的起伏
+      $$('.rail__card', rail).forEach(function (card, i) {
+        var dy = ((i % 5) - 2) * 9 + (i % 2 ? 5 : -5);
+        card.style.setProperty('--dy', dy.toFixed(1) + 'px');
+      });
+
+      var vp = rail._viewport;
+      if (!vp) return;
+
+      // 悬停：暂停该条轨道
+      vp.addEventListener('pointerenter', function () {
+        rail._paused = true;
+      });
+      vp.addEventListener('pointerleave', function () {
+        rail._paused = false;
+      });
+
+      // 滚轮：调节速度（向下加速 / 向上减速直至反向）
+      vp.addEventListener(
+        'wheel',
+        function (e) {
+          target = Math.max(-MAX, Math.min(MAX, target + e.deltaY * 0.008));
+          lastWheel = Date.now();
+        },
+        { passive: true }
+      );
+
+      // 拖拽：直接拨动轨道
+      var drag = { on: false, moved: false, x: 0, off: 0 };
+      vp.addEventListener('pointerdown', function (e) {
+        if (e.button !== undefined && e.button !== 0) return;
+        drag.on = true;
+        drag.moved = false;
+        drag.x = e.clientX;
+        drag.off = rail._offset;
+        rail._dragging = true;
+        if (vp.setPointerCapture) {
+          try {
+            vp.setPointerCapture(e.pointerId);
+          } catch (err) {}
+        }
+      });
+      vp.addEventListener('pointermove', function (e) {
+        if (!drag.on) return;
+        var dx = e.clientX - drag.x;
+        if (!drag.moved && Math.abs(dx) > 6) {
+          drag.moved = true;
+          vp.classList.add('is-drag');
+        }
+        if (drag.moved) {
+          rail._offset = drag.off - dx;
+          render(rail);
+        }
+      });
+      function endDrag() {
+        if (!drag.on) return;
+        drag.on = false;
+        rail._dragging = false;
+        vp.classList.remove('is-drag');
+        if (drag.moved) {
+          // 拖拽结束后抑制这一次点击，避免误开详情
+          vp.addEventListener(
+            'click',
+            function (ev) {
+              ev.stopPropagation();
+              ev.preventDefault();
+            },
+            { once: true, capture: true }
+          );
+        }
+      }
+      vp.addEventListener('pointerup', endDrag);
+      vp.addEventListener('pointercancel', endDrag);
+      vp.addEventListener('lostpointercapture', endDrag);
+    });
+
+    // 窗口尺寸变化：重新铺满
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        rails.forEach(function (rail) {
+          fill(rail);
+          render(rail);
+        });
+      }, 180);
+    });
+
+    if (prefersReduced()) {
+      // 降低动态效果：轨道静止，改为可横向拖动查看
+      rails.forEach(function (rail) {
+        render(rail);
+      });
+      return;
+    }
+
+    function tick() {
+      // 停止滚轮操作 1.6 秒后，速度缓缓回到基础流速
+      if (lastWheel && Date.now() - lastWheel > 1600) {
+        target = BASE;
+        lastWheel = 0;
+      }
+      speed += (target - speed) * 0.1;
+
+      rails.forEach(function (rail) {
+        if (rail._paused || rail._dragging) return;
+        rail._offset += speed;
+        render(rail);
+      });
+      raf = requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
   /* ---------- 个人信息注入 ---------- */
   function applyProfile() {
     var p = DATA.profile || {};
@@ -1219,6 +1381,7 @@
     initGlobal();
     initMotion();
     initIpMascots();
+    initRails();
   }
 
   if (document.readyState === 'loading') {

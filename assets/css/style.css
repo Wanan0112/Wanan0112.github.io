@@ -2643,6 +2643,152 @@ button.slot {
   cursor: zoom-in;
 }
 
+/* ---------- 14.6 横向流动作品带 ---------- */
+.rail-hint {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 18px;
+  margin: -6px 0 34px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+}
+
+.rail-hint span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.rail-hint i {
+  font-style: normal;
+  color: var(--kraft-3);
+}
+
+.rail-group {
+  margin-bottom: 26px;
+}
+
+.rail {
+  position: relative;
+}
+
+.rail__viewport {
+  position: relative;
+  overflow: hidden;
+  padding: 34px 0 38px;
+  cursor: grab;
+  touch-action: pan-y;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+}
+
+.rail__viewport.is-drag {
+  cursor: grabbing;
+}
+
+.rail__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.rail__set {
+  display: flex;
+  gap: 24px;
+  padding-right: 24px;
+}
+
+.rail__card {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(186px, 21vw, 300px);
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--cream);
+  box-shadow: 0 14px 30px rgba(35, 65, 76, 0.2);
+  cursor: pointer;
+  translate: 0 var(--dy, 0px);
+  animation: rail-float 7.5s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -0.46s);
+  transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.45s;
+}
+
+/* 竖版展板轨道用竖卡，避免内容被裁掉 */
+.rail-group[data-cat='展板'] .rail__card {
+  width: clamp(150px, 14vw, 200px);
+  aspect-ratio: 3 / 4;
+}
+
+.rail__card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.rail__card:hover {
+  transform: scale(1.07) rotate(-1.4deg);
+  box-shadow: 0 26px 46px rgba(35, 65, 76, 0.3);
+  z-index: 3;
+}
+
+.rail__tip {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translate(-50%, 10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(251, 245, 232, 0.94);
+  border: 1px solid rgba(35, 65, 76, 0.2);
+  box-shadow: 0 8px 20px rgba(15, 30, 40, 0.22);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+  max-width: 92%;
+}
+
+.rail__tip em {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  color: var(--kraft-3);
+}
+
+.rail__tip i {
+  font-style: normal;
+  font-size: 12.5px;
+  color: var(--ink);
+}
+
+.rail__card:hover .rail__tip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@keyframes rail-float {
+  0%,
+  100% {
+    translate: 0 calc(var(--dy, 0px) - 9px);
+  }
+
+  50% {
+    translate: 0 calc(var(--dy, 0px) + 9px);
+  }
+}
+
 /* ---------- 15. 响应式 ---------- */
 @media (max-width: 1080px) {
   .services__grid {
@@ -2677,6 +2823,18 @@ button.slot {
 }
 
 @media (max-width: 900px) {
+  .rail__card {
+    width: clamp(150px, 32vw, 214px);
+  }
+
+  .rail__set {
+    gap: 18px;
+    padding-right: 18px;
+  }
+
+  .rail__viewport {
+    padding: 26px 0 30px;
+  }
   /* 窄屏正文占满宽度，小精灵收起 */
   .ip-decor {
     display: none;
@@ -2829,6 +2987,18 @@ button.slot {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
+  }
+
+  /* 作品带：关闭漂移，改为可横向拖动查看 */
+  .rail__card {
+    animation: none !important;
+    translate: 0 var(--dy, 0px);
+  }
+
+  .rail__viewport {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
   .mark__svg path {
