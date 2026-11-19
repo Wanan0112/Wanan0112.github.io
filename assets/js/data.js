@@ -32,14 +32,15 @@ window.SITE_DATA = {
   /* ---------- 分类筛选（对应一级目录） ---------- */
   filters: ['全部', '三维模型作品', '虚幻引擎作品', '交互装置设计', '信息可视化设计', '绘本IP设计', '展板'],
 
-  /* ---------- 一级目录（与源文件夹一一对应） ---------- */
+  /* ---------- 一级目录（与源文件夹一一对应） ----------
+     theme = 边框主题，对应三个 IP 小精灵族：red 火团子 / yellow 咸蛋黄 / blue 蓝泡泡 */
   categories: [
-    { cat: '三维模型作品', label: '三维模型作品', desc: '雕刻造型、硬表面结构与角色场景模型', projects: ['stone-knife', 'hard-surface-box', 'robot-chef'] },
-    { cat: '虚幻引擎作品', label: '虚幻引擎作品', desc: '引擎内的室内空间与自然林地场景', projects: ['ue-interior', 'ue-forest'] },
-    { cat: '交互装置设计', label: '交互装置设计', desc: '装置本体、硬件互动与动态展演', projects: ['tapestry', 'swarm-wave'] },
-    { cat: '信息可视化设计', label: '信息可视化设计', desc: '数字媒介转译、数据叙事与动态海报', projects: ['true-color', 'ember-poster'] },
-    { cat: '绘本IP设计', label: '绘本 IP 设计', desc: '故事创意、角色设定与绘本内页', projects: ['colorful-world'] },
-    { cat: '展板', label: '展板', desc: '展览与课程展板合集，共 15 张', projects: ['boards'] },
+    { cat: '三维模型作品', label: '三维模型作品', theme: 'red', desc: '雕刻造型、硬表面结构与角色场景模型', projects: ['stone-knife', 'hard-surface-box', 'robot-chef'] },
+    { cat: '虚幻引擎作品', label: '虚幻引擎作品', theme: 'blue', desc: '引擎内的室内空间与自然林地场景', projects: ['ue-interior', 'ue-forest'] },
+    { cat: '交互装置设计', label: '交互装置设计', theme: 'yellow', desc: '装置本体、硬件互动与动态展演', projects: ['tapestry', 'swarm-wave'] },
+    { cat: '信息可视化设计', label: '信息可视化设计', theme: 'red', desc: '数字媒介转译、数据叙事与动态海报', projects: ['true-color', 'ember-poster'] },
+    { cat: '绘本IP设计', label: '绘本 IP 设计', theme: 'yellow', desc: '故事创意、角色设定与绘本内页', projects: ['colorful-world'] },
+    { cat: '展板', label: '展板', theme: 'blue', desc: '展览与课程展板合集，共 15 张', projects: ['boards'] },
   ],
 
   /* ---------- 二级项目（每个对应源文件夹里的一个子文件夹） ---------- */

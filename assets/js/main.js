@@ -17,6 +17,14 @@
 
   var DATA = window.SITE_DATA || {};
   var ASSETS = window.SITE_ASSETS || {};
+  var IP_IMG = {
+    red: 'assets/images/ip/ip-red.png',
+    yellow: 'assets/images/ip/ip-yellow.png',
+    blue: 'assets/images/ip/ip-blue.png',
+  };
+  function ipImg(theme) {
+    return IP_IMG[theme] || IP_IMG.red;
+  }
   var $ = function (sel, root) {
     return (root || document).querySelector(sel);
   };
@@ -185,6 +193,9 @@
                 '" alt="' +
                 (im.cap || p.title || '') +
                 '" loading="lazy" />' +
+                '<img class="rail__ip" src="' +
+                ipImg(cat.theme) +
+                '" alt="" aria-hidden="true" />' +
                 '<span class="rail__tip"><em>' +
                 (p.category || '') +
                 '</em>' +
@@ -200,6 +211,8 @@
           return (
             '<section class="work-group rail-group" data-cat="' +
             cat.cat +
+            '" data-theme="' +
+            (cat.theme || 'red') +
             '">' +
             head +
             '<div class="rail" data-rail>' +
@@ -219,6 +232,8 @@
         return (
           '<section class="work-group" data-cat="' +
           cat.cat +
+          '" data-theme="' +
+          (cat.theme || 'red') +
           '">' +
           head +
           '<div class="proj-grid" style="--cols:' +
@@ -262,6 +277,9 @@
                 '</span>' +
                 '<span class="pcard__cta">查看作品详情 →</span>' +
                 '</div>' +
+                '<img class="pcard__ip" src="' +
+                ipImg(cat.theme) +
+                '" alt="" aria-hidden="true" />' +
                 '</button>'
               );
             })

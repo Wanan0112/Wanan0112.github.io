@@ -2669,6 +2669,7 @@ button.slot {
 }
 
 .pcard {
+  position: relative;
   display: block;
   width: 100%;
   padding: 0;
@@ -2772,6 +2773,159 @@ button.slot {
   color: var(--kraft-3);
 }
 
+/* ---------- 14.5c IP 主题边框（火团子 / 咸蛋黄 / 蓝泡泡） ---------- */
+.work-group {
+  --ip: #c8473c;
+  --ip-shadow: rgba(226, 86, 74, 0.22);
+  --ip-tape: rgba(226, 86, 74, 0.38);
+}
+
+.work-group[data-theme='yellow'] {
+  --ip: #c58a22;
+  --ip-shadow: rgba(240, 183, 60, 0.3);
+  --ip-tape: rgba(240, 183, 60, 0.5);
+}
+
+.work-group[data-theme='blue'] {
+  --ip: #5e93c3;
+  --ip-shadow: rgba(143, 196, 234, 0.35);
+  --ip-tape: rgba(143, 196, 234, 0.5);
+}
+
+.work-group .board-label::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ip);
+  box-shadow: 0 0 0 4px var(--ip-shadow);
+  margin-right: 12px;
+  vertical-align: 2px;
+}
+
+/* 作品卡：手绘不规则描边 + 偏移纸影 + 胶带 + 小精灵探头 */
+.pcard {
+  border: 2px solid var(--ip);
+  border-radius: 20px 14px 22px 16px / 16px 22px 14px 20px;
+  box-shadow: 5px 5px 0 var(--ip-shadow), 0 12px 28px rgba(35, 65, 76, 0.12);
+  overflow: visible;
+}
+
+.pcard::before {
+  content: '';
+  position: absolute;
+  z-index: 3;
+  top: -11px;
+  left: 50%;
+  width: 88px;
+  height: 22px;
+  transform: translateX(-50%) rotate(-3deg);
+  background: repeating-linear-gradient(90deg, var(--ip-tape) 0 7px, rgba(255, 255, 255, 0.16) 7px 11px);
+  border: 1px solid var(--ip);
+  border-radius: 3px 5px 2px 4px;
+  box-shadow: 0 2px 5px rgba(35, 65, 76, 0.12);
+  pointer-events: none;
+}
+
+.pcard:hover {
+  transform: translate(-2px, -7px) rotate(-0.5deg);
+  box-shadow: 8px 8px 0 var(--ip-shadow), 0 26px 44px rgba(35, 65, 76, 0.22);
+}
+
+.pcard__media img {
+  border-radius: 17px 11px 19px 13px / 13px 19px 11px 17px;
+}
+
+.pcard__ip {
+  position: absolute;
+  z-index: 4;
+  top: -17px;
+  right: -13px;
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 5px rgba(35, 65, 76, 0.22));
+  transform-origin: 50% 80%;
+  animation: ip-peek 3.8s ease-in-out infinite;
+}
+
+.pcard:hover .pcard__ip {
+  animation: ip-peek-hover 0.85s ease-in-out infinite;
+}
+
+@keyframes ip-peek {
+  0%,
+  100% {
+    transform: rotate(-8deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(6deg) translateY(-3px);
+  }
+}
+
+@keyframes ip-peek-hover {
+  0%,
+  100% {
+    transform: rotate(-15deg) scale(1.1);
+  }
+
+  50% {
+    transform: rotate(11deg) scale(1.18) translateY(-5px);
+  }
+}
+
+/* 展板相片卡：同样的三族描边与胶带，小精灵缩为角标 */
+.rail__card {
+  border: 2px solid var(--ip);
+  border-radius: 18px 12px 20px 14px / 14px 20px 12px 18px;
+  box-shadow: 4px 4px 0 var(--ip-shadow), 0 14px 30px rgba(35, 65, 76, 0.2);
+  overflow: visible;
+}
+
+.rail__card > img:first-child {
+  border-radius: 15px 9px 17px 11px / 11px 17px 9px 15px;
+}
+
+.rail__card:hover {
+  box-shadow: 7px 7px 0 var(--ip-shadow), 0 26px 46px rgba(35, 65, 76, 0.3);
+}
+
+.rail__ip {
+  position: absolute;
+  z-index: 4;
+  top: -12px;
+  right: -9px;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 4px rgba(35, 65, 76, 0.2));
+  transform-origin: 50% 80%;
+  animation: ip-peek 4.4s ease-in-out infinite;
+}
+
+.rail__card:hover .rail__ip {
+  animation: ip-peek-hover 0.9s ease-in-out infinite;
+}
+
+.rail__card::before {
+  content: '';
+  position: absolute;
+  z-index: 3;
+  top: -8px;
+  left: 50%;
+  width: 58px;
+  height: 15px;
+  transform: translateX(-50%) rotate(2.5deg);
+  background: repeating-linear-gradient(90deg, var(--ip-tape) 0 5px, rgba(255, 255, 255, 0.16) 5px 8px);
+  border: 1px solid var(--ip);
+  border-radius: 2px 3px 2px 3px;
+  pointer-events: none;
+}
+
 /* ---------- 14.6 横向流动作品带（仅展板） ---------- */
 .rail-hint {
   display: flex;
@@ -2854,7 +3008,7 @@ button.slot {
   aspect-ratio: 3 / 4;
 }
 
-.rail__card img {
+.rail__card > img:first-child {
   width: 100%;
   height: 100%;
   object-fit: cover;

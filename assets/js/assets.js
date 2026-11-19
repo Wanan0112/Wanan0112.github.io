@@ -119,16 +119,12 @@ window.SITE_ASSETS = {
       { src: 'assets/videos/tapestry-b.mp4', poster: 'assets/videos/poster-tapestry-b.jpg', cap: '装置展示片段二' },],
   },
   'swarm-wave': {
-    images: [
-      { src: 'assets/images/works/interactive/swarm-wave/01.jpg', cap: '装置静帧 6s', ratio: 1.7766 },
-      { src: 'assets/images/works/interactive/swarm-wave/02.jpg', cap: '装置静帧 22s', ratio: 1.7766 },
-      { src: 'assets/images/works/interactive/swarm-wave/03.jpg', cap: '装置静帧 42s', ratio: 1.7766 },
-    ],
-    rail: [
-      { src: 'assets/images/works/interactive/swarm-wave/01.jpg', cap: '装置静帧 6s', ratio: 1.7766 },
-      { src: 'assets/images/works/interactive/swarm-wave/02.jpg', cap: '装置静帧 22s', ratio: 1.7766 },
-      { src: 'assets/images/works/interactive/swarm-wave/03.jpg', cap: '装置静帧 42s', ratio: 1.7766 },
-    ],
+    images: [      { src: 'assets/images/works/interactive/swarm-wave/02.jpg', cap: '装置静帧 22s', ratio: 1.7766 },
+{ src: 'assets/images/works/interactive/swarm-wave/01.jpg', cap: '装置静帧 6s', ratio: 1.7766 },
+      { src: 'assets/images/works/interactive/swarm-wave/03.jpg', cap: '装置静帧 42s', ratio: 1.7766 },],
+    rail: [      { src: 'assets/images/works/interactive/swarm-wave/02.jpg', cap: '装置静帧 22s', ratio: 1.7766 },
+{ src: 'assets/images/works/interactive/swarm-wave/01.jpg', cap: '装置静帧 6s', ratio: 1.7766 },
+      { src: 'assets/images/works/interactive/swarm-wave/03.jpg', cap: '装置静帧 42s', ratio: 1.7766 },],
     videos: [{ src: 'assets/videos/swarm-wave.mp4', poster: 'assets/videos/poster-swarm-wave.jpg', cap: '蜂浪装置展示视频（54 秒完整演示）' },],
   },
   'true-color': {
