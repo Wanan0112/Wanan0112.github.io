@@ -343,4 +343,4 @@ XA.bindPageEvents = function () {
   });
 };
 
-XA.init();
+if (!window.XA_DEFER_INIT) XA.init();
