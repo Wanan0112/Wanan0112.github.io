@@ -49,6 +49,7 @@
   <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h6a4 4 0 0 0 0-8h-4a4 4 0 0 1 0-8h6"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
   <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0M8.5 16a6 6 0 0 1 7 0M12 20h.01"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.2 9.2 4.4 4.4 0 0 0 7 18Z"/><path d="M12 3v2M4.5 6 6 7M19.5 6 18 7"/></symbol>
 </svg>
 
 <div class="stage">
@@ -79,11 +80,11 @@
     </div>
     <main class="screens" id="screens"></main>
     <nav class="tabbar" id="tabbar">
-      <button class="tab" data-tab="home"><svg class="ico"><use href="#i-navigation"/></svg><span>导航</span></button>
-      <button class="tab" data-tab="entertainment"><svg class="ico"><use href="#i-music"/></svg><span>娱乐</span></button>
+      <button class="tab" data-tab="home"><svg class="ico"><use href="#i-navigation"/></svg><span data-i18n="nav">导航</span></button>
+      <button class="tab" data-tab="entertainment"><svg class="ico"><use href="#i-music"/></svg><span data-i18n="entertainment">娱乐</span></button>
       <button class="sos-tab" data-action="sos" aria-label="SOS 紧急求助"><span>SOS</span></button>
-      <button class="tab" data-tab="community"><svg class="ico"><use href="#i-users"/></svg><span>社区</span></button>
-      <button class="tab" data-tab="profile"><svg class="ico"><use href="#i-user"/></svg><span>我的</span></button>
+      <button class="tab" data-tab="community"><svg class="ico"><use href="#i-users"/></svg><span data-i18n="community">社区</span></button>
+      <button class="tab" data-tab="profile"><svg class="ico"><use href="#i-user"/></svg><span data-i18n="profile">我的</span></button>
     </nav>
     <div class="modal-layer" id="modalLayer"></div>
     <div class="toast" id="toast"></div>
