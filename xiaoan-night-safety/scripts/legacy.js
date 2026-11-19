@@ -42,7 +42,7 @@
     XA.$('#phone').classList.toggle('no-tabbar', state !== 'default');
     if (state === 'default') {
       var search = XA.$('.home-search [data-destination]');
-      if (search) search.textContent = '搜索目的地、公交站';
+      if (search) search.textContent = XA.t ? XA.t('searchHint') : '搜索目的地、公交站';
       var panel = XA.$('#routePanel');
       if (panel) panel.classList.remove('expanded');
     }
@@ -220,15 +220,17 @@
   function renderAccount() {
     var card = XA.$('[data-screen="profile"] .profile-card');
     if (!card) return;
+    var en = XA.lang === 'en';
     var name = card.querySelector('b'), sub = card.querySelector('small'), av = card.querySelector('.profile-avatar');
     var item = card.querySelector('.level');
-    if (name) name.textContent = XA.account.loggedIn ? XA.account.nickname : '未登录 · 点击登录';
+    if (name) name.textContent = XA.account.loggedIn ? XA.account.nickname : (en ? 'Not signed in · Tap to sign in' : '未登录 · 点击登录');
     if (sub) sub.textContent = XA.account.loggedIn ?
-      ('手机号：' + XA.account.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') + ' · 已连续守护 3 晚') :
-      '登录后同步夜行数据 · 点击登录';
+      ((en ? 'Phone: ' : '手机号：') + XA.account.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') + (en ? ' · 3 nights guarded' : ' · 已连续守护 3 晚')) :
+      (en ? 'Sign in to sync your night walks · Tap to sign in' : '登录后同步夜行数据 · 点击登录');
     if (av) av.textContent = XA.account.loggedIn ? XA.account.nickname.slice(0, 1) : '安';
-    if (item) item.textContent = XA.account.loggedIn ? '夜行者 Lv.3' : '游客模式';
+    if (item) item.textContent = XA.account.loggedIn ? (en ? 'Night Walker Lv.3' : '夜行者 Lv.3') : (en ? 'Guest mode' : '游客模式');
   }
+  XA.renderAccount = renderAccount;
   function buildLogin() {
     if (XA.$('.login-screen')) return;
     var el = document.createElement('div');
@@ -298,6 +300,29 @@
   XA.actions['logout-account'] = function () {
     XA.account.loggedIn = false; XA.account.phone = ''; XA.account.code = '';
     saveAccount(); renderAccount(); XA.closeModal(); XA.toast('已退出登录');
+  };
+  XA.actions['account-security'] = function () {
+    XA.openSheet('<h3 data-i18n="accountSecurity">账号与安全</h3><div class="sheet-sub" data-i18n="accountSecuritySub">登录方式、设备与紧急访问</div>' +
+      '<div class="option-row">' + ic('phone') + '<span><b data-i18n="accountLogin">登录方式</b><small>' +
+      (XA.account.loggedIn ? (XA.account.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') + ' · 验证码登录') : '未登录 · 可随时登录') + '</small></span></div>' +
+      '<div class="option-row">' + ic('lock') + '<span><b data-i18n="accountDevice">已配对设备</b><small>小安 AR 眼镜 XA-0281 · 本地加密</small></span></div>' +
+      '<div class="option-row">' + ic('shield') + '<span><b>紧急联系人</b><small>3 位 · 仅报警或长按求助时通知</small></span></div>' +
+      '<button class="primary-btn" data-action="open-login" data-i18n="accountChange">管理</button>');
+  };
+  XA.actions['switch-account'] = function () {
+    XA.openSheet('<h3 data-i18n="switchAccount">切换账号</h3><div class="sheet-sub" data-i18n="switchAccountSub">可使用其他手机号登录</div>' +
+      '<div class="option-row">' + ic('users') + '<span><b>' + (XA.account.loggedIn ? XA.account.nickname : '当前未登录') +
+      '</b><small>' + (XA.account.loggedIn ? XA.account.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') : '跳过登录模式') + '</small></span></div>' +
+      '<button class="primary-btn" data-action="switch-login" data-i18n="continueSwitch">继续切换</button>');
+  };
+  XA.actions['switch-login'] = function () {
+    XA.account.loggedIn = false; XA.account.code = '';
+    saveAccount(); renderAccount();
+    XA.closeModal();
+    setTimeout(function () {
+      openLogin();
+      setTimeout(function () { var p = XA.$('#loginPhone'); if (p) p.value = XA.account.phone || ''; }, 80);
+    }, 180);
   };
   XA.actions['save-nickname'] = function () {
     var v = ((XA.$('#acctNewName') || {}).value || '').trim();
@@ -587,8 +612,9 @@
   }
   XA.actions.search = function () {
     var presets = Object.keys(DESTS);
-    XA.openSheet('<h3>搜索目的地</h3><div class="sheet-sub">支持输入关键词搜索真实地点，或使用常用地址</div>' +
+    XA.openSheet('<h3 data-i18n="search">搜索目的地</h3><div class="sheet-sub">支持输入关键词搜索真实地点，或使用常用地址</div>' +
       '<input id="xaSearchInput" class="sheet-input" style="min-height:auto;height:44px" placeholder="输入地点名称，如 西湖" autocomplete="off">' +
+      '<div class="fav-hint">' + ic('pin') + '<span><b data-i18n="commonAddresses">常用地址</b><small data-i18n="commonHint">点击即可快速规划夜间安全路线</small></span></div>' +
       '<div id="xaPreset" class="seg">' + presets.map(function (n) {
         return '<button data-xa-dest="' + n + '">' + n + '</button>';
       }).join('') + '</div>' +
@@ -601,7 +627,11 @@
         if (q.length < 2) { XA.$('#xaPlaceResults').innerHTML = ''; return; }
         searchTimer = setTimeout(function () { searchPlaces(q); }, 450);
       });
-      setTimeout(function () { input.focus(); }, 260);
+      setTimeout(function () {
+        input.focus();
+        var sh = XA.$('#modalLayer .sheet');
+        if (sh) sh.classList.add('raised');
+      }, 260);
     }
   };
 
@@ -637,6 +667,42 @@
     box.querySelector('.confirm-btn').addEventListener('click', fire);
   };
 
+  /* ---------------- 天气 ---------------- */
+  var lastWeather = null;
+  function weatherLabel(code) {
+    var en = XA.lang === 'en';
+    if (code === 0) return en ? 'Clear' : '晴';
+    if (code === 1 || code === 2) return en ? 'Partly cloudy' : '多云';
+    if (code === 3) return en ? 'Overcast' : '阴';
+    if (code >= 45 && code <= 48) return en ? 'Foggy' : '雾';
+    if (code >= 51 && code <= 67) return en ? 'Rainy' : '雨';
+    if (code >= 71 && code <= 77) return en ? 'Snowy' : '雪';
+    if (code >= 80 && code <= 82) return en ? 'Showers' : '阵雨';
+    if (code >= 95) return en ? 'Thunderstorm' : '雷阵雨';
+    return en ? 'Cloudy' : '多云';
+  }
+  function paintWeather(temp, text) {
+    lastWeather = { temp: temp, text: text };
+    XA.weatherText = Math.round(temp) + '° ' + text;
+    var el = XA.$('#weatherText');
+    if (el) el.textContent = XA.weatherText;
+  }
+  function updateWeather() {
+    if (lastWeather) { paintWeather(lastWeather.temp, lastWeather.text); return; }
+    var c = gcj();
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + c[0] + '&longitude=' + c[1] + '&current=temperature_2m,weather_code';
+    fetch(url).then(function (r) { return r.json(); }).then(function (d) {
+      var cur = d && d.current;
+      if (!cur || typeof cur.temperature_2m !== 'number') throw new Error('no weather');
+      paintWeather(cur.temperature_2m, weatherLabel(cur.weather_code));
+    }).catch(function () {
+      var en = XA.lang === 'en';
+      paintWeather(22, en ? 'Cloudy' : '多云');
+    });
+  }
+  XA.updateWeather = updateWeather;
+  XA.clearWeather = function () { lastWeather = null; };
+
   /* ---------------- 加载流程 ---------------- */
   XA.playSplash = function () {
     var splash = XA.$('#splash'), status = XA.$('#splashStatus');
@@ -649,6 +715,7 @@
     ];
     stages.forEach(function (s) { setTimeout(function () { if (status) status.textContent = s[1]; }, s[0]); });
     initHomeMap();
+    updateWeather();
     setTimeout(function () { locate(true); }, 500);
     var gone = false;
     function dismiss() {
@@ -686,6 +753,7 @@
     setTimeout(function () {
       initNavMap();
       startWatch();
+      updateWeather();
       var nav = XA.$('.nav-session');
       if (nav) {
         nav.classList.add('pure-nav');
@@ -716,18 +784,17 @@
     if (r) r.classList.remove('open');
     if (p) p.classList.toggle('open');
   };
+  XA.actions['close-map-mode'] = function () { var p = XA.$('#mapModePop'); if (p) p.classList.remove('open'); };
 
   XA.init();
   loadSettings();
   loadAccount();
+  var savedLang = 'zh';
+  try { savedLang = localStorage.getItem('xa_language') || 'zh'; } catch (e) {}
+  XA.setLanguage(savedLang);
   buildLogin();
   var profileCard = XA.$('[data-screen="profile"] .profile-card');
   if (profileCard) profileCard.addEventListener('click', function () { XA.actions['open-login'](); });
-  var menu = XA.$('[data-screen="profile"] .menu-group');
-  if (menu) menu.insertAdjacentHTML('afterbegin',
-    '<button data-menu="appearance"><span class="menu-ico mint">' + ic('settings') + '</span>外观与主题<small>主题色 · 点位 · 倒计时</small>' + ic('chevron') + '</button>');
-  XA.menuSheets.appearance = ['外观与主题', '主题色、地图点位与安全偏好'];
-
   document.addEventListener('click', function (e) {
     var theme = e.target.closest('[data-theme-set]');
     if (theme) { XA.settings.theme = theme.dataset.themeSet; saveSettings(); applyTheme(); openSettings(); XA.toast('主题色已更新'); return; }
