@@ -265,7 +265,7 @@ XA.playSplash = function () {
   if (!splash) return;
   var stages = [
     [650, '正在校准夜路数据…'],
-    [1350, 'AI 小安正在守护…'],
+    [1350, 'AI 安星正在守护…'],
     [2050, '准备就绪 · 出发吧']
   ];
   stages.forEach(function (s) {
