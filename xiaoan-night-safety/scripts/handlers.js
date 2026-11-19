@@ -17,7 +17,22 @@ XA.I18N = {
     musicPlaying: '正在播放 · 后台播放', weatherFallback: '22° 多云',
     entertainmentSub: '夜路很长，让声音陪你走', communitySub: '真实夜行经验，彼此照亮',
     arSub: '眼镜控制台', profileSub: '守护设置与夜行记录', nightVideo: '夜行影像',
-    activeNow: 'AI 小安正在守护'
+    activeNow: 'AI 小安正在守护',
+    settingsPageSub: '个性、安全与设备', personalSettings: '个性设置', personalSub: '外观、语言与显示偏好',
+    securityPrivacySettings: '安全隐私设置', securityPrivacySub: '权限、账号与访问范围',
+    otherSettings: '其他设置', otherSub: '关于、设备与帮助', feedback: '问题反馈', feedbackSub: '联系客服或提交问题',
+    privacyManage: '隐私与权限', privacyManageSub: '主页访问、购买记录与定位权限',
+    allowHomepage: '允许他人访问我的主页', allowHomepageDesc: '关闭后他人无法查看你的主页',
+    hidePurchases: '隐藏购买记录', hidePurchasesDesc: '开启后他人无法查看你的购买记录',
+    locationPermission: '位置权限', locationPermissionDesc: '仅导航和紧急求助时使用，关闭后需手动输入地址',
+    analytics: '匿名体验改进', analyticsDesc: '关闭后不会上传交互统计',
+    enabled: '已开启', disabled: '已关闭', privacySaved: '隐私设置已保存',
+    feedbackTitle: '问题反馈', feedbackSub: '请告诉我们遇到的问题', feedbackType: '问题类型',
+    feedbackPlaceholder: '请描述问题发生的时间、页面和操作步骤…', submitFeedback: '提交反馈',
+    contactService: '联系在线客服', serviceTitle: '在线客服', serviceSub: '工作日 9:00–22:00 · 演示会话',
+    servicePlaceholder: '输入你想咨询的问题…', sendMessage: '发送', feedbackThanks: '反馈已提交，我们会尽快联系你',
+    logoutConfirmTitle: '是否退出登录？', logoutConfirmSub: '退出后将无法同步安全路线与守护记录',
+    confirmLogout: '确认退出', keepLogin: '保持登录'
   },
   en: {
     nav: 'Navigate', entertainment: 'Entertain', community: 'Community', profile: 'Me', sos: 'Emergency',
@@ -37,7 +52,22 @@ XA.I18N = {
     musicPlaying: 'Now playing · Background', weatherFallback: '22° Cloudy',
     entertainmentSub: 'Long roads sound better together', communitySub: 'Real night walks, shared light',
     arSub: 'Glasses console', profileSub: 'Safety settings & trip history', nightVideo: 'Night walks in motion',
-    activeNow: 'Xiao\u0027an is guarding you'
+    activeNow: 'Xiao\u0027an is guarding you',
+    settingsPageSub: 'Personal, safety & device', personalSettings: 'Personal', personalSub: 'Theme, language & display',
+    securityPrivacySettings: 'Safety & privacy', securityPrivacySub: 'Permissions, account & access',
+    otherSettings: 'More', otherSub: 'About, device & help', feedback: 'Feedback', feedbackSub: 'Contact support or report an issue',
+    privacyManage: 'Privacy & permissions', privacyManageSub: 'Profile access, purchases & location',
+    allowHomepage: 'Allow others to view my profile', allowHomepageDesc: 'Turn off to hide your profile from others',
+    hidePurchases: 'Hide purchase history', hidePurchasesDesc: 'Turn on to hide your purchases from others',
+    locationPermission: 'Location permission', locationPermissionDesc: 'Used only for navigation and SOS; off requires manual address entry',
+    analytics: 'Anonymous experience insights', analyticsDesc: 'Turn off to stop sending interaction statistics',
+    enabled: 'On', disabled: 'Off', privacySaved: 'Privacy settings saved',
+    feedbackTitle: 'Send feedback', feedbackSub: 'Tell us what went wrong', feedbackType: 'Issue type',
+    feedbackPlaceholder: 'Describe when it happened, where, and what you did…', submitFeedback: 'Submit feedback',
+    contactService: 'Contact live support', serviceTitle: 'Live support', serviceSub: 'Weekdays 9:00–22:00 · demo chat',
+    servicePlaceholder: 'Type your question…', sendMessage: 'Send', feedbackThanks: 'Thanks, we will contact you soon',
+    logoutConfirmTitle: 'Sign out?', logoutConfirmSub: 'You will not be able to sync routes and guard history',
+    confirmLogout: 'Sign out', keepLogin: 'Stay signed in'
   }
 };
 XA.lang = 'zh';
@@ -371,7 +401,74 @@ XA.actions = {
     '<img src="assets/ar-preview.jpg" alt="镜片预览" style="width:100%;border-radius:14px;display:block">' +
     '<p class="sheet-note">前方 30 m 右转进入滨江路 · 目的地滨江花园 320 m · 安全分 92 · 路灯 86%</p>'); },
   'find-glasses': function () { XA.toast('已向眼镜发送查找信号 · 镜腿提示音与闪烁已开启'); },
-  settings: function () { XA.go('profile'); XA.toast('设置已打开'); }
+  settings: function () { XA.go('settings'); },
+  'settings-language': function () { XA.actions.language(); },
+  'privacy-settings': function () {
+    var p = XA.privacy || {};
+    var row = function (key, icon, titleKey, descKey) {
+      var on = !!p[key];
+      return '<button class="setting-line privacy-row" data-privacy="' + key + '" aria-pressed="' + on + '">' +
+        '<span>' + ic(icon) + '</span><span class="privacy-copy"><b data-i18n="' + titleKey + '">' + XA.t(titleKey) + '</b>' +
+        '<small data-i18n="' + descKey + '">' + XA.t(descKey) + '</small></span>' +
+        '<span class="toggle' + (on ? ' on' : '') + '"><i></i></span></button>';
+    };
+    XA.openSheet('<h3 data-i18n="privacyManage">隐私与权限</h3><div class="sheet-sub" data-i18n="privacyManageSub">主页访问、购买记录与定位权限</div>' +
+      row('allowHomepage', 'users', 'allowHomepage', 'allowHomepageDesc') +
+      row('hidePurchases', 'lock', 'hidePurchases', 'hidePurchasesDesc') +
+      row('location', 'pin', 'locationPermission', 'locationPermissionDesc') +
+      row('analytics', 'shield', 'analytics', 'analyticsDesc') +
+      '<p class="sheet-note">所有开关仅保存在本机，可随时更改。关闭位置权限后，导航需手动输入起点。</p>');
+  },
+  feedback: function () {
+    XA.openSheet('<h3 data-i18n="feedbackTitle">问题反馈</h3><div class="sheet-sub" data-i18n="feedbackSub">请告诉我们遇到的问题</div>' +
+      '<div class="sheet-chips"><button class="chip active" data-feedback-type="功能异常">功能异常</button>' +
+      '<button class="chip" data-feedback-type="体验建议">体验建议</button><button class="chip" data-feedback-type="账号与隐私">账号与隐私</button></div>' +
+      '<textarea class="sheet-input" id="feedbackInput" placeholder="' + XA.t('feedbackPlaceholder') + '" data-i18n-placeholder="feedbackPlaceholder"></textarea>' +
+      '<button class="option-row" data-action="feedback-service">' + ic('phone') + '<span><b data-i18n="contactService">联系在线客服</b><small data-i18n="serviceSub">工作日 9:00–22:00 · 演示会话</small></span></button>' +
+      '<button class="primary-btn" data-action="submit-feedback" data-i18n="submitFeedback">提交反馈</button>');
+    XA.$$('[data-feedback-type]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        XA.$$('[data-feedback-type]').forEach(function (b) { b.classList.remove('active'); });
+        el.classList.add('active');
+      });
+    });
+  },
+  'submit-feedback': function () {
+    var val = ((XA.$('#feedbackInput') || {}).value || '').trim();
+    if (!val) { XA.toast(XA.lang === 'en' ? 'Please describe the issue' : '请先描述遇到的问题'); return; }
+    XA.closeModal(); XA.toast(XA.t('feedbackThanks'));
+  },
+  'feedback-service': function () {
+    XA.openSheet('<h3 data-i18n="serviceTitle">在线客服</h3><div class="sheet-sub" data-i18n="serviceSub">工作日 9:00–22:00 · 演示会话</div>' +
+      '<div class="service-chat" id="serviceChat"><p class="service-msg">小安：你好，我是小安客服。请描述你遇到的问题，我会尽力帮你。</p></div>' +
+      '<div class="service-input-row"><input class="login-input" id="serviceInput" placeholder="' + XA.t('servicePlaceholder') + '" data-i18n-placeholder="servicePlaceholder"><button class="primary-btn" data-action="service-send" data-i18n="sendMessage">发送</button></div>');
+    setTimeout(function () { var i = XA.$('#serviceInput'); if (i) i.focus(); }, 260);
+  },
+  'service-send': function () {
+    var input = XA.$('#serviceInput'), chat = XA.$('#serviceChat');
+    if (!input || !chat) return;
+    var val = input.value.trim();
+    if (!val) return;
+    var me = document.createElement('p');
+    me.className = 'service-msg me'; me.textContent = '我：' + val;
+    chat.appendChild(me); input.value = ''; chat.scrollTop = chat.scrollHeight;
+    setTimeout(function () {
+      var reply = document.createElement('p');
+      reply.className = 'service-msg';
+      reply.textContent = XA.lang === 'en' ? 'Xiao’an: Thanks for reporting. We have recorded this demo conversation.' : '小安：已收到，我们会记录这段演示会话并尽快跟进。';
+      chat.appendChild(reply); chat.scrollTop = chat.scrollHeight;
+    }, 600);
+  },
+  'logout-confirm': function () {
+    XA.closeModal();
+    setTimeout(function () {
+      XA.openSheet('<h3 data-i18n="logoutConfirmTitle">是否退出登录？</h3><div class="sheet-sub" data-i18n="logoutConfirmSub">退出后将无法同步安全路线与守护记录</div>' +
+        '<div class="option-row">' + ic('users') + '<span><b>' + (XA.account && XA.account.loggedIn ? XA.account.nickname : '游客') + '</b><small>' +
+        (XA.account && XA.account.loggedIn ? XA.account.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') : '当前未登录') + '</small></span></div>' +
+        '<button class="login-skip" data-close="1" data-i18n="keepLogin">保持登录</button>' +
+        '<button class="logout-confirm-btn" data-action="logout-account" data-i18n="confirmLogout">确认退出</button>');
+    }, 180);
+  }
 };
 
 XA.menuSheets = {
@@ -380,7 +477,7 @@ XA.menuSheets = {
   history: ['守护记录', '已完成 18 段安全行程 · 1 次误报取消'],
   privacy: ['隐私与权限', '位置仅使用期间 · 麦克风端侧处理 · 可随时撤回'],
   device: ['AR 眼镜设备', 'XA-0281 已连接 · 电量 82% · 配对信息本地加密'],
-  about: ['关于小安', '小安 · 夜行安全系统 V1.0 · 概念设计原型']
+  about: ['关于小安', '小安 · 夜行安全系统 V1.4 · 概念设计原型']
 };
 
 XA.bindPageEvents = function () {
@@ -402,6 +499,18 @@ XA.bindPageEvents = function () {
       XA.setLanguage(lang.dataset.lang);
       XA.closeModal();
       XA.toast(XA.lang === 'en' ? 'Language set to English' : '已切换为简体中文');
+      return;
+    }
+    var privacy = e.target.closest('[data-privacy]');
+    if (privacy) {
+      var key = privacy.dataset.privacy;
+      XA.privacy[key] = !XA.privacy[key];
+      var on = !!XA.privacy[key];
+      privacy.setAttribute('aria-pressed', String(on));
+      var tg = privacy.querySelector('.toggle');
+      if (tg) tg.classList.toggle('on', on);
+      if (XA.savePrivacy) XA.savePrivacy();
+      XA.toast(XA.t('privacySaved') + ' · ' + (on ? XA.t('enabled') : XA.t('disabled')));
       return;
     }
     var menu = e.target.closest('[data-menu]');
