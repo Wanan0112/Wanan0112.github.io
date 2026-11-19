@@ -1,10 +1,44 @@
+.screen{padding-top:calc(44px + env(safe-area-inset-top))}
+.tabbar{height:calc(var(--tabh) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
+.scroll-screen{padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 16px)}
+
 @media (max-width:900px){
+  html,body{height:100%;overflow:hidden}
   body{background:#05070d}
-  .stage{display:block;min-height:100dvh;padding:0;background:#05070d}
+  .stage{display:block;width:100%;height:100dvh;min-height:100dvh;padding:0;background:#05070d}
   .stage-copy{display:none}
   .phone{width:100vw;height:100dvh;border:0;border-radius:0;box-shadow:none}
   .phone::before{display:none}
-  .status-bar{padding-top:max(10px,env(safe-area-inset-top))}
+  .status-bar{height:calc(44px + env(safe-area-inset-top));padding:max(12px,env(safe-area-inset-top)) calc(26px + env(safe-area-inset-right)) 0 calc(26px + env(safe-area-inset-left))}
+  .home-map{inset:calc(44px + env(safe-area-inset-top)) 0 0}
+  .home-top{top:calc(52px + env(safe-area-inset-top))}
+  .search-box{top:calc(104px + env(safe-area-inset-top))}
+  .score-card{top:calc(166px + env(safe-area-inset-top))}
+  .dest-chip{top:calc(170px + env(safe-area-inset-top))}
+  .layer-btn{top:calc(288px + env(safe-area-inset-top))}
+  .bulb-btn{top:calc(338px + env(safe-area-inset-top))}
+  .event-card{top:calc(390px + env(safe-area-inset-top))}
+  .home-sheet{top:calc(462px + env(safe-area-inset-top));padding-bottom:calc(var(--tabh) - 16px + env(safe-area-inset-bottom))}
+  .route-footer,.ar-footer{bottom:calc(16px + env(safe-area-inset-bottom))}
+  .toast{bottom:calc(100px + env(safe-area-inset-bottom))}
+  .modal-layer .sheet{border-radius:28px 28px 0 0;padding-bottom:calc(26px + env(safe-area-inset-bottom))}
+}
+@media (max-width:360px){
+  :root{--safe:14px}
+  .brand-text b{font-size:14px}
+  .guard-text{display:none}
+  .home-sheet .dest-main b{font-size:13px}
+  .shortcuts button{font-size:8px;padding:0 5px}
+  .shortcuts small{display:none}
+  .score-card{width:222px}
+  .dest-chip{max-width:120px}
+  .route-card{gap:7px;padding:9px}
+  .score-ring.sm{width:46px;height:46px}
+  .score-ring.sm>span{font-size:15px}
+  .story-actions{gap:6px}
+}
+@media (max-height:480px) and (orientation:landscape){
+  body::after{content:"请竖屏使用小安，获得完整守护体验";position:fixed;inset:0;z-index:999;background:#05070d;color:var(--mint);font-size:14px;letter-spacing:.08em;display:flex;align-items:center;justify-content:center}
 }
 @media (min-width:901px) and (max-height:930px){
   .stage{padding:20px 24px;min-height:100vh}
