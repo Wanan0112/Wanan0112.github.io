@@ -150,16 +150,60 @@ XA_SCREENS.profile = `
   </div>
   <div class="section-title profile-section"><h3 data-i18n="settings">设置</h3><small data-i18n="settingsSub">守护偏好与账号</small></div>
   <div class="menu-group">
-    <button data-menu="about"><span class="menu-ico blue">${ic('shield')}</span><span data-i18n="about">关于小安</span>${ic('chevron')}</button>
-    <button data-menu="privacy"><span class="menu-ico mint">${ic('lock')}</span><span data-i18n="privacy">隐私与权限</span><small>位置 · 麦克风</small>${ic('chevron')}</button>
-    <button data-action="settings"><span class="menu-ico amber">${ic('settings')}</span><span data-i18n="appearance">外观与主题</span><small data-i18n="themeName">薄荷夜色</small>${ic('chevron')}</button>
-    <button data-action="account-security"><span class="menu-ico mint">${ic('lock')}</span><span data-i18n="accountSecurity">账号与安全</span><small data-i18n="deviceBound">已绑定设备</small>${ic('chevron')}</button>
-    <button data-action="language"><span class="menu-ico blue">${ic('glasses')}</span><span data-i18n="language">管理语言</span><small data-i18n="languageName">简体中文</small>${ic('chevron')}</button>
-    <button data-menu="device"><span class="menu-ico amber">${ic('glasses')}</span><span data-i18n="device">AR 眼镜设备</span><small>已连接</small>${ic('chevron')}</button>
+    <button data-action="settings"><span class="menu-ico mint">${ic('settings')}</span><span data-i18n="settings">设置</span><small data-i18n="settingsPageSub">个性、安全与设备</small>${ic('chevron')}</button>
+  </div>
+  <div class="menu-group">
+    <button data-action="feedback"><span class="menu-ico amber">${ic('comment')}</span><span data-i18n="feedback">问题反馈</span><small data-i18n="feedbackSub">联系客服</small>${ic('chevron')}</button>
   </div>
   <div class="menu-group account-actions">
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
-    <button data-action="logout-account" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
+    <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">小安 · 夜行安全系统 V1.3 · 概念设计原型</p>
+  <p class="version">小安 · 夜行安全系统 V1.4 · 概念设计原型</p>
+</section>`;
+
+XA_SCREENS.settings = `
+<section class="screen scroll-screen settings-screen" data-screen="settings">
+  <header class="page-head">
+    <button class="icon-btn" data-back="profile">${ic('back')}</button>
+    <div class="head-title"><h2 data-i18n="settings">设置</h2><small data-i18n="settingsPageSub">个性、安全与设备</small></div>
+    <button class="icon-btn" data-action="feedback">${ic('comment')}</button>
+  </header>
+
+  <div class="settings-hero glass">
+    <span class="profile-avatar">安</span>
+    <span><b>小安用户</b><small data-i18n="settingsSub">守护偏好与账号</small></span>
+    <span class="level">Lv.3</span>
+  </div>
+
+  <div class="settings-block">
+    <div class="settings-block-head"><span class="settings-block-ico mint">${ic('settings')}</span><span><b data-i18n="personalSettings">个性设置</b><small data-i18n="personalSub">外观、语言与显示偏好</small></span></div>
+    <div class="menu-group">
+      <button data-action="settings-appearance"><span class="menu-ico amber">${ic('settings')}</span><span data-i18n="appearance">外观与主题</span><small data-i18n="themeName">薄荷夜色</small>${ic('chevron')}</button>
+      <button data-action="settings-language"><span class="menu-ico blue">${ic('glasses')}</span><span data-i18n="language">管理语言</span><small data-i18n="languageName">简体中文</small>${ic('chevron')}</button>
+    </div>
+  </div>
+
+  <div class="settings-block">
+    <div class="settings-block-head"><span class="settings-block-ico blue">${ic('shield')}</span><span><b data-i18n="securityPrivacySettings">安全隐私设置</b><small data-i18n="securityPrivacySub">权限、账号与访问范围</small></span></div>
+    <div class="menu-group">
+      <button data-action="privacy-settings"><span class="menu-ico mint">${ic('lock')}</span><span data-i18n="privacyManage">隐私与权限</span><small>4 项开关</small>${ic('chevron')}</button>
+      <button data-action="account-security"><span class="menu-ico amber">${ic('users')}</span><span data-i18n="accountSecurity">账号与安全</span><small data-i18n="deviceBound">已绑定设备</small>${ic('chevron')}</button>
+    </div>
+  </div>
+
+  <div class="settings-block">
+    <div class="settings-block-head"><span class="settings-block-ico amber">${ic('glasses')}</span><span><b data-i18n="otherSettings">其他设置</b><small data-i18n="otherSub">关于、设备与帮助</small></span></div>
+    <div class="menu-group">
+      <button data-menu="about"><span class="menu-ico blue">${ic('shield')}</span><span data-i18n="about">关于小安</span>${ic('chevron')}</button>
+      <button data-menu="device"><span class="menu-ico amber">${ic('glasses')}</span><span data-i18n="device">AR 眼镜设备</span><small>已连接</small>${ic('chevron')}</button>
+      <button data-action="feedback"><span class="menu-ico mint">${ic('comment')}</span><span data-i18n="feedback">问题反馈</span><small data-i18n="contactService">联系在线客服</small>${ic('chevron')}</button>
+    </div>
+  </div>
+
+  <div class="menu-group account-actions">
+    <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
+    <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
+  </div>
+  <p class="version">小安 · 夜行安全系统 V1.4 · 概念设计原型</p>
 </section>`;
