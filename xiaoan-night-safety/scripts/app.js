@@ -70,7 +70,7 @@ XA.bindSheetGestures = function () {
   });
   sheet.addEventListener('pointermove', function (e) {
     if (!dragging) return;
-    dy = Math.max(0, e.clientY - startY);
+    dy = Math.max(-70, e.clientY - startY);
     sheet.style.transform = 'translateY(' + dy + 'px)';
   });
   function end() {
@@ -79,6 +79,8 @@ XA.bindSheetGestures = function () {
     sheet.classList.remove('dragging');
     sheet.style.transform = '';
     if (dy > 90) XA.closeModal();
+    else if (dy < -30) sheet.classList.add('raised');
+    else if (dy > 20) sheet.classList.remove('raised');
     dy = 0;
   }
   sheet.addEventListener('pointerup', end);
@@ -87,6 +89,8 @@ XA.bindSheetGestures = function () {
 
 XA.closeModal = function () {
   var layer = XA.$('#modalLayer');
+  var video = layer && layer.querySelector('video');
+  if (video) { video.pause(); video.removeAttribute('src'); video.load(); }
   layer.classList.remove('open');
   setTimeout(function () { if (!layer.classList.contains('open')) layer.innerHTML = ''; }, 320);
 };
