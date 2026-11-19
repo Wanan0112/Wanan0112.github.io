@@ -4,6 +4,7 @@
   var PHOTON = 'https://photon.komoot.io/api/';
   var OSRM = 'https://router.project-osrm.org/route/v1/';
   var TILE = 'https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}';
+  var TILE_SAT = 'https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}';
   var DEFAULT = { lat: 30.2700, lng: 120.1500 };
   var DESTS = {
     '滨江花园': { lat: 30.2080, lng: 120.2100, name: '滨江花园' },
@@ -25,6 +26,64 @@
 
   var geoStart = [DEFAULT.lat, DEFAULT.lng];
   var curRoutes = [], destPoint = null, navWatch = null, geoReady = false, loginShown = false;
+  var mapMode = '2d', baseMap = 'standard';
+  XA.homeState = 'default';
+
+  function setHomeState(state) {
+    XA.homeState = state;
+    window.scrollTo(0, 0);
+    var phone = XA.$('#phone');
+    if (phone) phone.scrollTop = 0;
+    XA.$$('.screen').forEach(function (el) { el.scrollTop = 0; });
+    var home = XA.$('[data-screen="home"]');
+    if (!home) return;
+    home.classList.remove('state-default', 'state-route', 'state-nav');
+    home.classList.add('state-' + state);
+    XA.$('#phone').classList.toggle('no-tabbar', true);
+    if (state === 'default') {
+      var search = XA.$('.home-search [data-destination]');
+      if (search) search.textContent = '搜索目的地、公交站';
+      var panel = XA.$('#routePanel');
+      if (panel) panel.classList.remove('expanded');
+    }
+    if (state === 'route') syncPanel();
+  }
+  function syncPanel() {
+    var phone = XA.$('#phone');
+    if (phone) phone.scrollTop = 0;
+    var r = curRoutes[0];
+    if (!r) return;
+    var set = function (sel, v) { var el = XA.$(sel); if (el) el.textContent = v; };
+    set('#rpScore', r.safety);
+    set('#rpLamp', r.lamp + '%');
+    set('#rpCam', r.cam + ' 处');
+    var sw = XA.$('#aiSwitch'), txt = XA.$('#aiStateText');
+    if (sw) sw.classList.toggle('on', !!XA.settings.aiCompanion);
+    if (txt) txt.textContent = XA.settings.aiCompanion ? '开启：语音陪伴 / 实时播报路况风险' : '关闭：导航静音，无 AI 互动';
+  }
+  function showRoutePanel() {
+    setHomeState('route');
+    var el = XA.$('.home-map');
+    if (el && el._xaMap) drawRoutes(el._xaMap);
+    syncPanel();
+  }
+  function resetHome() {
+    setHomeState('default');
+    var el = XA.$('.home-map');
+    if (el && el._xaMap && el._xaMap._xaRoutes) {
+      el._xaMap._xaRoutes.forEach(function (l) { el._xaMap.removeLayer(l); });
+      el._xaMap._xaRoutes = [];
+    }
+  }
+  function applyMapMode() {
+    document.body.classList.toggle('map-3d', mapMode === '3d');
+    var el = XA.$('.home-map'), m = el && el._xaMap;
+    if (!m) return;
+    Object.keys(m._layers).forEach(function (k) {
+      var layer = m._layers[k];
+      if (layer && layer._url) layer.setUrl(baseMap === 'satellite' ? TILE_SAT : TILE);
+    });
+  }
 
   function wgs84ToGcj02(lat, lng) {
     var outOfChina = !(lng > 73.66 && lng < 135.05 && lat > 3.86 && lat < 53.55);
@@ -59,7 +118,7 @@
 
   /* ---------------- 设置 ---------------- */
   XA.settings = {
-    theme: 'mint', sosCd: 3, voice: true, follow: true, radar: true, acc: true,
+    theme: 'mint', sosCd: 3, voice: true, follow: true, radar: true, acc: true, aiCompanion: true,
     markers: {
       lamp: { color: LCOLOR.lamp, shape: 'circle', glow: 7 },
       cam: { color: LCOLOR.cam, shape: 'circle', glow: 6 },
@@ -73,7 +132,7 @@
       if (s) {
         XA.settings.theme = s.theme || 'mint';
         XA.settings.sosCd = s.sosCd || 3;
-        ['voice', 'follow', 'radar', 'acc'].forEach(function (k) {
+        ['voice', 'follow', 'radar', 'acc', 'aiCompanion'].forEach(function (k) {
           if (typeof s[k] === 'boolean') XA.settings[k] = s[k];
         });
         if (s.markers) Object.keys(XA.settings.markers).forEach(function (k) {
@@ -123,6 +182,28 @@
     XA.openSheet(html);
   }
   XA.actions.settings = function () { openSettings(); };
+  XA.actions['risk-popover'] = function () {
+    var p = XA.$('#riskPopover'), m = XA.$('#mapModePop');
+    if (m) m.classList.remove('open');
+    if (p) p.classList.toggle('open');
+  };
+  XA.actions['close-risk'] = function () { var p = XA.$('#riskPopover'); if (p) p.classList.remove('open'); };
+  XA.actions.recenter = function () { locate(false); XA.toast('已回到当前位置'); };
+  XA.actions['ai-toggle'] = function () {
+    XA.settings.aiCompanion = !XA.settings.aiCompanion;
+    saveSettings(); syncPanel();
+    XA.toast(XA.settings.aiCompanion ? 'AI 全程陪伴已开启' : 'AI 全程陪伴已关闭 · 导航静音');
+  };
+  XA.actions['open-drawer'] = function () { var d = XA.$('#sideDrawer'); if (d) d.classList.add('open'); };
+  XA.actions['close-drawer'] = function () { var d = XA.$('#sideDrawer'); if (d) d.classList.remove('open'); };
+  XA.actions['open-route'] = function () {
+    XA.actions['close-drawer']();
+    XA.go('route');
+  };
+  XA.actions['open-ar'] = function () {
+    XA.actions['close-drawer']();
+    XA.go('ar');
+  };
 
   /* ---------------- 登录 ---------------- */
   XA.account = { loggedIn: false, phone: '', nickname: '小安用户', code: '' };
@@ -390,7 +471,7 @@
     return {
       coords: coords, distance: r.distance, seconds: sec, safety: safety,
       time: Math.ceil(sec / 60), dist: distKm.toFixed(1),
-      lamp: Math.max(3, Math.round(safety / 7 + (idx === 1 ? 2 : 0))),
+      lamp: Math.min(100, Math.max(40, Math.round(safety + 6 - (idx === 1 ? 12 : 0) - (idx === 2 ? 28 : 0)))),
       cam: Math.max(1, Math.round(safety / 12)),
       event: Math.max(0, Math.round((100 - safety) / 14))
     };
@@ -469,13 +550,15 @@
     return fetch(url).then(function (res) { return res.json(); }).then(function (data) {
       if (data.code !== 'Ok' || !data.routes || !data.routes.length) throw new Error('no route');
       curRoutes = data.routes.slice(0, 3).map(assessRoute);
-      updateRouteCards();
+      updateRouteCards(); syncPanel();
+      var eh = XA.$('.home-map'); if (eh && eh._xaMap) drawRoutes(eh._xaMap);
       var em = XA.$('.route-map'); if (em && em._xaMap) drawRoutes(em._xaMap);
       var en = XA.$('.nav-map'); if (en && en._xaMap) drawRoutes(en._xaMap, true);
       XA.toast('已生成 3 条真实路线 · 按安全优先排序');
     }).catch(function () {
       curRoutes = syntheticRoutes(dest);
-      updateRouteCards();
+      updateRouteCards(); syncPanel();
+      var eh = XA.$('.home-map'); if (eh && eh._xaMap) drawRoutes(eh._xaMap);
       var em = XA.$('.route-map'); if (em && em._xaMap) drawRoutes(em._xaMap);
       XA.toast('路线服务暂不可用，已切换到演示路线');
     });
@@ -583,6 +666,10 @@
   var origGo = XA.go;
   XA.go = function (screen, noHistory) {
     origGo(screen, noHistory);
+    if (screen === 'home') {
+      XA.$('#phone').classList.add('no-tabbar');
+      if (!noHistory) resetHome();
+    }
     if (screen === 'route') setTimeout(function () {
       initRouteMap();
       if (!curRoutes.length || XA._lastPlanned !== XA.destination) {
@@ -596,9 +683,17 @@
   var origStart = XA.actions['start-nav'];
   XA.actions['start-nav'] = function () {
     origStart();
+    setHomeState('nav');
     setTimeout(function () {
       initNavMap();
       startWatch();
+      var nav = XA.$('.nav-session');
+      if (nav) {
+        nav.classList.add('pure-nav');
+        if (!nav.querySelector('.nav-sos')) nav.insertAdjacentHTML('beforeend', '<button class="nav-sos" data-action="sos">SOS</button>');
+        var turn = nav.querySelector('.nav-turn');
+        if (turn && !turn.querySelector('.nav-end')) turn.insertAdjacentHTML('beforeend', '<button class="nav-end" data-action="end-nav">结束</button>');
+      }
       if (curRoutes.length) {
         var idx = XA.route === 'A' ? 0 : XA.route === 'B' ? 1 : 2;
         var r = curRoutes[idx];
@@ -614,18 +709,13 @@
     }, 90);
   };
   var origEnd = XA.actions['end-nav'];
-  XA.actions['end-nav'] = function () { stopWatch(); origEnd(); };
+  XA.actions['end-nav'] = function () { stopWatch(); origEnd(); resetHome(); };
   var origFire = XA.fireAlarm;
   XA.fireAlarm = function () { stopWatch(); origFire(); };
-  var origLayer = XA.actions.layer;
-  XA.actions.layer = function (el) {
-    origLayer(el);
-    [XA.$('.home-map'), XA.$('.nav-map')].forEach(function (box) {
-      var m = box && box._xaMap;
-      if (!m || !m._xaPoints) return;
-      var visible = !document.body.classList.contains('light-layer-on');
-      m._xaPoints.forEach(function (p) { if (visible) m.addLayer(p); else m.removeLayer(p); });
-    });
+  XA.actions.layer = function () {
+    var p = XA.$('#mapModePop'), r = XA.$('#riskPopover');
+    if (r) r.classList.remove('open');
+    if (p) p.classList.toggle('open');
   };
 
   XA.init();
@@ -664,7 +754,7 @@
       destPoint = DESTS[dest.dataset.xaDest];
       XA.setDestination(dest.dataset.xaDest);
       XA._lastPlanned = dest.dataset.xaDest;
-      XA.closeModal(); XA.go('route'); planRoutes(dest.dataset.xaDest);
+      XA.closeModal(); showRoutePanel(); planRoutes(dest.dataset.xaDest);
       return;
     }
     var ph = e.target.closest('[data-photon]');
@@ -673,10 +763,65 @@
       destPoint = p;
       XA.setDestination(p.name);
       XA._lastPlanned = p.name;
-      XA.closeModal(); XA.go('route'); planRoutes(p.name);
+      XA.closeModal(); showRoutePanel(); planRoutes(p.name);
       return;
     }
+    var mm = e.target.closest('[data-map-mode]');
+    if (mm) {
+      mapMode = mm.dataset.mapMode;
+      XA.$$('[data-map-mode]').forEach(function (b) { b.classList.toggle('on', b === mm); });
+      applyMapMode(); XA.toast('地图视角已切换为 ' + mapMode.toUpperCase()); return;
+    }
+    var bm = e.target.closest('[data-base-map]');
+    if (bm) {
+      baseMap = bm.dataset.baseMap;
+      XA.$$('[data-base-map]').forEach(function (b) { b.classList.toggle('on', b === bm); });
+      applyMapMode(); XA.toast(baseMap === 'satellite' ? '已切换卫星地图' : '已切换标准地图'); return;
+    }
     var menuItem = e.target.closest('[data-menu="appearance"]');
-    if (menuItem) { openSettings(); }
+    if (menuItem) { openSettings(); return; }
+    if (!e.target.closest('#riskPopover') && !e.target.closest('[data-action="risk-popover"]')) {
+      var rp = XA.$('#riskPopover'); if (rp) rp.classList.remove('open');
+    }
+    if (!e.target.closest('#mapModePop') && !e.target.closest('[data-action="layer"]')) {
+      var mp = XA.$('#mapModePop'); if (mp) mp.classList.remove('open');
+    }
+  });
+
+  /* 面板手势：上滑展开 / 下滑关闭 */
+  var panel = XA.$('#routePanel');
+  if (panel) {
+    var py = 0, pd = 0, dragging = false;
+    panel.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse') return;
+      py = e.clientY; pd = 0; dragging = true;
+      panel.style.transition = 'none';
+    });
+    panel.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      pd = e.clientY - py;
+      panel.style.transform = 'translateY(' + Math.max(0, pd) + 'px)';
+    });
+    function endPanel() {
+      if (!dragging) return;
+      dragging = false;
+      panel.style.transition = '';
+      panel.style.transform = '';
+      if (pd > 90) resetHome();
+      else if (pd < -50) panel.classList.add('expanded');
+    }
+    panel.addEventListener('pointerup', endPanel);
+    panel.addEventListener('pointercancel', endPanel);
+  }
+  /* 左边缘右滑呼出功能抽屉 */
+  var sx = 0, sy = 0, tracking = false;
+  document.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'mouse') return;
+    sx = e.clientX; sy = e.clientY; tracking = sx < 24;
+  });
+  document.addEventListener('pointerup', function (e) {
+    if (!tracking) return;
+    tracking = false;
+    if (e.clientX - sx > 80 && Math.abs(e.clientY - sy) < 60) XA.actions['open-drawer']();
   });
 })();
