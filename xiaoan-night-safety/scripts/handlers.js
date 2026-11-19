@@ -1,11 +1,100 @@
+XA.I18N = {
+  zh: {
+    nav: '导航', entertainment: '娱乐', community: '社区', profile: '我的', sos: '紧急求助',
+    searchHint: '搜索目的地、公交站', routeAnalysis: '路线安全分析', routeSub: '已按安全优先排序', emergency: '紧急求助',
+    settings: '设置', settingsSub: '守护偏好与账号', contacts: '紧急联系人', routes: '我的安全路线', history: '守护记录',
+    about: '关于小安', privacy: '隐私与权限', appearance: '外观与主题', themeName: '薄荷夜色',
+    accountSecurity: '账号与安全', deviceBound: '已绑定设备', language: '管理语言', languageName: '简体中文',
+    device: 'AR 眼镜设备', switchAccount: '切换账号', logout: '退出登录',
+    accountSecuritySub: '登录方式、设备与紧急访问', accountLogin: '登录方式', accountPhone: '手机号',
+    accountDevice: '已配对设备', accountChange: '管理', languageSub: '选择应用显示语言',
+    languageChinese: '简体中文', languageEnglish: 'English', switchAccountSub: '可使用其他手机号登录',
+    continueSwitch: '继续切换', cancel: '取消', navActive: '安全导航中', remainingMin: '剩余分钟',
+    remainingKm: '剩余公里', safetyScore: '安全分', endNav: '结束导航', startNav: '开始安全导航',
+    search: '搜索目的地', commonAddresses: '常用地址', commonHint: '点击即可快速规划夜间安全路线',
+    mapSettings: '地图设置', view: '视角', basemap: '底图', standard: '标准', satellite: '卫星',
+    onlineVideo: '免费素材 · 点击播放', onlineTip: '视频来自公开免费素材，仅用于娱乐模块演示。关闭弹窗即停止播放。',
+    musicPlaying: '正在播放 · 后台播放', weatherFallback: '22° 多云',
+    entertainmentSub: '夜路很长，让声音陪你走', communitySub: '真实夜行经验，彼此照亮',
+    arSub: '眼镜控制台', profileSub: '守护设置与夜行记录', nightVideo: '夜行影像',
+    activeNow: 'AI 小安正在守护'
+  },
+  en: {
+    nav: 'Navigate', entertainment: 'Entertain', community: 'Community', profile: 'Me', sos: 'Emergency',
+    searchHint: 'Search destinations or stops', routeAnalysis: 'Route safety', routeSub: 'Sorted by safety first', emergency: 'Emergency',
+    settings: 'Settings', settingsSub: 'Preferences & account', contacts: 'Emergency contacts', routes: 'My safe routes', history: 'Guard history',
+    about: "About Xiao'an", privacy: 'Privacy & permissions', appearance: 'Appearance & theme', themeName: 'Mint night',
+    accountSecurity: 'Account & security', deviceBound: 'Device paired', language: 'Language', languageName: 'English',
+    device: 'AR glasses', switchAccount: 'Switch account', logout: 'Sign out',
+    accountSecuritySub: 'Sign-in method, devices and emergency access', accountLogin: 'Sign-in method', accountPhone: 'Phone number',
+    accountDevice: 'Paired device', accountChange: 'Manage', languageSub: 'Choose the app display language',
+    languageChinese: '简体中文', languageEnglish: 'English', switchAccountSub: 'Sign in with another phone number',
+    continueSwitch: 'Continue', cancel: 'Cancel', navActive: 'Safe navigation', remainingMin: 'min left',
+    remainingKm: 'km left', safetyScore: 'Safety score', endNav: 'End navigation', startNav: 'Start safe navigation',
+    search: 'Search destination', commonAddresses: 'Frequent addresses', commonHint: 'Tap to plan a safe night route',
+    mapSettings: 'Map settings', view: 'View', basemap: 'Basemap', standard: 'Standard', satellite: 'Satellite',
+    onlineVideo: 'Free clips · Tap to play', onlineTip: 'Videos are public free media for demo only. Closing the sheet stops playback.',
+    musicPlaying: 'Now playing · Background', weatherFallback: '22° Cloudy',
+    entertainmentSub: 'Long roads sound better together', communitySub: 'Real night walks, shared light',
+    arSub: 'Glasses console', profileSub: 'Safety settings & trip history', nightVideo: 'Night walks in motion',
+    activeNow: 'Xiao\u0027an is guarding you'
+  }
+};
+XA.lang = 'zh';
+XA.t = function (key) {
+  var dict = XA.I18N[XA.lang] || XA.I18N.zh;
+  return dict[key] || XA.I18N.zh[key] || key;
+};
+XA.applyI18n = function () {
+  document.documentElement.lang = XA.lang === 'en' ? 'en' : 'zh-CN';
+  XA.$$('[data-i18n]').forEach(function (el) {
+    var value = XA.t(el.dataset.i18n);
+    if (el.textContent.trim() !== value) el.textContent = value;
+  });
+  XA.$$('[data-i18n-placeholder]').forEach(function (el) {
+    el.setAttribute('placeholder', XA.t(el.dataset.i18nPlaceholder));
+  });
+  if (XA.renderAccount) XA.renderAccount();
+};
+XA.setLanguage = function (lang) {
+  XA.lang = lang === 'en' ? 'en' : 'zh';
+  try { localStorage.setItem('xa_language', XA.lang); } catch (e) {}
+  if (XA.clearWeather) XA.clearWeather();
+  XA.applyI18n();
+  if (XA.updateWeather) XA.updateWeather();
+};
+var origOpenSheet = XA.openSheet;
+XA.openSheet = function (html) {
+  origOpenSheet.apply(XA, arguments);
+  XA.applyI18n();
+};
+
 XA.tracks = [
-  { title: '夜航', artist: '小安电台 · 夜行歌单', lyric: '路灯把影子拉得很长', duration: 208 },
-  { title: '城市微光', artist: '小安电台 · 夜行歌单', lyric: '每一盏灯都在替我说晚安', duration: 236 },
-  { title: '雨夜白噪音', artist: '助眠 · 放松', lyric: '雨声落在伞上，脚步轻轻', duration: 300 }
+  { title: '夜航', artist: 'SoundHelix · 夜行歌单', lyric: '路灯把影子拉得很长', duration: 372, src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+  { title: '城市微光', artist: 'SoundHelix · 夜行歌单', lyric: '每一盏灯都在替我说晚安', duration: 364, src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+  { title: '雨夜白噪音', artist: 'SoundImage · 环境声', lyric: '街声落在伞上，脚步轻轻', duration: 20, src: 'https://soundimage.org/wp-content/uploads/2022/06/Street-Ambience_6-6-22.mp3' }
+];
+XA.videos = [
+  { title: '雨夜归途 · 城市有光', src: 'https://videos.pexels.com/video-files/19828393/19828393-hd_1920_1080_24fps.mp4', note: 'Pexels 免费素材 · 雨夜街道' },
+  { title: '夜色城市 · 车流延时', src: 'https://videos.pexels.com/video-files/17499154/17499154-hd_1920_1080_24fps.mp4', note: 'Pexels 免费素材 · 城市夜景' }
 ];
 XA.trackIndex = 0;
 XA.progressSec = 102;
 XA.playing = false;
+XA.audio = null;
+XA.ensureAudio = function () {
+  if (!XA.audio) {
+    XA.audio = new Audio();
+    XA.audio.preload = 'metadata';
+    XA.audio.addEventListener('timeupdate', function () {
+      XA.progressSec = Math.floor(XA.audio.currentTime);
+      XA.updatePlayer();
+    });
+    XA.audio.addEventListener('loadedmetadata', function () { XA.updatePlayer(); });
+    XA.audio.addEventListener('ended', function () { XA.setTrack(1); });
+  }
+  return XA.audio;
+};
 
 XA.updatePlayer = function () {
   var t = XA.tracks[XA.trackIndex];
@@ -13,9 +102,12 @@ XA.updatePlayer = function () {
   set('#trackTitle', t.title);
   set('#trackArtist', t.artist);
   set('#trackLyric', t.lyric);
-  set('#trackCurrent', Math.floor(XA.progressSec / 60) + ':' + String(XA.progressSec % 60).padStart(2, '0'));
+  var fmt = function (s) { return Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0'); };
+  var dur = (XA.audio && isFinite(XA.audio.duration) && XA.audio.duration > 0) ? XA.audio.duration : t.duration;
+  set('#trackCurrent', fmt(XA.progressSec));
+  set('#trackDuration', fmt(dur));
   var bar = XA.$('#trackProgress');
-  if (bar) bar.style.width = Math.min(100, XA.progressSec / t.duration * 100) + '%';
+  if (bar) bar.style.width = Math.min(100, XA.progressSec / dur * 100) + '%';
   var vinylLabel = XA.$('.vinyl>span b');
   if (vinylLabel) vinylLabel.textContent = t.title;
   var btn = XA.$('[data-action="play"]');
@@ -27,6 +119,11 @@ XA.updatePlayer = function () {
 XA.setTrack = function (delta) {
   XA.trackIndex = (XA.trackIndex + delta + XA.tracks.length) % XA.tracks.length;
   XA.progressSec = 0;
+  var a = XA.ensureAudio();
+  a.pause();
+  a.src = XA.tracks[XA.trackIndex].src;
+  a.load();
+  if (XA.playing) a.play().catch(function () {});
   XA.updatePlayer();
   XA.toast('已切换到《' + XA.tracks[XA.trackIndex].title + '》');
 };
@@ -52,23 +149,25 @@ XA.startNavigation = function () {
         '<path class="nv-route" d="M40 300 C110 270 150 205 205 160 S290 110 350 60"/>' +
       '</svg>' +
       '<span class="nv-user"></span>' +
-      '<span class="nv-label">' + ic('shield') + ' 安全导航中 · 路线 A</span>' +
-      '<div class="nav-turn"><span class="turn-arrow">' + ic('navigation') + '</span>' +
+      '<span class="nv-label">' + ic('shield') + ' <span data-i18n="navActive">安全导航中</span> · 路线 A</span>' +
+      '<div class="nav-turn"><span class="weather-chip" id="weatherChip">' + ic('cloud') + '<span id="weatherText">' + (XA.weatherText || XA.t('weatherFallback')) + '</span></span>' +
+        '<span class="turn-arrow">' + ic('navigation') + '</span>' +
         '<div><b id="turnTitle">前方 30 m 右转进入滨江路</b><small id="turnSub">全程有灯 · 路灯覆盖 86%</small></div>' +
         '<span class="turn-dist" id="turnDist">30 m</span></div>' +
     '</div>' +
     '<div class="nav-body">' +
-      '<div class="nav-stats"><div><b id="navRemain">18</b><small>剩余分钟</small></div><div><b id="navDist">1.2</b><small>剩余公里</small></div><div><b>92</b><small>安全分</small></div></div>' +
+      '<div class="nav-stats"><div><b id="navRemain">18</b><small data-i18n="remainingMin">剩余分钟</small></div><div><b id="navDist">1.2</b><small data-i18n="remainingKm">剩余公里</small></div><div><b>92</b><small data-i18n="safetyScore">安全分</small></div></div>' +
       '<div class="nav-steps">' + XA.navSteps.map(function (s, i) {
         return '<div class="nav-step' + (i === 0 ? ' active' : '') + '"><i></i><span>' + s.title + '</span><b>' + s.dist + '</b></div>';
       }).join('') + '</div>' +
       '<div class="nav-actions">' +
-        '<button class="primary-btn" data-action="end-nav" style="flex:1;width:auto">' + ic('check') + '结束导航</button>' +
+        '<button class="primary-btn" data-action="end-nav" style="flex:1;width:auto">' + ic('check') + '<span data-i18n="endNav">结束导航</span></button>' +
         '<button class="square-btn" data-action="nav-share">' + ic('share') + '</button>' +
         '<button class="sos-mini" data-action="sos">SOS</button>' +
       '</div>' +
     '</div>';
   XA.$('#phone').appendChild(box);
+  XA.applyI18n();
   requestAnimationFrame(function () { box.classList.add('open'); });
 
   var i = 0;
@@ -108,6 +207,11 @@ XA.actions = {
       '<div class="option-row">' + ic('warning') + '<span><b>文昌巷路灯检修</b><small>2 分钟前 · 建议绕行滨江路</small></span></div>' +
       '<div class="option-row">' + ic('shield') + '<span><b>夜间守护已开启</b><small>今晚 21:00 · 已连续 3 晚</small></span></div>' +
       '<div class="option-row">' + ic('glasses') + '<span><b>AR 眼镜电量 82%</b><small>18 分钟前 · 设备状态正常</small></span></div>');
+  },
+  language: function () {
+    XA.openSheet('<h3 data-i18n="language">管理语言</h3><div class="sheet-sub" data-i18n="languageSub">选择应用显示语言</div>' +
+      '<button class="option-row" data-lang="zh">' + ic('check') + '<span><b data-i18n="languageChinese">简体中文</b><small>Chinese (Simplified)</small></span></button>' +
+      '<button class="option-row" data-lang="en">' + ic('glasses') + '<span><b data-i18n="languageEnglish">English</b><small>English interface</small></span></button>');
   },
   search: function () {
     var names = ['滨江花园', '家', '公司', '健身房', '西溪公园', '地铁文三路站'];
@@ -194,14 +298,11 @@ XA.actions = {
   'ar-entry': function () { XA.go('ar'); },
   play: function () {
     XA.playing = !XA.playing;
+    var a = XA.ensureAudio();
+    if (!a.src) a.src = XA.tracks[XA.trackIndex].src;
+    if (XA.playing) a.play().catch(function () { XA.toast('音频播放被拦截，请再次点击播放'); });
+    else a.pause();
     XA.updatePlayer();
-    if (XA.playing) {
-      XA.playerTimer = setInterval(function () {
-        XA.progressSec++;
-        if (XA.progressSec >= XA.tracks[XA.trackIndex].duration) XA.setTrack(1);
-        else XA.updatePlayer();
-      }, 1000);
-    } else clearInterval(XA.playerTimer);
   },
   prev: function () { XA.setTrack(-1); },
   next: function () { XA.setTrack(1); },
@@ -211,7 +312,12 @@ XA.actions = {
     el.textContent = on ? '已关闭' : '已开启';
     XA.toast(on ? '眼镜端歌词同步已关闭' : '眼镜端歌词同步已开启');
   },
-  video: function () { XA.toast('视频已静音后台播放 · 导航播报优先'); },
+  video: function (el) {
+    var v = XA.videos[parseInt((el && el.dataset.video) || '0', 10)] || XA.videos[0];
+    XA.openSheet('<h3>' + v.title + '</h3><div class="sheet-sub">' + v.note + ' · 导航播报优先</div>' +
+      '<video class="xa-video" controls autoplay muted playsinline src="' + v.src + '"></video>' +
+      '<p class="sheet-note">视频来自公开免费素材，仅用于娱乐模块演示。关闭弹窗即停止播放。</p>');
+  },
   'community-search': function () { XA.toast('社区搜索：夜路、路灯、AR 眼镜'); },
   topic: function () { XA.toast('话题已展开 · 夜路故事征集'); },
   'story-more': function () {
@@ -291,6 +397,13 @@ XA.bindPageEvents = function () {
   });
 
   document.addEventListener('click', function (e) {
+    var lang = e.target.closest('[data-lang]');
+    if (lang) {
+      XA.setLanguage(lang.dataset.lang);
+      XA.closeModal();
+      XA.toast(XA.lang === 'en' ? 'Language set to English' : '已切换为简体中文');
+      return;
+    }
     var menu = e.target.closest('[data-menu]');
     if (menu) {
       var m = XA.menuSheets[menu.dataset.menu];
@@ -336,6 +449,7 @@ XA.bindPageEvents = function () {
     var el = XA.$('#' + id);
     if (el) el.addEventListener('input', function () {
       el.style.background = 'linear-gradient(90deg,var(--amber) ' + el.value + '%,rgba(255,255,255,.12) ' + el.value + '%)';
+      if (XA.audio) XA.audio.volume = Math.max(0, Math.min(1, Number(el.value) / 100));
     });
   });
   XA.$$('input[type=range]').forEach(function (el) {
