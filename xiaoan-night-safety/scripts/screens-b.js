@@ -12,9 +12,10 @@ XA_SCREENS.entertainment = `
 
   <div class="player-card glass">
     <div class="player-top"><span class="playing-tag">${ic('music')} <span data-i18n="musicPlaying">正在播放 · 后台播放</span></span><span class="hires">HI-RES</span></div>
+    <button class="source-row" data-action="music-source"><span>${ic('music')} <b data-i18n="musicSource">音源</b></span><span id="musicSourceLabel" data-i18n="sourceLocal">安星本地歌单</span>${ic('chevron')}</button>
     <div class="track-row">
-      <div class="track-info"><h3 id="trackTitle">夜航</h3><small id="trackArtist">安星电台 · 夜行歌单</small><p id="trackLyric">路灯把影子拉得很长</p></div>
-      <div class="vinyl" id="vinyl"><span><b>夜航</b><small>安星电台</small></span></div>
+      <div class="track-info"><h3 id="trackTitle">夜航</h3><small id="trackArtist">安星电台 · 夜行歌单</small><em id="trackSubtitle">给独行路上的一点温柔</em><div class="lyric-marquee"><span id="trackLyric">路灯把影子拉得很长，风吹散一整天的慌张 · 跟着节拍慢慢走</span></div></div>
+      <div class="vinyl cover-night" id="vinyl"><span><b>夜航</b><small>安星电台</small></span></div>
     </div>
     <div class="progress"><span id="trackProgress" style="width:32%"></span></div>
     <div class="progress-time"><span id="trackCurrent">1:42</span><span id="trackDuration">6:12</span></div>
@@ -156,7 +157,7 @@ XA_SCREENS.profile = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">安星 · 夜行安全系统 V1.8 · 概念设计原型</p>
+  <p class="version">安星 · 夜行安全系统 V1.9 · 概念设计原型</p>
 </section>`;
 
 XA_SCREENS.settings = `
@@ -202,5 +203,5 @@ XA_SCREENS.settings = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">安星 · 夜行安全系统 V1.8 · 概念设计原型</p>
+  <p class="version">安星 · 夜行安全系统 V1.9 · 概念设计原型</p>
 </section>`;
