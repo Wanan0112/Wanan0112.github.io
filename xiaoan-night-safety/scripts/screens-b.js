@@ -35,18 +35,18 @@ XA_SCREENS.entertainment = `
     <span class="lyric-bars"><i></i><i></i><i></i><i></i><i></i></span>
   </div>
 
-  <div class="section-title"><h3 data-i18n="nightVideo">伴行视频</h3><small data-i18n="videoSubtitle">接入抖音开放能力，APP 内沉浸式刷短视频，不离开安星</small></div>
-  <div class="douyin-account glass">
-    <span class="dy-logo">${ic('play')}</span>
-    <span><b data-i18n="douyinQuickLogin">抖音快捷登录入口</b><small id="douyinAccountSub" data-i18n="douyinLoginSub">登录后可播放抖音精选视频</small></span>
-    <button id="douyinAccountBtn" data-action="douyin-login" data-i18n="douyinLogin">登录抖音账号</button>
+  <div class="section-title"><h3 data-i18n="audioBook">伴行听书</h3><small data-i18n="bookSubtitle">接入番茄小说开放能力，APP 内沉浸式听书，不离开安星</small></div>
+  <div class="fanqie-account glass">
+    <span class="fq-logo">${ic('play')}</span>
+    <span><b data-i18n="fanqieQuickLogin">番茄小说快捷登录入口</b><small id="fanqieAccountSub" data-i18n="fanqieLoginSub">登录后可收听番茄精选小说</small></span>
+    <button id="fanqieAccountBtn" data-action="fanqie-login" data-i18n="fanqieLogin">登录番茄小说账号</button>
   </div>
-  <div class="douyin-toolbar">
-    <div class="dy-tabs"><button class="active" data-action="douyin-tab" data-tab-type="featured" data-i18n="douyinFeatured">抖音精选</button><button data-action="douyin-tab" data-tab-type="favorites" data-i18n="douyinCustom">我的收藏</button></div>
-    <button class="dy-refresh" data-action="douyin-refresh">${ic('settings')}<span data-i18n="refreshVideos">换一批</span></button>
+  <div class="book-toolbar">
+    <div class="bk-tabs"><button class="active" data-action="book-tab" data-tab-type="featured" data-i18n="fanqieFeatured">番茄精选</button><button data-action="book-tab" data-tab-type="favorites" data-i18n="fanqieCustom">我的书架</button></div>
+    <button class="bk-refresh" data-action="book-refresh">${ic('settings')}<span data-i18n="refreshBooks">换一批</span></button>
   </div>
-  <div class="douyin-grid" id="douyinVideoGrid"></div>
-  <button class="douyin-add" data-action="douyin-add">${ic('plus')}<span data-i18n="douyinAdd">添加我的抖音视频</span>${ic('chevron')}</button>
+  <div class="book-grid" id="fanqieBookGrid"></div>
+  <button class="fanqie-add" data-action="fanqie-add">${ic('plus')}<span data-i18n="fanqieAdd">同步我的书架</span>${ic('chevron')}</button>
 
   <div class="playlists">
     <button class="playlist p1 active" data-playlist-card="night" data-action="open-playlist" data-playlist="night"><span>${ic('music')}</span><b data-i18n="playlistNight">夜行歌单</b><small>3 首 · 陪你走完这段路</small>${ic('chevron')}</button>
@@ -157,7 +157,7 @@ XA_SCREENS.profile = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">安星 · 夜行安全系统 V1.10 · 概念设计原型</p>
+  <p class="version">安星 · 夜行安全系统 V1.11 · 概念设计原型</p>
 </section>`;
 
 XA_SCREENS.settings = `
@@ -203,5 +203,5 @@ XA_SCREENS.settings = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">安星 · 夜行安全系统 V1.10 · 概念设计原型</p>
+  <p class="version">安星 · 夜行安全系统 V1.11 · 概念设计原型</p>
 </section>`;
