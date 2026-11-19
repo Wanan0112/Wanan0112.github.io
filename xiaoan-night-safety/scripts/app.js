@@ -95,6 +95,7 @@ XA.closeModal = function () {
   if (video) { video.pause(); video.removeAttribute('src'); video.load(); }
   var frame = layer && layer.querySelector('iframe');
   if (frame) frame.src = 'about:blank';
+  if (XA.stopBookPlayback) XA.stopBookPlayback();
   layer.classList.remove('open');
   var phone = XA.$('#phone');
   if (phone) phone.classList.remove('modal-open');
