@@ -4,7 +4,7 @@ window.ic = function (name, cls) {
 };
 
 XA_SCREENS.home = `
-<section class="screen active" data-screen="home">
+<section class="screen active state-default" data-screen="home">
   <div class="home-map">
     <div class="map-blocks">
       <span class="blk b1"></span><span class="blk b2"></span><span class="blk b3"></span><span class="blk b4"></span>
@@ -14,70 +14,58 @@ XA_SCREENS.home = `
       <path class="road-base" d="M-20 330 C80 300 130 250 190 205 S310 120 420 70"/>
       <path class="road-base thin" d="M-20 200 C90 215 160 240 230 300 S330 370 420 390"/>
       <path class="road-base thin" d="M60 -10 C100 90 130 180 100 290 S80 420 60 490"/>
-      <path class="route-shadow" d="M18 425 C90 405 120 345 165 295 S260 215 330 170"/>
-      <path class="route-main" d="M18 425 C90 405 120 345 165 295 S260 215 330 170"/>
-      <path class="route-dash" d="M18 425 C70 390 120 350 190 320 S290 260 350 220"/>
     </svg>
     <div class="map-lights"></div>
     <span class="map-node n1"></span><span class="map-node n2"></span><span class="map-node n3"></span>
   </div>
 
-  <header class="home-top">
-    <div class="brand">
-      <span class="brand-mark">${ic('moon')}</span>
-      <span class="brand-text"><b>小安</b><small>XIAO'AN</small></span>
-      <span class="guard-dot"></span><span class="guard-text">夜间守护中 · 已连续 3 晚</span>
-    </div>
-    <button class="icon-btn" data-action="notifications">${ic('bell')}<i class="red-dot"></i></button>
-  </header>
-
-  <button class="search-box" data-action="search">${ic('search')}<span>搜索目的地、公交站</span>${ic('mic','mic')}</button>
-
-  <button class="score-card glass" data-action="score-detail">
-    <span class="score-ring" style="--p:92;--ring:#7ff0d4"><span>92</span></span>
-    <span class="score-copy">
-      <span class="label">路线安全系数 <em>AI</em></span>
-      <span class="sub">路灯覆盖 86% <i>·</i> 近30天事件 2 起</span>
-      <span class="more">查看分数构成 ${ic('chevron')}</span>
-    </span>
+  <button class="home-search" data-action="search">
+    ${ic('search')}<span data-destination>搜索目的地、公交站</span>${ic('mic','mic')}
   </button>
 
-  <div class="dest-chip glass">${ic('pin')}<span><b data-destination>滨江花园</b><small>1.2 km · 步行 18 min</small></span></div>
-  <button class="float-btn layer-btn" data-action="layer">${ic('layers')}</button>
-  <button class="float-btn bulb-btn" data-action="bulb">${ic('warning')}</button>
+  <div class="home-floats">
+    <button class="float-btn" data-action="layer" aria-label="图层">${ic('layers')}</button>
+    <button class="float-btn" data-action="risk-popover" aria-label="安全警告">${ic('warning')}</button>
+    <button class="float-btn" data-action="recenter" aria-label="我的定位">${ic('pin')}</button>
+  </div>
 
-  <button class="event-card glass" data-action="event-detail">
-    <span class="event-icon">${ic('bell')}</span>
-    <span class="event-text"><small>● 实时播报 · 2 分钟前</small><b>文昌巷路灯检修，建议绕行滨江路</b></span>
-    ${ic('chevron','chev')}
-  </button>
+  <div class="risk-popover" id="riskPopover">
+    <div class="rp-head"><b>附近夜行风险</b><button data-action="close-risk">${ic('close')}</button></div>
+    <div class="risk-item"><span class="risk-dot amber"></span><span><b>文昌巷 300m 路灯检修</b><small>2 分钟前 · 建议绕行滨江路</small></span></div>
+    <div class="risk-item"><span class="risk-dot coral"></span><span><b>文三路近 30 天事件 2 起</b><small>照明偏弱 · 建议走主干道</small></span></div>
+    <div class="risk-item"><span class="risk-dot amber"></span><span><b>西溪公园入口照明不足</b><small>今晚 21:12 用户上报</small></span></div>
+  </div>
 
-  <div class="home-sheet">
-    <div class="drag-handle"></div>
-    <div class="dest-row">
-      <span class="dest-arrow">${ic('navigation')}</span>
-      <span class="dest-main">
-        <small>目的地</small><b><span data-destination>滨江花园</span> · 东南门</b>
-        <span class="dest-sub">路线已避开暗巷 · 比常规路线多 3 分钟</span>
-      </span>
-      <button class="pill-btn" data-action="search">切换</button>
+  <div class="map-mode-pop" id="mapModePop">
+    <div class="rp-head"><b>地图设置</b><button data-action="close-map-mode">${ic('close')}</button></div>
+    <small>视角</small><div class="seg"><button data-map-mode="2d" class="on">2D</button><button data-map-mode="3d">3D</button></div>
+    <small>底图</small><div class="seg"><button data-base-map="standard" class="on">标准</button><button data-base-map="satellite">卫星</button></div>
+  </div>
+
+  <div class="route-panel" id="routePanel">
+    <div class="rp-handle"></div>
+    <div class="rp-dest"><span class="dest-arrow">${ic('navigation')}</span><span><small>目的地</small><b><span data-destination>滨江花园</span> · 东南门</b></span><button data-action="search">修改</button></div>
+    <div class="rp-stats">
+      <div><b id="rpScore">92</b><small>安全系数</small></div>
+      <div><b id="rpLamp">86%</b><small>路灯覆盖</small></div>
+      <div><b id="rpCam">12 处</b><small>监控覆盖</small></div>
     </div>
-    <div class="metrics">
-      <div><span class="m-ico amber">${ic('warning')}</span><span><b>86%</b><small>路灯覆盖</small></span></div>
-      <div><span class="m-ico mint">${ic('shield')}</span><span><b>12 处</b><small>监控覆盖</small></span></div>
-      <div><span class="m-ico mint">${ic('navigation')}</span><span><b>开启</b><small>AI 全程陪伴</small></span></div>
+    <div class="rp-tip">${ic('check')}<span>本路线避开暗巷，比常规路线多 3 分钟</span></div>
+    <div class="rp-ai"><span><b>AI 全程陪伴</b><small id="aiStateText">开启：语音陪伴 / 实时播报路况风险</small></span><button class="switch on" id="aiSwitch" data-action="ai-toggle"><i></i></button></div>
+    <div class="rp-actions">
+      <button class="primary-btn" data-action="start-nav">${ic('navigation')}开始安全导航</button>
+      <button class="sos-small" data-action="sos">SOS</button>
     </div>
-    <div class="shortcuts">
-      <button data-shortcut="家">${ic('pin')}家 <small>2.1 km</small>${ic('chevron','up')}</button>
-      <button data-shortcut="公司">${ic('pin')}公司 <small>4.6 km</small>${ic('chevron','up')}</button>
-      <button data-shortcut="健身房">${ic('pin')}健身房 <small>1.4 km</small>${ic('chevron','up')}</button>
-    </div>
-    <button class="ai-card" data-action="ai-suggest">
-      <span class="ai-face">☺</span>
-      <span class="ai-copy"><b>小安 AI · 陪你走夜路</b><small>今晚走滨江路吧，路灯更亮，我陪你。</small></span>
-      <span class="ai-chip">对话 ${ic('chevron')}</span>
-    </button>
-    <button class="primary-btn" data-action="start-nav">${ic('navigation')}开始安全导航<small>18 min</small></button>
+  </div>
+
+  <div class="side-drawer" id="sideDrawer">
+    <div class="drawer-head"><b>小安 · 夜行安全</b><small>夜间守护</small><button data-action="close-drawer">${ic('close')}</button></div>
+    <button data-tab="home">${ic('navigation')}安全导航</button>
+    <button data-action="open-route">${ic('route')}路线分析</button>
+    <button data-tab="entertainment">${ic('music')}夜间娱乐</button>
+    <button data-tab="community">${ic('users')}社区互助</button>
+    <button data-action="open-ar">${ic('glasses')}AR 眼镜</button>
+    <button data-tab="profile">${ic('user')}我的</button>
   </div>
 </section>`;
 
