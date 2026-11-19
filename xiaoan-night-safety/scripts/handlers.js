@@ -1,0 +1,247 @@
+XA.tracks = [
+  { title: '夜航', artist: '小安电台 · 夜行歌单', lyric: '路灯把影子拉得很长', duration: 208 },
+  { title: '城市微光', artist: '小安电台 · 夜行歌单', lyric: '每一盏灯都在替我说晚安', duration: 236 },
+  { title: '雨夜白噪音', artist: '助眠 · 放松', lyric: '雨声落在伞上，脚步轻轻', duration: 300 }
+];
+XA.trackIndex = 0;
+XA.progressSec = 102;
+XA.playing = false;
+
+XA.updatePlayer = function () {
+  var t = XA.tracks[XA.trackIndex];
+  var set = function (sel, val) { var el = XA.$(sel); if (el) el.textContent = val; };
+  set('#trackTitle', t.title);
+  set('#trackArtist', t.artist);
+  set('#trackLyric', t.lyric);
+  set('#trackCurrent', Math.floor(XA.progressSec / 60) + ':' + String(XA.progressSec % 60).padStart(2, '0'));
+  var bar = XA.$('#trackProgress');
+  if (bar) bar.style.width = Math.min(100, XA.progressSec / t.duration * 100) + '%';
+  var vinylLabel = XA.$('.vinyl>span b');
+  if (vinylLabel) vinylLabel.textContent = t.title;
+  var btn = XA.$('[data-action="play"]');
+  if (btn) btn.innerHTML = ic(XA.playing ? 'pause' : 'play');
+  var vinyl = XA.$('#vinyl');
+  if (vinyl) vinyl.classList.toggle('playing', XA.playing);
+};
+
+XA.setTrack = function (delta) {
+  XA.trackIndex = (XA.trackIndex + delta + XA.tracks.length) % XA.tracks.length;
+  XA.progressSec = 0;
+  XA.updatePlayer();
+  XA.toast('已切换到《' + XA.tracks[XA.trackIndex].title + '》');
+};
+
+XA.actions = {
+  notifications: function () {
+    XA.openSheet('<h3>守护通知</h3><div class="sheet-sub">安全消息优先送达</div>' +
+      '<div class="option-row">' + ic('warning') + '<span><b>文昌巷路灯检修</b><small>2 分钟前 · 建议绕行滨江路</small></span></div>' +
+      '<div class="option-row">' + ic('shield') + '<span><b>夜间守护已开启</b><small>今晚 21:00 · 已连续 3 晚</small></span></div>' +
+      '<div class="option-row">' + ic('glasses') + '<span><b>AR 眼镜电量 82%</b><small>18 分钟前 · 设备状态正常</small></span></div>');
+  },
+  search: function () {
+    XA.openSheet('<h3>搜索目的地</h3><div class="sheet-sub">选择后会同步更新路线分析</div>' +
+      ['滨江花园', '家', '公司', '健身房'].map(function (n) {
+        return '<button class="option-row" data-pick="' + n + '">' + ic('pin') + '<span><b>' + n + '</b><small>步行可达 · 夜间路线已计算</small></span>' + ic('chevron') + '</button>';
+      }).join('') +
+      '<button class="primary-btn" data-action="close-pick">使用当前位置附近推荐</button>');
+    XA.$$('[data-pick]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        XA.setDestination(el.dataset.pick);
+        XA.closeModal();
+        XA.toast('目的地已更新为 ' + el.dataset.pick);
+      });
+    });
+  },
+  'close-pick': function () { XA.closeModal(); },
+  'score-detail': function () {
+    XA.openSheet('<h3>安全分由什么构成</h3><div class="sheet-sub">滨江路主线 · 21:40 更新 · 演示数据</div>' +
+      [['路灯覆盖', 30], ['监控与求助点', 20], ['实时事件', 25], ['人流与商业活跃度', 15], ['路线类型', 10]].map(function (r) {
+        return '<div class="weight-row"><div><span>' + r[0] + '</span><b>' + r[1] + '%</b></div><div class="weight-bar"><i style="width:' + (r[1] * 3) + '%"></i></div></div>';
+      }).join('') +
+      '<p class="sheet-note">安全分是可观测环境因素的加权表达，不是犯罪预测，也不代表绝对安全。数据不足时会显示“数据不足”，不会给出看似精确的高分。</p>');
+  },
+  layer: function (el) {
+    var on = document.body.classList.toggle('light-layer-on');
+    el.classList.toggle('active', on);
+    XA.toast(on ? '路灯图层已开启 · 显示 86% 照明覆盖' : '路灯图层已关闭');
+  },
+  bulb: function () { XA.openSheet('<h3>路灯信息</h3><div class="sheet-sub">城市照明数据 · 21:39 更新</div>' +
+    '<div class="option-row">' + ic('warning') + '<span><b>文昌巷 300m 处路灯检修</b><small>预计 22:30 恢复 · 建议绕行滨江路</small></span></div>' +
+    '<div class="option-row">' + ic('check') + '<span><b>滨江路主线全程有灯</b><small>覆盖率 86% · 12 处监控</small></span></div>'); },
+  'event-detail': function () {
+    XA.openSheet('<h3>实时事件详情</h3><div class="sheet-sub">来源：城市照明 / 用户上报 · 2 分钟前</div>' +
+      '<div class="option-row">' + ic('warning') + '<span><b>文昌巷 300m 路灯检修</b><small>影响文昌巷捷径 B 线，A 线滨江路不受影响</small></span></div>' +
+      '<button class="primary-btn" data-action="accept-advice">采纳建议 · 改走滨江路</button>');
+  },
+  'accept-advice': function () { XA.closeModal(); XA.selectRoute('A'); XA.go('route'); },
+  'ai-suggest': function () {
+    XA.openSheet('<h3>小安 AI</h3><div class="sheet-sub">陪你走夜路 · 短句、具体、不夸张</div>' +
+      '<div class="option-row">' + ic('navigation') + '<span><b>今晚走滨江路吧</b><small>路灯更亮，比文昌巷多 3 分钟，安全分 +28</small></span></div>' +
+      '<div class="option-row">' + ic('check') + '<span><b>已为你避开暗巷</b><small>路线经过 12 处监控、3 个便利店求助点</small></span></div>' +
+      '<button class="primary-btn" data-action="accept-advice">好的，走滨江路</button>');
+  },
+  'start-nav': function () {
+    XA.openSheet('<h3>安全导航已开启</h3><div class="sheet-sub">路线 A · 滨江路主线 · 预计 18 分钟</div>' +
+      '<div class="option-row">' + ic('navigation') + '<span><b>前方 30 m 右转进入滨江路</b><small>全程有灯 · 路灯覆盖 86% · 监控 12 处</small></span></div>' +
+      '<div class="option-row">' + ic('shield') + '<span><b>小安正在陪你</b><small>实时事件播报已开启 · 位置仅行程级共享</small></span></div>' +
+      '<div class="option-row">' + ic('music') + '<span><b>环境声保留</b><small>导航播报优先，音乐自动降低音量</small></span></div>' +
+      '<button class="primary-btn" data-action="end-nav">结束导航</button>');
+    XA.toast('安全导航已开始 · 小安陪你走夜路');
+  },
+  'end-nav': function () { XA.closeModal(); XA.toast('导航已结束 · 行程记录已保存'); },
+  'share-trip': function () {
+    XA.openSheet('<h3>分享行程</h3><div class="sheet-sub">仅分享行程级信息，不暴露实时精确轨迹</div>' +
+      '<div class="option-row">' + ic('users') + '<span><b>紧急联系人（3 位）</b><small>妈妈、阿哲、物业管家</small></span></div>' +
+      '<div class="option-row">' + ic('share') + '<span><b>生成行程卡片</b><small>模糊具体住址与时间</small></span></div>' +
+      '<button class="primary-btn" data-action="shared">确认分享行程</button>');
+  },
+  shared: function () { XA.closeModal(); XA.toast('行程已分享给 3 位紧急联系人'); },
+  sos: function () { XA.showSosConfirm(); },
+  'sos-guide': function () {
+    XA.openSheet('<h3>求助与兜底</h3><div class="sheet-sub">所有自动动作可取消、可解释、可关闭</div>' +
+      '<div class="option-row">' + ic('phone') + '<span><b>无法自动呼叫 110</b><small>会显示“请点击拨号”，不做虚假承诺</small></span></div>' +
+      '<div class="option-row">' + ic('pin') + '<span><b>定位不准或暂无网络</b><small>显示精度范围并缓存位置，尝试短信求助</small></span></div>' +
+      '<div class="option-row">' + ic('shield') + '<span><b>误报恢复</b><small>长按 2 秒取消报警，记录保留可回看</small></span></div>');
+  },
+  'location-detail': function () {
+    XA.openSheet('<h3>当前位置</h3><div class="sheet-sub">已同步给 3 位紧急联系人 · 精度 ±5 m</div>' +
+      '<div class="option-row">' + ic('pin') + '<span><b>杭州市西湖区文三路 90 号</b><small>更新于 21:42:06 · 来源：GPS + 基站</small></span></div>' +
+      '<p class="sheet-note">定位仅用于本次紧急行程共享，报警结束后停止共享。</p>');
+  },
+  'cancel-alarm': function () {},
+  'ar-entry': function () { XA.go('ar'); },
+  play: function () {
+    XA.playing = !XA.playing;
+    XA.updatePlayer();
+    if (XA.playing) {
+      XA.playerTimer = setInterval(function () {
+        XA.progressSec++;
+        if (XA.progressSec >= XA.tracks[XA.trackIndex].duration) XA.setTrack(1);
+        else XA.updatePlayer();
+      }, 1000);
+    } else clearInterval(XA.playerTimer);
+  },
+  prev: function () { XA.setTrack(-1); },
+  next: function () { XA.setTrack(1); },
+  volume: function () { var row = XA.$('#volumeRow'); if (row) row.classList.toggle('show'); },
+  'lyric-sync': function (el) {
+    var on = el.textContent.trim() === '已开启';
+    el.textContent = on ? '已关闭' : '已开启';
+    XA.toast(on ? '眼镜端歌词同步已关闭' : '眼镜端歌词同步已开启');
+  },
+  video: function () { XA.toast('视频已静音后台播放 · 导航播报优先'); },
+  'community-search': function () { XA.toast('社区搜索：夜路、路灯、AR 眼镜'); },
+  topic: function () { XA.toast('话题已展开 · 夜路故事征集'); },
+  'story-more': function () { XA.toast('已减少此类内容推荐'); },
+  publish: function () {
+    XA.openSheet('<h3>发布夜行故事</h3><div class="sheet-sub">默认模糊具体住址与时间，保护分享者</div>' +
+      '<textarea class="sheet-input" id="storyInput" placeholder="写下你的夜路故事…"></textarea>' +
+      '<div class="sheet-chips"><button class="chip active" data-pub="anon">匿名分享</button><button class="chip" data-pub="local">仅同城可见</button></div>' +
+      '<button class="primary-btn" data-action="post-story">发布故事</button>');
+    XA.$$('[data-pub]').forEach(function (el) {
+      el.addEventListener('click', function () { el.classList.toggle('active'); });
+    });
+  },
+  'post-story': function () {
+    var val = (XA.$('#storyInput') || {}).value || '';
+    if (!val.trim()) { XA.toast('请先写下你的故事'); return; }
+    var feed = XA.$('#storyFeed');
+    var article = document.createElement('article');
+    article.className = 'story-card';
+    article.dataset.cat = 'local';
+    article.innerHTML = '<header><span class="avatar green">我</span><span><b>' +
+      (XA.$('[data-pub="anon"]').classList.contains('active') ? '匿名用户' : '小安用户') +
+      '</b><small>刚刚 · 杭州</small></span><span class="real-tag">真实经历</span></header><p></p>' +
+      '<footer><span>滨江路 · 刚刚</span><span class="story-actions"><button class="like" data-action="like"><span class="like-ico">' +
+      ic('heart') + '</span><b>0</b></button><button>' + ic('comment') + '<b>0</b></button><button>' + ic('share') + '分享</button></span></footer>';
+    article.querySelector('p').textContent = val;
+    feed.insertBefore(article, feed.firstChild);
+    XA.closeModal();
+    XA.toast('故事已发布 · 已进入审核队列');
+  },
+  like: function (el) {
+    el.classList.toggle('liked');
+    var b = el.querySelector('b');
+    if (b) b.textContent = el.classList.contains('liked') ? (parseInt(b.textContent, 10) + 1) : (parseInt(b.textContent, 10) - 1);
+  },
+  'ar-settings': function () {
+    XA.openSheet('<h3>眼镜设置</h3><div class="sheet-sub">小安 AR · XA-0281</div>' +
+      '<div class="option-row">' + ic('settings') + '<span><b>镜片亮度</b><small>自动 · 根据环境光调节</small></span></div>' +
+      '<div class="option-row">' + ic('lock') + '<span><b>设备配对</b><small>本地加密 · 断开后可删除记录</small></span></div>' +
+      '<button class="primary-btn" data-action="close-settings">完成</button>');
+  },
+  'close-settings': function () { XA.closeModal(); },
+  'ar-full': function () { XA.openSheet('<h3>实时镜片画面</h3><div class="sheet-sub">1080P · 眼镜端实时同步</div>' +
+    '<img src="assets/ar-preview.jpg" alt="镜片预览" style="width:100%;border-radius:14px;display:block">' +
+    '<p class="sheet-note">前方 30 m 右转进入滨江路 · 目的地滨江花园 320 m · 安全分 92 · 路灯 86%</p>'); },
+  'find-glasses': function () { XA.toast('已向眼镜发送查找信号 · 镜腿提示音与闪烁已开启'); },
+  settings: function () { XA.go('profile'); XA.toast('设置已打开'); }
+};
+
+XA.menuSheets = {
+  contacts: ['紧急联系人', '妈妈 / 阿哲 / 物业管家 · 已通知 3 位'],
+  routes: ['我的安全路线', '滨江路主线 92 分 · 文三路备选 78 分'],
+  history: ['守护记录', '已完成 18 段安全行程 · 1 次误报取消'],
+  privacy: ['隐私与权限', '位置仅使用期间 · 麦克风端侧处理 · 可随时撤回'],
+  device: ['AR 眼镜设备', 'XA-0281 已连接 · 电量 82% · 配对信息本地加密'],
+  about: ['关于小安', '小安 · 夜行安全系统 V1.0 · 概念设计原型']
+};
+
+XA.bindPageEvents = function () {
+  var cancelBtn = XA.$('[data-action="cancel-alarm"]');
+  if (cancelBtn) XA.hold(cancelBtn, 2000, function () { XA.cancelAlarm(); });
+
+  document.addEventListener('click', function (e) {
+    var menu = e.target.closest('[data-menu]');
+    if (menu) {
+      var m = XA.menuSheets[menu.dataset.menu];
+      if (m) XA.openSheet('<h3>' + m[0] + '</h3><div class="sheet-sub">' + m[1] + '</div>' +
+        '<div class="option-row">' + ic('check') + '<span><b>信息已同步</b><small>演示数据 · 仅用于设计评审</small></span></div>');
+      return;
+    }
+    var ctab = e.target.closest('[data-ctab]');
+    if (ctab) {
+      XA.$$('[data-ctab]').forEach(function (el) { el.classList.toggle('active', el === ctab); });
+      var cat = ctab.dataset.ctab;
+      XA.$$('.story-card').forEach(function (el) { el.style.display = (cat === 'all' || el.dataset.cat === cat) ? '' : 'none'; });
+      return;
+    }
+    var track = e.target.closest('[data-track]');
+    if (track) {
+      var idx = XA.tracks.findIndex(function (t) { return t.title === track.dataset.track; });
+      XA.trackIndex = idx === -1 ? 0 : idx;
+      XA.progressSec = 0;
+      XA.updatePlayer();
+      XA.toast('已载入《' + XA.tracks[XA.trackIndex].title + '》');
+      return;
+    }
+    var mode = e.target.closest('[data-mode]');
+    if (mode) {
+      XA.$$('.mode-card').forEach(function (el) { el.classList.toggle('active', el === mode); });
+      XA.toast('眼镜端已切换到' + mode.dataset.mode);
+      return;
+    }
+    var sense = e.target.closest('[data-sense]');
+    if (sense) {
+      sense.classList.toggle('on');
+      var n = XA.$$('.sense.on').length;
+      var t = XA.$('#armedText');
+      if (t) t.textContent = n === 3 ? '自动报警已就绪' : n + ' 项感知开启';
+      XA.toast(sense.dataset.sense + (sense.classList.contains('on') ? '已开启' : '已关闭'));
+      return;
+    }
+    var goods = e.target.closest('[data-goods]');
+    if (goods) { XA.toast(goods.dataset.goods + ' · 社区专享，演示页面不下单'); }
+  });
+  ['volumeSlider', 'arVolume'].forEach(function (id) {
+    var el = XA.$('#' + id);
+    if (el) el.addEventListener('input', function () {
+      el.style.background = 'linear-gradient(90deg,var(--amber) ' + el.value + '%,rgba(255,255,255,.12) ' + el.value + '%)';
+    });
+  });
+  XA.$$('input[type=range]').forEach(function (el) {
+    el.style.background = 'linear-gradient(90deg,var(--amber) ' + el.value + '%,rgba(255,255,255,.12) ' + el.value + '%)';
+  });
+};
+
+XA.init();
