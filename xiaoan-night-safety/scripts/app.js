@@ -252,7 +252,7 @@ XA.init = function () {
   if (XA.bindPageEvents) XA.bindPageEvents();
   var requested = new URLSearchParams(location.search).get('screen');
   XA.go(XA_SCREENS[requested] ? requested : 'home', true);
-  XA.playSplash();
+  setTimeout(function () { XA.playSplash(); }, 0);
 };
 
 XA.playSplash = function () {
