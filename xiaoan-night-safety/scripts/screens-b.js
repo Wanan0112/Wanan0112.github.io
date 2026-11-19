@@ -159,7 +159,7 @@ XA_SCREENS.profile = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">小安 · 夜行安全系统 V1.4 · 概念设计原型</p>
+  <p class="version">小安 · 夜行安全系统 V1.5 · 概念设计原型</p>
 </section>`;
 
 XA_SCREENS.settings = `
@@ -205,5 +205,5 @@ XA_SCREENS.settings = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">小安 · 夜行安全系统 V1.4 · 概念设计原型</p>
+  <p class="version">小安 · 夜行安全系统 V1.5 · 概念设计原型</p>
 </section>`;
