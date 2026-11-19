@@ -1,5 +1,5 @@
 /* 旧版能力移植：真实地图导航 / 主题设定 / 登录 / 加载流程
-   仅复用旧版逻辑，界面与文案保持新版小安设计。 */
+   仅复用旧版逻辑，界面与文案保持新版安星设计。 */
 (function () {
   var PHOTON = 'https://photon.komoot.io/api/';
   var OSRM = 'https://router.project-osrm.org/route/v1/';
@@ -214,7 +214,7 @@
   };
 
   /* ---------------- 登录 ---------------- */
-  XA.account = { loggedIn: false, phone: '', nickname: '小安用户', code: '' };
+  XA.account = { loggedIn: false, phone: '', nickname: '安星用户', code: '' };
   XA.privacy = { allowHomepage: true, hidePurchases: false, location: true, analytics: false };
   function loadPrivacy() {
     try {
@@ -255,8 +255,8 @@
     var el = document.createElement('div');
     el.className = 'login-screen';
     el.id = 'loginScreen';
-    el.innerHTML = '<img class="login-logo" src="assets/splash-logo.png" alt="小安">' +
-      '<div class="login-title">欢迎回到小安</div>' +
+    el.innerHTML = '<img class="login-logo" src="assets/splash-logo.png" alt="安星">' +
+      '<div class="login-title">欢迎回到安星</div>' +
       '<div class="login-sub">登录后同步你的安全路线、紧急联系人<br>与夜间守护记录。</div>' +
       '<div class="login-form">' +
       '<label class="login-label">手机号</label>' +
@@ -267,7 +267,7 @@
       '<button class="login-btn" data-action="do-login">登录并继续</button>' +
       '<button class="login-skip" data-action="skip-login">暂时跳过，先看看</button>' +
       '</div>' +
-      '<div class="login-foot">验证码为演示数据，会在页面中直接提示<br>小安不会上传你的手机号</div>';
+      '<div class="login-foot">验证码为演示数据，会在页面中直接提示<br>安星不会上传你的手机号</div>';
     XA.$('#phone').appendChild(el);
   }
   function openLogin() {
@@ -310,7 +310,7 @@
     if (c !== XA.account.code) { XA.toast('验证码不正确，请重新输入'); return; }
     XA.account.loggedIn = true;
     XA.account.phone = p;
-    XA.account.nickname = XA.account.nickname || '小安用户';
+    XA.account.nickname = XA.account.nickname || '安星用户';
     XA.account.code = '';
     saveAccount(); renderAccount(); closeLogin();
     XA.toast('登录成功 · 夜行数据已同步');
@@ -324,7 +324,7 @@
     XA.openSheet('<h3 data-i18n="accountSecurity">账号与安全</h3><div class="sheet-sub" data-i18n="accountSecuritySub">登录方式、设备与紧急访问</div>' +
       '<div class="option-row">' + ic('phone') + '<span><b data-i18n="accountLogin">登录方式</b><small>' +
       (XA.account.loggedIn ? (XA.account.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') + ' · 验证码登录') : '未登录 · 可随时登录') + '</small></span></div>' +
-      '<div class="option-row">' + ic('lock') + '<span><b data-i18n="accountDevice">已配对设备</b><small>小安 AR 眼镜 XA-0281 · 本地加密</small></span></div>' +
+      '<div class="option-row">' + ic('lock') + '<span><b data-i18n="accountDevice">已配对设备</b><small>安星 AR 眼镜 XA-0281 · 本地加密</small></span></div>' +
       '<div class="option-row">' + ic('shield') + '<span><b>紧急联系人</b><small>3 位 · 仅报警或长按求助时通知</small></span></div>' +
       '<button class="primary-btn" data-action="open-login" data-i18n="accountChange">管理</button>');
   };
@@ -813,7 +813,7 @@
       [0, '正在连接夜间守护…'],
       [450, '正在获取实时位置…'],
       [1100, '正在校准路灯与事件数据…'],
-      [1750, 'AI 小安正在守护…']
+      [1750, 'AI 安星正在守护…']
     ];
     stages.forEach(function (s) { setTimeout(function () { if (status) status.textContent = s[1]; }, s[0]); });
     initHomeMap();
