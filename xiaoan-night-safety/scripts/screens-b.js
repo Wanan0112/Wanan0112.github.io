@@ -49,8 +49,8 @@ XA_SCREENS.entertainment = `
   <button class="douyin-add" data-action="douyin-add">${ic('plus')}<span data-i18n="douyinAdd">添加我的抖音视频</span>${ic('chevron')}</button>
 
   <div class="playlists">
-    <button class="playlist p1" data-track="夜行歌单"><span>${ic('music')}</span><b>夜行歌单</b><small>32 首 · 陪你走完这段路</small>${ic('play','pl')}</button>
-    <button class="playlist p2" data-track="雨夜白噪音"><span>${ic('glasses')}</span><b>雨夜白噪音</b><small>助眠 · 放松</small>${ic('play','pl')}</button>
+    <button class="playlist p1 active" data-playlist-card="night" data-action="open-playlist" data-playlist="night"><span>${ic('music')}</span><b data-i18n="playlistNight">夜行歌单</b><small>3 首 · 陪你走完这段路</small>${ic('chevron')}</button>
+    <button class="playlist p2" data-playlist-card="rain" data-action="open-playlist" data-playlist="rain"><span>${ic('glasses')}</span><b data-i18n="playlistRain">雨夜白噪音</b><small>白噪音歌单 · 2 段环境声</small>${ic('chevron')}</button>
   </div>
 </section>`;
 
@@ -157,7 +157,7 @@ XA_SCREENS.profile = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">安星 · 夜行安全系统 V1.9 · 概念设计原型</p>
+  <p class="version">安星 · 夜行安全系统 V1.10 · 概念设计原型</p>
 </section>`;
 
 XA_SCREENS.settings = `
@@ -203,5 +203,5 @@ XA_SCREENS.settings = `
     <button data-action="switch-account"><span class="menu-ico blue">${ic('users')}</span><span data-i18n="switchAccount">切换账号</span>${ic('chevron')}</button>
     <button data-action="logout-confirm" class="logout-row"><span class="menu-ico coral">${ic('close')}</span><span data-i18n="logout">退出登录</span>${ic('chevron')}</button>
   </div>
-  <p class="version">安星 · 夜行安全系统 V1.9 · 概念设计原型</p>
+  <p class="version">安星 · 夜行安全系统 V1.10 · 概念设计原型</p>
 </section>`;
