@@ -16,7 +16,7 @@ XA.I18N = {
     onlineVideo: '免费素材 · 点击播放', onlineTip: '视频来自公开免费素材，仅用于伴行模块演示。关闭弹窗即停止播放。',
     musicPlaying: '正在播放 · 后台播放', weatherFallback: '22° 多云',
     entertainmentSub: '夜路很长，让声音陪你走', communitySub: '真实夜行经验，彼此照亮',
-    arSub: '眼镜控制台', profileSub: '守护设置与夜行记录', nightVideo: '伴行视频',
+    arSub: '眼镜控制台', profileSub: '守护设置与夜行记录', nightVideo: '伴行听书',
     activeNow: 'AI 安星正在守护',
     settingsPageSub: '个性、安全与设备', personalSettings: '个性设置', personalSub: '外观、语言与显示偏好',
     securityPrivacySettings: '安全隐私设置', securityPrivacySub: '权限、账号与访问范围',
@@ -37,18 +37,18 @@ XA.I18N = {
     clearHistory: '清空', recommendPlaces: '推荐地点', recommendHint: '附近安全且高评分的去处',
     swipeUpTip: '上滑查看附近推荐地点', nearbySafe: '安全优先 · 附近守护点', nearbyTop: '附近高分去处',
     searchSheetSub: '输入关键词搜索真实地点，或使用下方地址',
-    douyin: '抖音', douyinLogin: '登录抖音账号', douyinLoggedIn: '已登录抖音账号', douyinLoginSub: '登录后可播放抖音精选视频',
-    douyinPhone: '手机号', douyinCode: '验证码', douyinGetCode: '获取验证码', douyinLoginBtn: '登录并继续',
-    douyinQr: '扫码登录', douyinQrTip: '请使用抖音 App 扫描二维码（演示）', douyinLoginRequired: '请先登录抖音账号',
-    douyinFeatured: '抖音精选', douyinAdd: '添加我的抖音视频', douyinAddSub: '粘贴抖音视频长链接或 19 位视频 ID',
-    douyinAddBtn: '添加并收藏', douyinOpen: '在抖音打开', douyinNoCustom: '还没有添加自己的视频',
-    douyinLogout: '退出抖音', douyinPlayTip: '视频播放全程留在安星，底部 SOS 始终可用。',
-    douyinCustom: '我的收藏', videoSubtitle: '接入抖音开放能力，APP 内沉浸式刷短视频，不离开安星',
-    douyinQuickLogin: '抖音快捷登录入口', refreshVideos: '换一批', videoSafety: '导航中 · 安全分 92 · 感知开启',
-    swipeVideo: '上滑看下一个', prevVideo: '上一个', nextVideo: '下一个',
-    syncFavorites: '同步我的收藏', syncLikes: '同步我的喜欢', pasteLink: '粘贴视频链接添加',
-    syncFavoritesTip: '演示同步：将用户收藏 / 喜欢列表中的视频加入伴行页。真实环境需抖音 OAuth 授权。',
-    noFavorites: '还没有同步收藏视频', videoLoadFail: '视频加载失败，请重试或切换下一条',
+    fanqie: '番茄小说', fanqieLogin: '登录番茄小说账号', fanqieLoggedIn: '已登录番茄小说账号', fanqieLoginSub: '登录后可收听番茄精选小说',
+    fanqiePhone: '手机号', fanqieCode: '验证码', fanqieGetCode: '获取验证码', fanqieLoginBtn: '登录并继续',
+    fanqieQr: '扫码登录', fanqieQrTip: '请使用番茄小说 App 扫描二维码（演示）', fanqieLoginRequired: '请先登录番茄小说账号',
+    fanqieFeatured: '番茄精选', fanqieAdd: '同步我的书架', fanqieAddSub: '演示同步：将收藏 / 最近阅读中的小说加入伴行页',
+    fanqieAddBtn: '同步并收藏', fanqieNoCustom: '书架还是空的', fanqieLogout: '退出番茄小说',
+    bookPlayTip: '听书全程留在安星，底部 SOS 始终可用。', fanqieCustom: '我的书架',
+    audioBook: '伴行听书', bookSubtitle: '接入番茄小说开放能力，APP 内沉浸式听书，不离开安星',
+    fanqieQuickLogin: '番茄小说快捷登录入口', refreshBooks: '换一批', bookSafety: '导航中 · 安全分 92 · 感知开启',
+    prevChapter: '上一章', nextChapter: '下一章', bookDemoTip: '网页无法读取其他 App 的真实书架与听书进度，小说、章节和进度均为模拟演示数据。',
+    syncBookshelf: '同步我的书架', syncRecent: '同步最近阅读', pasteBook: '搜索并添加小说',
+    syncBookshelfTip: '演示同步：将番茄小说书架中的作品加入伴行页。真实环境需番茄开放平台授权。',
+    listening: '正在播放', paused: '已暂停', readDuration: '预计 12 分钟',
     musicSource: '音源', sourceLocal: '安星本地歌单', sourceNetease: '跳转网易云音乐', sourceQQ: '跳转 QQ 音乐',
     sourceSheetSub: '选择音源；除本地歌单外均为概念跳转，播放器展示模拟数据。',
     sourceDemoTip: '网页无法读取其他 App 的真实后台播放信息，歌名、歌词、封面和进度均为模拟演示数据。',
@@ -73,7 +73,7 @@ XA.I18N = {
     onlineVideo: 'Free clips · Tap to play', onlineTip: 'Videos are public free media for demo only. Closing the sheet stops playback.',
     musicPlaying: 'Now playing · Background', weatherFallback: '22° Cloudy',
     entertainmentSub: 'Long roads sound better together', communitySub: 'Real night walks, shared light',
-    arSub: 'Glasses console', profileSub: 'Safety settings & trip history', nightVideo: 'Companion videos',
+    arSub: 'Glasses console', profileSub: 'Safety settings & trip history', nightVideo: 'Companion audiobooks',
     activeNow: 'Anxing is guarding you',
     settingsPageSub: 'Personal, safety & device', personalSettings: 'Personal', personalSub: 'Theme, language & display',
     securityPrivacySettings: 'Safety & privacy', securityPrivacySub: 'Permissions, account & access',
@@ -94,18 +94,18 @@ XA.I18N = {
     clearHistory: 'Clear', recommendPlaces: 'Recommended nearby', recommendHint: 'Safe and highly rated places near you',
     swipeUpTip: 'Swipe up for nearby recommendations', nearbySafe: 'Safety first · nearby protection', nearbyTop: 'Top-rated nearby',
     searchSheetSub: 'Search real places or use the saved addresses below',
-    douyin: 'Douyin', douyinLogin: 'Sign in to Douyin', douyinLoggedIn: 'Signed in to Douyin', douyinLoginSub: 'Sign in to play featured Douyin videos',
-    douyinPhone: 'Phone', douyinCode: 'Code', douyinGetCode: 'Get code', douyinLoginBtn: 'Sign in & continue',
-    douyinQr: 'QR sign-in', douyinQrTip: 'Scan this QR code in the Douyin app (demo)', douyinLoginRequired: 'Please sign in to Douyin first',
-    douyinFeatured: 'Douyin picks', douyinAdd: 'Add my Douyin video', douyinAddSub: 'Paste a full Douyin video link or 19-digit video ID',
-    douyinAddBtn: 'Add & save', douyinOpen: 'Open in Douyin', douyinNoCustom: 'No saved videos yet',
-    douyinLogout: 'Sign out', douyinPlayTip: 'Videos stay inside Anxing. The bottom SOS button is always available.',
-    douyinCustom: 'My collection', videoSubtitle: 'Powered by Douyin. Watch immersive short videos without leaving Anxing.',
-    douyinQuickLogin: 'Quick sign-in with Douyin', refreshVideos: 'Refresh', videoSafety: 'Navigating · Safety 92 · Sensing on',
-    swipeVideo: 'Swipe up for next', prevVideo: 'Previous', nextVideo: 'Next',
-    syncFavorites: 'Sync my favorites', syncLikes: 'Sync my liked videos', pasteLink: 'Add by pasting a link',
-    syncFavoritesTip: 'Demo sync: adds videos from favorites / likes. Real sync requires Douyin OAuth.',
-    noFavorites: 'No saved videos yet', videoLoadFail: 'Video failed to load. Retry or switch to the next one.',
+    fanqie: 'Fanqie Novel', fanqieLogin: 'Sign in to Fanqie', fanqieLoggedIn: 'Signed in to Fanqie', fanqieLoginSub: 'Sign in to listen to featured novels',
+    fanqiePhone: 'Phone', fanqieCode: 'Code', fanqieGetCode: 'Get code', fanqieLoginBtn: 'Sign in & continue',
+    fanqieQr: 'QR sign-in', fanqieQrTip: 'Scan this QR code in the Fanqie Novel app (demo)', fanqieLoginRequired: 'Please sign in to Fanqie first',
+    fanqieFeatured: 'Fanqie picks', fanqieAdd: 'Sync bookshelf', fanqieAddSub: 'Demo sync: add saved or recently read novels',
+    fanqieAddBtn: 'Sync & save', fanqieNoCustom: 'Your bookshelf is empty', fanqieLogout: 'Sign out of Fanqie',
+    bookPlayTip: 'Audiobooks stay inside Anxing. The bottom SOS button is always available.', fanqieCustom: 'My bookshelf',
+    audioBook: 'Companion audiobooks', bookSubtitle: 'Powered by Fanqie Novel. Listen to stories without leaving Anxing.',
+    fanqieQuickLogin: 'Quick sign-in with Fanqie Novel', refreshBooks: 'Refresh', bookSafety: 'Navigating · Safety 92 · Sensing on',
+    prevChapter: 'Previous chapter', nextChapter: 'Next chapter', bookDemoTip: 'Web pages cannot read real bookshelves or listening progress. Novels, chapters and progress are simulated.',
+    syncBookshelf: 'Sync my bookshelf', syncRecent: 'Sync recently read', pasteBook: 'Search & add novel',
+    syncBookshelfTip: 'Demo sync: add novels from a Fanqie bookshelf. Real sync requires platform authorization.',
+    listening: 'Playing', paused: 'Paused', readDuration: 'About 12 min',
     musicSource: 'Source', sourceLocal: 'Anxing local playlist', sourceNetease: 'Open NetEase Cloud Music', sourceQQ: 'Open QQ Music',
     sourceSheetSub: 'Choose a source. Only the local playlist is real; other options are concept redirects with demo data.',
     sourceDemoTip: 'Web pages cannot read real background playback from other apps. Track, lyric, cover and progress are simulated.',
@@ -129,8 +129,8 @@ XA.applyI18n = function () {
     el.setAttribute('placeholder', XA.t(el.dataset.i18nPlaceholder));
   });
   if (XA.renderAccount) XA.renderAccount();
-  if (XA.renderDouyinAccount) XA.renderDouyinAccount();
-  if (XA.renderDouyinVideos) XA.renderDouyinVideos();
+  if (XA.renderFanqieAccount) XA.renderFanqieAccount();
+  if (XA.renderFanqieBooks) XA.renderFanqieBooks();
   if (XA.updatePlayer) XA.updatePlayer();
   if (XA.renderPlaylistCards) XA.renderPlaylistCards();
 };
@@ -167,115 +167,177 @@ XA.playlists = {
 XA.activePlaylist = 'night';
 XA.tracks = XA.playlists.night.tracks.slice();
 XA.musicSource = 'local';
-XA.videos = [
-  { title: '林间庇护所 · 慢节奏建造', id: '7358621438187718668', author: '抖音精选', tags: '#荒野建造 #解压', coverClass: 'cover-shelter', coverWord: '林间小屋', icon: 'shield' },
-  { title: '深夜食堂 · 一碗热汤面', id: '7583346692204924160', author: '抖音精选', tags: '#吃播 #深夜治愈', coverClass: 'cover-food', coverWord: '热气腾腾', icon: 'pin' },
-  { title: '手工皂切割 · 超解压 ASMR', id: '7358621438187718668', author: '抖音精选', tags: '#解压 #ASMR', coverClass: 'cover-asmr', coverWord: '一刀下去', icon: 'music' },
-  { title: '雨落帐篷 · 篝火露营', id: '7583346692204924160', author: '抖音精选', tags: '#露营 #雨声白噪音', coverClass: 'cover-camp', coverWord: '雨夜篝火', icon: 'glasses' },
-  { title: 'AI 爽剧 · 雨夜逆袭', id: '7358621438187718668', author: '抖音精选', tags: '#AI短剧 #爽剧', coverClass: 'cover-drama', coverWord: '反转来袭', icon: 'play' },
-  { title: '猫咪打盹 · 治愈陪伴', id: '7583346692204924160', author: '抖音精选', tags: '#萌宠 #治愈', coverClass: 'cover-cat', coverWord: '慢一点', icon: 'users' },
-  { title: '木作小屋 · 一钉一木', id: '7358621438187718668', author: '抖音精选', tags: '#木工 #手作', coverClass: 'cover-wood', coverWord: '慢慢造', icon: 'settings' },
-  { title: '霓虹散步 · 城市灯光', id: '7583346692204924160', author: '抖音精选', tags: '#城市漫游 #灯光', coverClass: 'cover-city', coverWord: '温柔夜色', icon: 'navigation' }
+XA.books = [
+  { title: '夜行便利店', author: '林间晚风', tags: '#都市治愈 #温暖夜归', coverClass: 'book-c1', coverWord: '夜行便利店', icon: 'pin', chapters: [
+    { title: '第 1 章 · 深夜的第一盏灯', text: '城市的夜色像一条缓慢流动的河。林夏走进街角便利店时，门口的风铃轻轻响了一声。热柜里最后一盒饭团还冒着热气，店员笑着点点头：今天也辛苦了。' },
+    { title: '第 2 章 · 会发光的小事', text: '她把雨伞靠在门边，听见收音机里播放着旧歌。那些看似微小的善意，像货架上的小灯，悄悄照亮了她回家的路。' }
+  ] },
+  { title: '雨停之前', author: '苏禾', tags: '#青春治愈 #雨天', coverClass: 'book-c2', coverWord: '雨停之前', icon: 'music', chapters: [
+    { title: '第 1 章 · 伞下的约定', text: '雨下了一整个下午。周迟站在教学楼门口，看着她从雨幕里跑来，伞沿滴下的水珠在台阶上碎成小小的花。' },
+    { title: '第 2 章 · 写给明天的信', text: '他们在便利店的便签纸上写下各自想说的话，然后把纸折成小船，放进雨后积水的路面。' }
+  ] },
+  { title: '林间小屋', author: '北岛木木', tags: '#荒野建造 #慢生活', coverClass: 'book-c3', coverWord: '林间小屋', icon: 'shield', chapters: [
+    { title: '第 1 章 · 第一根原木', text: '清晨的雾气停在树梢。他把第一根原木扛上山脊，阳光穿过叶缝落在手背上，像一种安静的鼓励。' },
+    { title: '第 2 章 · 炉火升起', text: '傍晚，小屋有了第一面墙。火光跳动，松木的香气混着雨后的泥土气息，让人忘记城市的喧闹。' }
+  ] },
+  { title: '山海食铺', author: '阿梨', tags: '#美食治愈 #人间烟火', coverClass: 'book-c4', coverWord: '山海食铺', icon: 'pin', chapters: [
+    { title: '第 1 章 · 一碗热汤', text: '海边的风带着咸味。小铺门口挂着旧灯箱，汤锅咕嘟咕嘟地响，第一碗热汤端上来时，旅程忽然变得柔软。' },
+    { title: '第 2 章 · 夜里来的客人', text: '深夜来的客人多半不急着说话。老板娘只是盛好饭，再放一小碟腌菜，许多疲惫就这样被慢慢安慰。' }
+  ] },
+  { title: '城市微光', author: '沈砚', tags: '#都市悬疑 #温柔反转', coverClass: 'book-c5', coverWord: '城市微光', icon: 'navigation', chapters: [
+    { title: '第 1 章 · 失物招领', text: '地铁站的失物招领处有一把旧钥匙，标签上写着：请在下雨天打开。她盯着那行字，忽然想起三年前的那个夜晚。' },
+    { title: '第 2 章 · 第九盏路灯', text: '沿着滨江路往前走，第九盏路灯下停着一辆自行车。车篮里有一封没有寄出的信。' }
+  ] },
+  { title: 'AI 恋人说明书', author: '鹤川', tags: '#轻科幻 #爽文', coverClass: 'book-c6', coverWord: 'AI 恋人', icon: 'play', chapters: [
+    { title: '第 1 章 · 开机第一天', text: '清晨六点，客厅里的机器人轻声说：早安，今天也要好好生活。它不知道，这句话会改变一整个夏天。' },
+    { title: '第 2 章 · 学会犹豫', text: '当它第一次说“我不确定”时，林栀忽然觉得，这个世界上也许真的多了一个会思考的人。' }
+  ] }
 ];
-XA.videoOrder = XA.videos.map(function (_, i) { return i; });
-XA.videoTab = 'featured';
-XA._videoFeed = XA.videos.slice();
-XA.douyin = { loggedIn: false, phone: '', nickname: '抖音用户', code: '' };
-XA.douyinVideos = [];
-XA.douyinFavoritesDemo = [
-  { title: '我的收藏 · 木屋建造合集', id: '7358621438187718668', author: '我的喜欢', tags: '#收藏 #建造', coverClass: 'cover-wood', coverWord: '我的收藏', icon: 'shield' },
-  { title: '我的收藏 · 夜宵治愈瞬间', id: '7583346692204924160', author: '我的喜欢', tags: '#收藏 #美食', coverClass: 'cover-food', coverWord: '我的喜欢', icon: 'pin' },
-  { title: '我的收藏 · 解压手工课', id: '7358621438187718668', author: '我的收藏', tags: '#收藏 #手工', coverClass: 'cover-asmr', coverWord: '慢慢看', icon: 'music' }
+XA.bookOrder = XA.books.map(function (_, i) { return i; });
+XA.bookTab = 'featured';
+XA._bookFeed = XA.books.slice();
+XA.fanqie = { loggedIn: false, phone: '', nickname: '番茄用户', code: '' };
+XA.fanqieBooks = [];
+XA.fanqieBooksDemo = [
+  { title: '我的书架 · 夜行便利店', author: '林间晚风', tags: '#书架 #治愈', coverClass: 'book-c1', coverWord: '我的书架', icon: 'pin', chapters: [
+    { title: '第 1 章 · 深夜的第一盏灯', text: '城市的夜色像一条缓慢流动的河。林夏走进街角便利店时，门口的风铃轻轻响了一声。' }
+  ] },
+  { title: '我的书架 · 山海食铺', author: '阿梨', tags: '#书架 #美食', coverClass: 'book-c4', coverWord: '继续听', icon: 'music', chapters: [
+    { title: '第 1 章 · 一碗热汤', text: '海边的风带着咸味。小铺门口挂着旧灯箱，汤锅咕嘟咕嘟地响，旅程忽然变得柔软。' }
+  ] }
 ];
-function dyEsc(s) {
+function fqEsc(s) {
   return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
-XA.loadDouyin = function () {
+XA.loadFanqie = function () {
   try {
-    var d = JSON.parse(localStorage.getItem('xa_douyin'));
-    if (d) Object.assign(XA.douyin, d);
-    var v = JSON.parse(localStorage.getItem('xa_douyin_videos'));
-    if (Array.isArray(v)) XA.douyinVideos = v.slice(0, 12);
+    var d = JSON.parse(localStorage.getItem('xa_fanqie'));
+    if (d) Object.assign(XA.fanqie, d);
+    var v = JSON.parse(localStorage.getItem('xa_fanqie_books'));
+    if (Array.isArray(v)) XA.fanqieBooks = v.slice(0, 12);
   } catch (e) {}
-  if (XA.renderDouyinAccount) XA.renderDouyinAccount();
-  if (XA.renderDouyinVideos) XA.renderDouyinVideos();
+  if (XA.renderFanqieAccount) XA.renderFanqieAccount();
+  if (XA.renderFanqieBooks) XA.renderFanqieBooks();
 };
-XA.saveDouyin = function () { try { localStorage.setItem('xa_douyin', JSON.stringify(XA.douyin)); } catch (e) {} };
-XA.saveDouyinVideos = function () { try { localStorage.setItem('xa_douyin_videos', JSON.stringify(XA.douyinVideos)); } catch (e) {} };
-XA.parseDouyinId = function (text) {
-  var m = String(text || '').match(/(\d{19})/);
-  return m ? m[1] : '';
-};
-XA.renderDouyinAccount = function () {
-  var btn = XA.$('#douyinAccountBtn');
+XA.saveFanqie = function () { try { localStorage.setItem('xa_fanqie', JSON.stringify(XA.fanqie)); } catch (e) {} };
+XA.saveFanqieBooks = function () { try { localStorage.setItem('xa_fanqie_books', JSON.stringify(XA.fanqieBooks)); } catch (e) {} };
+XA.renderFanqieAccount = function () {
+  var btn = XA.$('#fanqieAccountBtn');
   if (btn) {
-    btn.textContent = XA.douyin.loggedIn ? XA.t('douyinLoggedIn') + ' · ' + XA.douyin.nickname : XA.t('douyinLogin');
-    btn.classList.toggle('logged', !!XA.douyin.loggedIn);
+    btn.textContent = XA.fanqie.loggedIn ? XA.t('fanqieLoggedIn') : XA.t('fanqieLogin');
+    btn.classList.toggle('logged', !!XA.fanqie.loggedIn);
   }
-  var sub = XA.$('#douyinAccountSub');
-  if (sub) sub.textContent = XA.douyin.loggedIn ? (XA.douyin.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') + ' · ' + XA.t('douyinFeatured')) : XA.t('douyinLoginSub');
+  var sub = XA.$('#fanqieAccountSub');
+  if (sub) sub.textContent = XA.fanqie.loggedIn ? (XA.fanqie.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') + ' · ' + XA.t('fanqieFeatured')) : XA.t('fanqieLoginSub');
 };
-XA.renderDouyinVideos = function () {
-  var grid = XA.$('#douyinVideoGrid');
+XA.renderFanqieBooks = function () {
+  var grid = XA.$('#fanqieBookGrid');
   if (!grid) return;
-  var mine = XA.videoTab === 'favorites';
-  var list = mine ? (XA.douyinVideos || []) : XA.videoOrder.map(function (i) { return XA.videos[i]; }).filter(Boolean);
-  XA._videoFeed = list;
+  var mine = XA.bookTab === 'favorites';
+  var list = mine ? (XA.fanqieBooks || []) : XA.bookOrder.map(function (i) { return XA.books[i]; }).filter(Boolean);
+  XA._bookFeed = list;
   if (!list.length) {
-    grid.innerHTML = '<button class="dy-empty" data-action="douyin-add">' + ic('play') +
-      '<b data-i18n="noFavorites">还没有同步收藏视频</b><small data-i18n="syncFavoritesTip">演示同步：将用户收藏 / 喜欢列表中的视频加入伴行页。</small></button>';
+    grid.innerHTML = '<button class="bk-empty" data-action="fanqie-add">' + ic('play') +
+      '<b>' + XA.t('fanqieNoCustom') + '</b><small>' + XA.t('syncBookshelfTip') + '</small></button>';
     return;
   }
-  grid.innerHTML = list.map(function (v, i) {
-    return '<button class="douyin-card" data-action="video" data-video="' + i + '" data-source="' + (mine ? 'favorites' : 'featured') + '">' +
-      '<span class="dy-cover ' + (v.coverClass || 'cover-default') + '"><span class="dy-cover-ico">' + ic(v.icon || 'play') + '</span>' +
-      '<span class="dy-cover-word">' + dyEsc(v.coverWord || '放松一下') + '</span></span>' +
-      '<span class="dy-play">' + ic('play') + '</span>' +
-      '<span class="dy-info"><b>' + dyEsc(v.title) + '</b><small>' + dyEsc(v.tags || v.author || '') + '</small></span>' +
-      '<span class="dy-badge' + (mine ? ' mine' : '') + '">' + (mine ? XA.t('douyinCustom') : XA.t('douyinFeatured')) + '</span></button>';
+  grid.innerHTML = list.map(function (b, i) {
+    return '<button class="book-card" data-action="open-book" data-book="' + i + '" data-source="' + (mine ? 'favorites' : 'featured') + '">' +
+      '<span class="bk-cover ' + (b.coverClass || 'book-c1') + '"><span class="bk-cover-ico">' + ic(b.icon || 'play') + '</span>' +
+      '<span class="bk-cover-word">' + fqEsc(b.coverWord || '伴行听书') + '</span></span>' +
+      '<span class="bk-play">' + ic('play') + '</span>' +
+      '<span class="bk-info"><b>' + fqEsc(b.title) + '</b><small>' + fqEsc(b.tags || b.author || '') + '</small></span>' +
+      '<span class="bk-badge' + (mine ? ' mine' : '') + '">' + (mine ? XA.t('fanqieCustom') : XA.t('fanqieFeatured')) + '</span></button>';
   }).join('');
-  XA.$$('[data-action="douyin-tab"]').forEach(function (el) {
-    el.classList.toggle('active', el.dataset.tabType === XA.videoTab);
+  XA.$$('[data-action="book-tab"]').forEach(function (el) {
+    el.classList.toggle('active', el.dataset.tabType === XA.bookTab);
   });
 };
-XA.refreshFeaturedVideos = function () {
-  XA.videoOrder = XA.videos.map(function (_, i) { return i; });
-  for (var i = XA.videoOrder.length - 1; i > 0; i--) {
+XA.refreshFeaturedBooks = function () {
+  XA.bookOrder = XA.books.map(function (_, i) { return i; });
+  for (var i = XA.bookOrder.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
-    var t = XA.videoOrder[i]; XA.videoOrder[i] = XA.videoOrder[j]; XA.videoOrder[j] = t;
+    var t = XA.bookOrder[i]; XA.bookOrder[i] = XA.bookOrder[j]; XA.bookOrder[j] = t;
   }
-  XA.videoTab = 'featured';
-  XA.renderDouyinVideos();
+  XA.bookTab = 'featured';
+  XA.renderFanqieBooks();
 };
-XA.currentVideoIndex = 0;
-XA.openVideo = function (index) {
-  var list = XA._videoFeed || XA.videos;
+XA.currentBookIndex = 0;
+XA.currentChapterIndex = 0;
+XA.bookPlaying = false;
+XA.bookProgress = 0;
+XA.bookSpeed = 1;
+XA.bookTimer = null;
+XA.stopBookPlayback = function () {
+  XA.bookPlaying = false;
+  if (XA.bookTimer) { clearInterval(XA.bookTimer); XA.bookTimer = null; }
+  try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
+};
+XA.startBookTimer = function () {
+  if (XA.bookTimer) clearInterval(XA.bookTimer);
+  XA.bookTimer = setInterval(function () {
+    XA.bookProgress = Math.min(100, XA.bookProgress + 1);
+    XA.paintBookPlayer();
+    if (XA.bookProgress >= 100) XA.actions['book-nav']({ dataset: { step: '1' } });
+  }, 900);
+};
+XA.speakCurrentChapter = function () {
+  if (!XA.bookPlaying || !window.speechSynthesis) return;
+  var list = XA._bookFeed || XA.books;
+  var book = list[XA.currentBookIndex];
+  if (!book || !book.chapters[XA.currentChapterIndex]) return;
+  try {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(book.chapters[XA.currentChapterIndex].text);
+    u.lang = 'zh-CN'; u.rate = XA.bookSpeed;
+    u.onend = function () { if (XA.bookPlaying) XA.actions['book-nav']({ dataset: { step: '1' } }); };
+    window.speechSynthesis.speak(u);
+  } catch (e) {}
+};
+XA.paintBookPlayer = function () {
+  var list = XA._bookFeed || XA.books;
+  var book = list[XA.currentBookIndex];
+  if (!book) return;
+  var chapter = book.chapters[XA.currentChapterIndex];
+  var set = function (sel, val) { var el = XA.$(sel); if (el) el.textContent = val; };
+  set('#bookTitle', book.title);
+  set('#bookAuthor', book.author + ' · ' + XA.t('fanqieFeatured'));
+  set('#bookChapterTitle', chapter.title);
+  set('#bookText', chapter.text);
+  var status = XA.$('#bookPlayStatus');
+  if (status) status.textContent = XA.bookPlaying ? XA.t('listening') : XA.t('paused');
+  var btn = XA.$('[data-action="book-toggle"]');
+  if (btn) btn.innerHTML = ic(XA.bookPlaying ? 'pause' : 'play');
+  var bar = XA.$('#bookProgress');
+  if (bar) bar.style.width = Math.min(100, XA.bookProgress) + '%';
+  XA.$$('[data-book-speed]').forEach(function (el) {
+    el.classList.toggle('active', Number(el.dataset.bookSpeed) === XA.bookSpeed);
+  });
+};
+XA.openBookPlayer = function (index) {
+  var list = XA._bookFeed || XA.books;
   var i = Math.max(0, Math.min(list.length - 1, Number(index) || 0));
-  var v = list[i];
-  if (!v) return;
-  XA.currentVideoIndex = i;
-  XA.openSheet('<div class="video-safety">' + ic('shield') + '<span data-i18n="videoSafety">导航中 · 安全分 92 · 感知开启</span><span class="video-live">LIVE</span></div>' +
-    '<div class="douyin-player-wrap" id="douyinPlayerWrap">' +
-    '<div class="douyin-player"><iframe src="https://open.douyin.com/player/video?vid=' + dyEsc(v.id) + '&autoplay=0" frameborder="0" referrerpolicy="unsafe-url" allowfullscreen loading="lazy"></iframe></div>' +
-    '<button class="dy-nav prev" data-action="video-nav" data-step="-1">' + ic('back') + '<span data-i18n="prevVideo">上一个</span></button>' +
-    '<button class="dy-nav next" data-action="video-nav" data-step="1">' + ic('chevron') + '<span data-i18n="nextVideo">下一个</span></button></div>' +
-    '<div class="video-sheet-meta"><b>' + dyEsc(v.title) + '</b><small>' + dyEsc(v.tags || v.author || '') + '</small></div>' +
-    '<div class="video-sheet-actions">' +
-    '<button data-action="video-nav" data-step="-1">' + ic('back') + '<span data-i18n="prevVideo">上一个</span></button>' +
-    '<button data-action="video-nav" data-step="1">' + ic('play') + '<span data-i18n="swipeVideo">上滑看下一个</span></button></div>' +
-    '<p class="sheet-note">' + XA.t('douyinPlayTip') + '</p>');
+  var book = list[i];
+  if (!book) return;
+  XA.currentBookIndex = i;
+  XA.currentChapterIndex = 0;
+  XA.bookProgress = 0;
+  XA.stopBookPlayback();
+  XA.openSheet('<div class="book-safety">' + ic('shield') + '<span data-i18n="bookSafety">导航中 · 安全分 92 · 感知开启</span><span class="book-live">LIVE</span></div>' +
+    '<div class="book-cover-lg ' + (book.coverClass || 'book-c1') + '"><span class="bk-cover-ico">' + ic(book.icon || 'play') + '</span><b>' + fqEsc(book.coverWord || book.title) + '</b></div>' +
+    '<div class="book-sheet-meta"><h3 id="bookTitle">' + fqEsc(book.title) + '</h3><small id="bookAuthor">' + fqEsc(book.author) + ' · ' + XA.t('fanqieFeatured') + '</small></div>' +
+    '<div class="book-chapter-head"><b id="bookChapterTitle">' + fqEsc(book.chapters[0].title) + '</b><span id="bookPlayStatus">' + XA.t('paused') + '</span></div>' +
+    '<p class="book-text" id="bookText">' + fqEsc(book.chapters[0].text) + '</p>' +
+    '<div class="book-progress"><span id="bookProgress" style="width:0%"></span></div>' +
+    '<div class="book-controls">' +
+    '<button data-action="book-nav" data-step="-1">' + ic('back') + '<span data-i18n="prevChapter">上一章</span></button>' +
+    '<button class="book-play" data-action="book-toggle">' + ic('play') + '</button>' +
+    '<button data-action="book-nav" data-step="1">' + ic('chevron') + '<span data-i18n="nextChapter">下一章</span></button></div>' +
+    '<div class="book-speed-row"><span>倍速</span><button data-book-speed="0.75">0.75x</button><button class="active" data-book-speed="1">1.0x</button><button data-book-speed="1.25">1.25x</button><button data-book-speed="1.5">1.5x</button></div>' +
+    '<p class="sheet-note">' + XA.t('bookPlayTip') + ' ' + XA.t('bookDemoTip') + '</p>');
   var sheet = XA.$('#modalLayer .sheet');
-  if (sheet) sheet.classList.add('video-sheet');
-  var wrap = XA.$('#douyinPlayerWrap');
-  if (wrap) {
-    var startY = 0;
-    wrap.addEventListener('pointerdown', function (e) { startY = e.clientY; });
-    wrap.addEventListener('pointerup', function (e) {
-      var dy = e.clientY - startY;
-      if (dy < -50) XA.actions['video-nav']({ dataset: { step: '1' } });
-      else if (dy > 50) XA.actions['video-nav']({ dataset: { step: '-1' } });
-    });
-  }
+  if (sheet) sheet.classList.add('book-sheet');
+  XA.paintBookPlayer();
 };
 XA.trackIndex = 0;
 XA.progressSec = 102;
@@ -350,7 +412,7 @@ XA.openPlaylist = function (key) {
     pl.tracks.map(function (t, i) {
       return '<button class="playlist-item" data-action="play-playlist-track" data-playlist="' + key + '" data-track-index="' + i + '">' +
         '<span class="playlist-index">' + String(i + 1).padStart(2, '0') + '</span>' +
-        '<span class="playlist-copy"><b>' + dyEsc(t.title) + '</b><small>' + dyEsc(t.artist) + ' · ' + dyEsc(t.subtitle || '') + '</small></span>' +
+        '<span class="playlist-copy"><b>' + fqEsc(t.title) + '</b><small>' + fqEsc(t.artist) + ' · ' + fqEsc(t.subtitle || '') + '</small></span>' +
         '<span class="playlist-play">' + ic('play') + '<em>' + XA.t('playTrack') + '</em></span></button>';
     }).join(''));
 };
@@ -586,124 +648,137 @@ XA.actions = {
       setTimeout(function () { XA.openExternalMusic(source); }, 260);
     }
   },
-  video: function (el) {
-    if (!XA.douyin.loggedIn) {
-      XA.toast(XA.t('douyinLoginRequired'));
-      XA.actions['douyin-login']();
+  'open-book': function (el) {
+    if (!XA.fanqie.loggedIn) {
+      XA.toast(XA.t('fanqieLoginRequired'));
+      XA.actions['fanqie-login']();
       return;
     }
-    XA.openVideo(parseInt((el && el.dataset.video) || '0', 10));
+    XA.openBookPlayer(parseInt((el && el.dataset.book) || '0', 10));
   },
-  'video-nav': function (el) {
+  'book-tab': function (el) {
+    XA.bookTab = (el && el.dataset.tabType === 'favorites') ? 'favorites' : 'featured';
+    XA.renderFanqieBooks();
+  },
+  'book-refresh': function () {
+    XA.refreshFeaturedBooks();
+    XA.toast(XA.lang === 'en' ? 'Fresh novels loaded' : '已为你换一批小说');
+  },
+  'book-nav': function (el) {
+    var list = XA._bookFeed || XA.books;
+    var book = list[XA.currentBookIndex];
+    if (!book) return;
+    var wasPlaying = XA.bookPlaying;
     var step = parseInt((el && el.dataset.step) || '1', 10);
-    var next = XA.currentVideoIndex + step;
-    var len = (XA._videoFeed || []).length;
-    if (!len) return;
-    if (next < 0) next = len - 1;
-    if (next >= len) next = 0;
-    XA.openVideo(next);
+    var next = XA.currentChapterIndex + step;
+    if (next < 0 || next >= book.chapters.length) {
+      XA.currentBookIndex = (XA.currentBookIndex + (step > 0 ? 1 : -1) + list.length) % list.length;
+      XA.currentChapterIndex = step > 0 ? 0 : Math.max(0, list[XA.currentBookIndex].chapters.length - 1);
+    } else XA.currentChapterIndex = next;
+    XA.bookProgress = 0;
+    XA.stopBookPlayback();
+    XA.openBookPlayer(XA.currentBookIndex);
+    XA.currentChapterIndex = Math.max(0, Math.min(list[XA.currentBookIndex].chapters.length - 1, XA.currentChapterIndex));
+    XA.bookPlaying = wasPlaying;
+    XA.paintBookPlayer();
+    if (wasPlaying) { XA.speakCurrentChapter(); XA.startBookTimer(); }
   },
-  'douyin-tab': function (el) {
-    XA.videoTab = (el && el.dataset.tabType === 'favorites') ? 'favorites' : 'featured';
-    XA.renderDouyinVideos();
+  'book-toggle': function () {
+    XA.bookPlaying = !XA.bookPlaying;
+    if (XA.bookPlaying) {
+      XA.speakCurrentChapter();
+      XA.startBookTimer();
+    } else {
+      XA.stopBookPlayback();
+    }
+    XA.paintBookPlayer();
   },
-  'douyin-refresh': function () {
-    XA.refreshFeaturedVideos();
-    XA.toast(XA.lang === 'en' ? 'Fresh videos loaded' : '已为你换一批放松视频');
-  },
-  'douyin-login': function () {
-    if (XA.douyin.loggedIn) {
-      XA.openSheet('<h3 data-i18n="douyinLoggedIn">已登录抖音</h3><div class="sheet-sub">' + dyEsc(XA.douyin.nickname) + ' · ' + XA.douyin.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') + '</div>' +
-        '<div class="option-row">' + ic('check') + '<span><b data-i18n="douyinFeatured">抖音精选</b><small data-i18n="douyinLoginSub">登录后可播放抖音精选视频</small></span></div>' +
-        '<button class="primary-btn" data-action="douyin-add" data-i18n="douyinAdd">添加我的抖音视频</button>' +
-        '<button class="login-skip" data-action="douyin-logout" data-i18n="douyinLogout">退出抖音</button>');
+  'fanqie-login': function () {
+    if (XA.fanqie.loggedIn) {
+      XA.openSheet('<h3 data-i18n="fanqieLoggedIn">已登录番茄小说账号</h3><div class="sheet-sub">' + fqEsc(XA.fanqie.nickname) + ' · ' + XA.fanqie.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') + '</div>' +
+        '<div class="option-row">' + ic('check') + '<span><b data-i18n="fanqieFeatured">番茄精选</b><small data-i18n="fanqieLoginSub">登录后可收听番茄精选小说</small></span></div>' +
+        '<button class="primary-btn" data-action="fanqie-add" data-i18n="fanqieAdd">同步我的书架</button>' +
+        '<button class="login-skip" data-action="fanqie-logout" data-i18n="fanqieLogout">退出番茄小说</button>');
       return;
     }
-    XA.openSheet('<h3 data-i18n="douyinLogin">登录抖音</h3><div class="sheet-sub" data-i18n="douyinLoginSub">登录后可播放抖音精选视频</div>' +
-      '<label class="login-label" data-i18n="douyinPhone">手机号</label>' +
-      '<input class="login-input" id="douyinPhone" type="tel" maxlength="11" inputmode="numeric" placeholder="请输入 11 位手机号">' +
-      '<label class="login-label" data-i18n="douyinCode">验证码</label>' +
-      '<div class="login-code-row"><input class="login-input" id="douyinCode" type="text" maxlength="4" inputmode="numeric" placeholder="4 位验证码">' +
-      '<button class="code-btn" data-action="douyin-code" data-i18n="douyinGetCode">获取验证码</button></div>' +
-      '<button class="primary-btn" data-action="douyin-do-login" data-i18n="douyinLoginBtn">登录并继续</button>' +
-      '<button class="login-skip" data-action="douyin-qr" data-i18n="douyinQr">扫码登录</button>' +
-      '<p class="sheet-note">演示登录不会连接抖音服务器，账号状态仅保存在本机。</p>');
+    XA.openSheet('<h3 data-i18n="fanqieLogin">登录番茄小说账号</h3><div class="sheet-sub" data-i18n="fanqieLoginSub">登录后可收听番茄精选小说</div>' +
+      '<label class="login-label" data-i18n="fanqiePhone">手机号</label>' +
+      '<input class="login-input" id="fanqiePhone" type="tel" maxlength="11" inputmode="numeric" placeholder="请输入 11 位手机号">' +
+      '<label class="login-label" data-i18n="fanqieCode">验证码</label>' +
+      '<div class="login-code-row"><input class="login-input" id="fanqieCode" type="text" maxlength="4" inputmode="numeric" placeholder="4 位验证码">' +
+      '<button class="code-btn" data-action="fanqie-code" data-i18n="fanqieGetCode">获取验证码</button></div>' +
+      '<button class="primary-btn" data-action="fanqie-do-login" data-i18n="fanqieLoginBtn">登录并继续</button>' +
+      '<button class="login-skip" data-action="fanqie-qr" data-i18n="fanqieQr">扫码登录</button>' +
+      '<p class="sheet-note">演示登录不会连接番茄小说服务器，账号状态仅保存在本机。</p>');
   },
-  'douyin-code': function () {
-    var p = ((XA.$('#douyinPhone') || {}).value || '').trim();
+  'fanqie-code': function () {
+    var p = ((XA.$('#fanqiePhone') || {}).value || '').trim();
     if (!/^1\d{10}$/.test(p)) { XA.toast('请输入正确的 11 位手机号'); return; }
-    XA.douyin.phone = p;
-    XA.douyin.code = String(Math.floor(1000 + Math.random() * 9000));
-    XA.saveDouyin();
-    XA.toast('验证码（演示）：' + XA.douyin.code);
+    XA.fanqie.phone = p;
+    XA.fanqie.code = String(Math.floor(1000 + Math.random() * 9000));
+    XA.saveFanqie();
+    XA.toast('验证码（演示）：' + XA.fanqie.code);
   },
-  'douyin-do-login': function () {
-    var p = ((XA.$('#douyinPhone') || {}).value || '').trim();
-    var c = ((XA.$('#douyinCode') || {}).value || '').trim();
+  'fanqie-do-login': function () {
+    var p = ((XA.$('#fanqiePhone') || {}).value || '').trim();
+    var c = ((XA.$('#fanqieCode') || {}).value || '').trim();
     if (!/^1\d{10}$/.test(p)) { XA.toast('请输入正确的 11 位手机号'); return; }
-    if (!XA.douyin.code || c !== XA.douyin.code) { XA.toast('验证码不正确或请先获取验证码'); return; }
-    XA.douyin.loggedIn = true;
-    XA.douyin.phone = p;
-    XA.douyin.nickname = XA.douyin.nickname || '抖音用户';
-    XA.douyin.code = '';
-    XA.saveDouyin(); XA.renderDouyinAccount(); XA.closeModal();
-    XA.toast('抖音账号已登录（演示）');
+    if (!XA.fanqie.code || c !== XA.fanqie.code) { XA.toast('验证码不正确或请先获取验证码'); return; }
+    XA.fanqie.loggedIn = true; XA.fanqie.phone = p;
+    XA.fanqie.nickname = XA.fanqie.nickname || '番茄用户'; XA.fanqie.code = '';
+    XA.saveFanqie(); XA.renderFanqieAccount(); XA.closeModal();
+    XA.toast('番茄小说账号已登录（演示）');
   },
-  'douyin-qr': function () {
-    XA.openSheet('<h3 data-i18n="douyinQr">扫码登录</h3><div class="sheet-sub" data-i18n="douyinQrTip">请使用抖音 App 扫描二维码（演示）</div>' +
-      '<div class="douyin-qr" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>' +
-      '<button class="primary-btn" data-action="douyin-qr-done" data-i18n="douyinLoginBtn">登录并继续</button>' +
+  'fanqie-qr': function () {
+    XA.openSheet('<h3 data-i18n="fanqieQr">扫码登录</h3><div class="sheet-sub" data-i18n="fanqieQrTip">请使用番茄小说 App 扫描二维码（演示）</div>' +
+      '<div class="fanqie-qr" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>' +
+      '<button class="primary-btn" data-action="fanqie-qr-done" data-i18n="fanqieLoginBtn">登录并继续</button>' +
       '<p class="sheet-note">原型使用模拟扫码，仅用于交互演示。</p>');
   },
-  'douyin-qr-done': function () {
-    XA.douyin.loggedIn = true;
-    XA.douyin.phone = XA.douyin.phone || '13800000000';
-    XA.douyin.nickname = XA.douyin.nickname || '抖音用户';
-    XA.saveDouyin(); XA.renderDouyinAccount(); XA.closeModal();
+  'fanqie-qr-done': function () {
+    XA.fanqie.loggedIn = true; XA.fanqie.phone = XA.fanqie.phone || '13800000000';
+    XA.fanqie.nickname = XA.fanqie.nickname || '番茄用户';
+    XA.saveFanqie(); XA.renderFanqieAccount(); XA.closeModal();
     XA.toast('扫码登录成功（演示）');
   },
-  'douyin-logout': function () {
-    XA.douyin.loggedIn = false; XA.douyin.code = '';
-    XA.saveDouyin(); XA.renderDouyinAccount(); XA.closeModal();
-    XA.toast('已退出抖音（演示）');
+  'fanqie-logout': function () {
+    XA.fanqie.loggedIn = false; XA.fanqie.code = '';
+    XA.saveFanqie(); XA.renderFanqieAccount(); XA.closeModal();
+    XA.toast('已退出番茄小说（演示）');
   },
-  'douyin-add': function () {
-    if (!XA.douyin.loggedIn) {
-      XA.toast(XA.t('douyinLoginRequired'));
-      XA.actions['douyin-login']();
-      return;
+  'fanqie-add': function () {
+    if (!XA.fanqie.loggedIn) {
+      XA.toast(XA.t('fanqieLoginRequired')); XA.actions['fanqie-login'](); return;
     }
-    XA.openSheet('<h3 data-i18n="douyinAdd">添加我的抖音视频</h3><div class="sheet-sub" data-i18n="syncFavoritesTip">演示同步：将用户收藏 / 喜欢列表中的视频加入伴行页。</div>' +
-      '<button class="option-row" data-action="douyin-sync" data-sync="favorites">' + ic('shield') + '<span><b data-i18n="syncFavorites">同步我的收藏</b><small>3 条 · 户外 / 美食 / 手工</small></span></button>' +
-      '<button class="option-row" data-action="douyin-sync" data-sync="likes">' + ic('play') + '<span><b data-i18n="syncLikes">同步我的喜欢</b><small>3 条 · 治愈 / 放松 / 轻剧情</small></span></button>' +
-      '<button class="option-row" data-action="douyin-add-link">' + ic('plus') + '<span><b data-i18n="pasteLink">粘贴视频链接添加</b><small data-i18n="douyinAddSub">粘贴抖音视频长链接或 19 位视频 ID</small></span></button>');
+    XA.openSheet('<h3 data-i18n="fanqieAdd">同步我的书架</h3><div class="sheet-sub" data-i18n="syncBookshelfTip">演示同步：将番茄小说书架中的作品加入伴行页。</div>' +
+      '<button class="option-row" data-action="fanqie-sync" data-sync="bookshelf">' + ic('shield') + '<span><b data-i18n="syncBookshelf">同步我的书架</b><small>2 本 · 治愈 / 美食</small></span></button>' +
+      '<button class="option-row" data-action="fanqie-sync" data-sync="recent">' + ic('play') + '<span><b data-i18n="syncRecent">同步最近阅读</b><small>2 本 · 继续上次进度</small></span></button>' +
+      '<button class="option-row" data-action="fanqie-add-link">' + ic('plus') + '<span><b data-i18n="pasteBook">搜索并添加小说</b><small>输入书名即可加入演示书架</small></span></button>');
   },
-  'douyin-sync': function (el) {
-    var type = (el && el.dataset.sync === 'likes') ? 'likes' : 'favorites';
-    XA.douyinVideos = XA.douyinFavoritesDemo.map(function (v, i) {
-      return Object.assign({}, v, { title: (type === 'likes' ? '我的喜欢 · ' : '我的收藏 · ') + v.title.replace(/^我的(收藏|喜欢)\s*·\s*/, ''), id: i % 2 === 0 ? '7358621438187718668' : '7583346692204924160' });
+  'fanqie-sync': function (el) {
+    var type = (el && el.dataset.sync === 'recent') ? 'recent' : 'bookshelf';
+    XA.fanqieBooks = XA.fanqieBooksDemo.map(function (b) {
+      return Object.assign({}, b, { title: (type === 'recent' ? '最近阅读 · ' : '我的书架 · ') + b.title.replace(/^我的书架\s*·\s*/, '') });
     });
-    XA.videoTab = 'favorites';
-    XA.saveDouyinVideos(); XA.renderDouyinVideos(); XA.closeModal();
-    XA.toast(type === 'likes' ? '已同步我的喜欢' : '已同步我的收藏');
+    XA.bookTab = 'favorites';
+    XA.saveFanqieBooks(); XA.renderFanqieBooks(); XA.closeModal();
+    XA.toast(type === 'recent' ? '已同步最近阅读' : '已同步我的书架');
   },
-  'douyin-add-link': function () {
-    XA.openSheet('<h3 data-i18n="pasteLink">粘贴视频链接添加</h3><div class="sheet-sub" data-i18n="douyinAddSub">粘贴抖音视频长链接或 19 位视频 ID</div>' +
-      '<input class="login-input" id="douyinLink" placeholder="https://www.douyin.com/video/…">' +
-      '<label class="login-label">标题</label><input class="login-input" id="douyinTitle" placeholder="例如：夜骑西湖">' +
-      '<button class="primary-btn" data-action="douyin-save" data-i18n="douyinAddBtn">添加并收藏</button>' +
-      '<p class="sheet-note">短链需先在浏览器打开并复制完整链接，或直接使用视频 ID。</p>');
+  'fanqie-add-link': function () {
+    XA.openSheet('<h3 data-i18n="pasteBook">搜索并添加小说</h3><div class="sheet-sub">输入书名，加入演示书架（不请求真实书城）</div>' +
+      '<input class="login-input" id="fanqieBookName" placeholder="例如：雨停之前">' +
+      '<button class="primary-btn" data-action="fanqie-save" data-i18n="fanqieAddBtn">同步并收藏</button>');
   },
-  'douyin-save': function () {
-    var raw = ((XA.$('#douyinLink') || {}).value || '').trim();
-    var title = ((XA.$('#douyinTitle') || {}).value || '').trim();
-    var id = XA.parseDouyinId(raw);
-    if (!id) { XA.toast('未识别视频 ID，请粘贴完整链接或 19 位数字'); return; }
-    XA.douyinVideos.unshift({ title: title || '我的抖音视频 · ' + id.slice(-6), id: id, author: XA.douyin.nickname, tags: XA.t('douyinCustom'), coverClass: 'cover-default', coverWord: '我的视频', icon: 'play' });
-    XA.douyinVideos = XA.douyinVideos.slice(0, 12);
-    XA.videoTab = 'favorites';
-    XA.saveDouyinVideos(); XA.renderDouyinVideos(); XA.closeModal();
-    XA.toast('视频已加入我的收藏');
+  'fanqie-save': function () {
+    var name = ((XA.$('#fanqieBookName') || {}).value || '').trim();
+    if (!name) { XA.toast('请输入小说名称'); return; }
+    XA.fanqieBooks.unshift({ title: name, author: '番茄用户收藏', tags: '#我的书架', coverClass: 'book-c1', coverWord: name, icon: 'play', chapters: [
+      { title: '第 1 章 · 开始阅读', text: '这是一段用于听书演示的原创示例文字。夜色温柔，脚步放慢，故事在耳边慢慢展开。' }
+    ] });
+    XA.fanqieBooks = XA.fanqieBooks.slice(0, 12);
+    XA.bookTab = 'favorites';
+    XA.saveFanqieBooks(); XA.renderFanqieBooks(); XA.closeModal();
+    XA.toast('小说已加入我的书架');
   },
   'community-search': function () { XA.toast('社区搜索：夜路、路灯、AR 眼镜'); },
   topic: function () { XA.toast('话题已展开 · 夜路故事征集'); },
@@ -834,7 +909,7 @@ XA.menuSheets = {
   history: ['守护记录', '已完成 18 段安全行程 · 1 次误报取消'],
   privacy: ['隐私与权限', '位置仅使用期间 · 麦克风端侧处理 · 可随时撤回'],
   device: ['AR 眼镜设备', 'XA-0281 已连接 · 电量 82% · 配对信息本地加密'],
-  about: ['关于安星', '安星 · 夜行安全系统 V1.10 · 概念设计原型']
+  about: ['关于安星', '安星 · 夜行安全系统 V1.11 · 概念设计原型']
 };
 
 XA.bindPageEvents = function () {
@@ -856,6 +931,14 @@ XA.bindPageEvents = function () {
       XA.setLanguage(lang.dataset.lang);
       XA.closeModal();
       XA.toast(XA.lang === 'en' ? 'Language set to English' : '已切换为简体中文');
+      return;
+    }
+    var speed = e.target.closest('[data-book-speed]');
+    if (speed) {
+      XA.bookSpeed = Number(speed.dataset.bookSpeed) || 1;
+      XA.$$('[data-book-speed]').forEach(function (el) { el.classList.toggle('active', el === speed); });
+      if (XA.bookPlaying) XA.speakCurrentChapter();
+      XA.toast('听书倍速 ' + XA.bookSpeed + 'x');
       return;
     }
     var privacy = e.target.closest('[data-privacy]');
