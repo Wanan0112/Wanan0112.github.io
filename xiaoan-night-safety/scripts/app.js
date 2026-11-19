@@ -91,6 +91,8 @@ XA.closeModal = function () {
   var layer = XA.$('#modalLayer');
   var video = layer && layer.querySelector('video');
   if (video) { video.pause(); video.removeAttribute('src'); video.load(); }
+  var frame = layer && layer.querySelector('iframe');
+  if (frame) frame.src = 'about:blank';
   layer.classList.remove('open');
   setTimeout(function () { if (!layer.classList.contains('open')) layer.innerHTML = ''; }, 320);
 };
