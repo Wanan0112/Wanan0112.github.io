@@ -14,6 +14,13 @@
     '西溪公园': { lat: 30.2680, lng: 120.0640, name: '西溪公园' },
     '地铁文三路站': { lat: 30.2760, lng: 120.1390, name: '地铁文三路站' }
   };
+  var RECOMMENDS = [
+    { name: '西湖公安分局 · 湖滨警务站', cat: '安全守护 · 24 小时开放', score: '安全 98', icon: 'shield', safe: true, lat: 30.2531, lng: 120.1652 },
+    { name: '西湖风景名胜区 · 湖滨入口', cat: '旅游景点 · 照明良好', score: '4.9 分', icon: 'navigation', lat: 30.2490, lng: 120.1530 },
+    { name: '湖滨银泰 in77', cat: '美食购物 · 人流充足', score: '4.8 分', icon: 'pin', lat: 30.2530, lng: 120.1675 },
+    { name: '知味观（湖滨店）', cat: '美食 · 营业至 22:30', score: '4.7 分', icon: 'pin', lat: 30.2542, lng: 120.1660 },
+    { name: '武林广场地铁站', cat: '交通枢纽 · 监控密集', score: '安全 94', icon: 'shield', safe: true, lat: 30.2732, lng: 120.1640 }
+  ];
   var POINTS = [
     { type: 'lamp', dLat: 0.0016, dLng: -0.0021 }, { type: 'lamp', dLat: 0.0009, dLng: 0.0018 },
     { type: 'lamp', dLat: -0.0014, dLng: 0.0025 }, { type: 'lamp', dLat: -0.0020, dLng: -0.0015 },
@@ -603,6 +610,79 @@
 
   /* ---------------- 搜索 ---------------- */
   var searchTimer = null;
+  var HISTORY_KEY = 'xa_search_history', HISTORY_MAX = 6;
+  XA.searchHistory = [];
+  function esc(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function loadSearchHistory() {
+    try {
+      var h = JSON.parse(localStorage.getItem(HISTORY_KEY));
+      if (Array.isArray(h)) XA.searchHistory = h.filter(function (x) { return typeof x === 'string'; }).slice(0, HISTORY_MAX);
+    } catch (e) {}
+  }
+  function saveSearchHistory() {
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(XA.searchHistory)); } catch (e) {}
+  }
+  function addSearchHistory(name) {
+    var n = String(name || '').trim();
+    if (!n) return;
+    XA.searchHistory = XA.searchHistory.filter(function (x) { return x !== n; });
+    XA.searchHistory.unshift(n);
+    XA.searchHistory = XA.searchHistory.slice(0, HISTORY_MAX);
+    saveSearchHistory();
+  }
+  function removeSearchHistory(index) {
+    XA.searchHistory.splice(index, 1);
+    saveSearchHistory();
+  }
+  function distanceText(p) {
+    var c = gcj(), rad = Math.PI / 180;
+    var dLat = (p.lat - c[0]) * rad, dLng = (p.lng - c[1]) * rad;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(c[0] * rad) * Math.cos(p.lat * rad) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    var m = 6371000 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return m < 1000 ? Math.round(m) + ' m' : (m / 1000).toFixed(1) + ' km';
+  }
+  function goToPlace(name, point) {
+    destPoint = point || DESTS[name] || { name: name, lat: DEFAULT.lat, lng: DEFAULT.lng };
+    XA.setDestination(name);
+    XA._lastPlanned = name;
+    addSearchHistory(name);
+    XA.closeModal();
+    showRoutePanel();
+    planRoutes(name);
+    XA.toast('已选择 ' + name + ' · 正在规划夜间安全路线');
+  }
+  function historyHtml() {
+    if (!XA.searchHistory.length) {
+      return '<div class="history-empty">' + ic('clock') + '<span>' + XA.t('historyEmpty') + '</span></div>';
+    }
+    return '<div class="history-grid">' + XA.searchHistory.map(function (name, i) {
+      return '<span class="history-chip"><button data-history="' + i + '">' + ic('clock') + esc(name) + '</button>' +
+        '<button class="history-remove" data-history-remove="' + i + '" aria-label="删除">' + ic('close') + '</button></span>';
+    }).join('') + '</div>';
+  }
+  function recoHtml() {
+    function card(p, i) {
+      return '<button class="reco-card' + (p.safe ? ' safe' : '') + '" data-reco="' + i + '">' +
+        '<span class="reco-ico">' + ic(p.icon) + '</span>' +
+        '<span class="reco-copy"><b>' + esc(p.name) + '</b><small>' + esc(p.cat) + '</small><em>' + distanceText(p) + ' · 预计 4–12 分钟</em></span>' +
+        '<span class="reco-meta"><b>' + esc(p.score) + '</b><small>' + (p.safe ? '安全优先' : '高评分') + '</small></span>' +
+        '<span class="reco-go">' + ic('chevron') + '</span></button>';
+    }
+    return '<div class="reco-group-label">' + ic('shield') + XA.t('nearbySafe') + '</div>' +
+      RECOMMENDS.map(function (p, i) { return p.safe ? card(p, i) : ''; }).join('') +
+      '<div class="reco-group-label">' + ic('pin') + XA.t('nearbyTop') + '</div>' +
+      RECOMMENDS.map(function (p, i) { return p.safe ? '' : card(p, i); }).join('');
+  }
+  XA.actions['clear-history'] = function () {
+    XA.searchHistory = []; saveSearchHistory(); XA.actions.search(); XA.toast('历史搜索已清空');
+  };
+  XA.actions['show-recommend'] = function () {
+    var sh = XA.$('#modalLayer .sheet');
+    if (sh) sh.classList.add('raised');
+  };
   function searchPlaces(q) {
     var box = XA.$('#xaPlaceResults');
     if (!box) return;
@@ -624,13 +704,19 @@
   }
   XA.actions.search = function () {
     var presets = Object.keys(DESTS);
-    XA.openSheet('<h3 data-i18n="search">搜索目的地</h3><div class="sheet-sub">支持输入关键词搜索真实地点，或使用常用地址</div>' +
+    XA.openSheet('<h3 data-i18n="search">搜索目的地</h3><div class="sheet-sub" data-i18n="searchSheetSub">输入关键词搜索真实地点，或使用下方地址</div>' +
       '<input id="xaSearchInput" class="sheet-input" style="min-height:auto;height:44px" placeholder="输入地点名称，如 西湖" autocomplete="off">' +
+      '<div id="xaPlaceResults" class="search-results"></div>' +
       '<div class="fav-hint">' + ic('pin') + '<span><b data-i18n="commonAddresses">常用地址</b><small data-i18n="commonHint">点击即可快速规划夜间安全路线</small></span></div>' +
       '<div id="xaPreset" class="seg">' + presets.map(function (n) {
-        return '<button data-xa-dest="' + n + '">' + n + '</button>';
+        return '<button data-xa-dest="' + esc(n) + '">' + esc(n) + '</button>';
       }).join('') + '</div>' +
-      '<div id="xaPlaceResults" style="margin-top:8px"></div>');
+      '<div class="search-section-title"><b data-i18n="historySearch">历史搜索</b><small><span data-i18n="historyHint">最多保留 6 条最近搜索</span><button data-action="clear-history" data-i18n="clearHistory">清空</button></small></div>' +
+      historyHtml() +
+      '<button class="swipe-tip" data-action="show-recommend">' + ic('back') + '<span data-i18n="swipeUpTip">上滑查看附近推荐地点</span></button>' +
+      '<div class="reco-section"><div class="search-section-title reco-title"><b data-i18n="recommendPlaces">推荐地点</b><small data-i18n="recommendHint">附近安全且高评分的去处</small></div>' + recoHtml() + '</div>');
+    var sh = XA.$('#modalLayer .sheet');
+    if (sh) sh.classList.add('search-sheet');
     var input = XA.$('#xaSearchInput');
     if (input) {
       input.addEventListener('input', function () {
@@ -639,11 +725,15 @@
         if (q.length < 2) { XA.$('#xaPlaceResults').innerHTML = ''; return; }
         searchTimer = setTimeout(function () { searchPlaces(q); }, 450);
       });
-      setTimeout(function () {
-        input.focus();
-        var sh = XA.$('#modalLayer .sheet');
-        if (sh) sh.classList.add('raised');
-      }, 260);
+      input.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter') return;
+        var q = input.value.trim();
+        if (q.length < 2) return;
+        clearTimeout(searchTimer);
+        addSearchHistory(q);
+        searchPlaces(q);
+      });
+      setTimeout(function () { input.focus(); }, 260);
     }
   };
 
@@ -802,6 +892,7 @@
   loadSettings();
   loadAccount();
   loadPrivacy();
+  loadSearchHistory();
   var savedLang = 'zh';
   try { savedLang = localStorage.getItem('xa_language') || 'zh'; } catch (e) {}
   XA.setLanguage(savedLang);
@@ -828,21 +919,27 @@
       XA.toast(({ voice: '危险语音提醒', follow: '位置跟随', radar: '雷达扫描', acc: '精度显示' })[k] + (XA.settings[k] ? '已开启' : '已关闭'));
       return;
     }
-    var dest = e.target.closest('[data-xa-dest]');
-    if (dest) {
-      destPoint = DESTS[dest.dataset.xaDest];
-      XA.setDestination(dest.dataset.xaDest);
-      XA._lastPlanned = dest.dataset.xaDest;
-      XA.closeModal(); showRoutePanel(); planRoutes(dest.dataset.xaDest);
+    var histRemove = e.target.closest('[data-history-remove]');
+    if (histRemove) {
+      e.stopPropagation();
+      removeSearchHistory(parseInt(histRemove.dataset.historyRemove, 10));
+      XA.actions.search();
       return;
     }
+    var hist = e.target.closest('[data-history]');
+    if (hist) { goToPlace(XA.searchHistory[parseInt(hist.dataset.history, 10)]); return; }
+    var reco = e.target.closest('[data-reco]');
+    if (reco) {
+      var rp = RECOMMENDS[parseInt(reco.dataset.reco, 10)];
+      if (rp) goToPlace(rp.name, rp);
+      return;
+    }
+    var dest = e.target.closest('[data-xa-dest]');
+    if (dest) { goToPlace(dest.dataset.xaDest, DESTS[dest.dataset.xaDest]); return; }
     var ph = e.target.closest('[data-photon]');
     if (ph && XA._xaPlaces) {
       var p = XA._xaPlaces[parseInt(ph.dataset.photon, 10)];
-      destPoint = p;
-      XA.setDestination(p.name);
-      XA._lastPlanned = p.name;
-      XA.closeModal(); showRoutePanel(); planRoutes(p.name);
+      goToPlace(p.name, p);
       return;
     }
     var mm = e.target.closest('[data-map-mode]');
