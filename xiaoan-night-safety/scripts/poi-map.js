@@ -72,11 +72,28 @@
   var CAT_LABEL = { hotel: '酒店', convenience: '便利店', toilets: '公共厕所', restaurant: '餐厅', cafe: '咖啡', pharmacy: '药店', hospital: '医院', subway: '地铁站', bus: '公交站', parking: '停车场', bank: '银行' };
   var CAT_ICON = { hotel: 'home', convenience: 'pin', toilets: 'pin', restaurant: 'music', cafe: 'music', pharmacy: 'shield', hospital: 'shield', subway: 'navigation', bus: 'navigation', parking: 'pin', bank: 'shield' };
   var PHOTON_TERM = { hotel: 'hotel', convenience: 'convenience store', toilets: 'toilets', restaurant: 'restaurant', cafe: 'cafe', pharmacy: 'pharmacy', hospital: 'hospital', subway: 'subway', bus: 'bus stop', parking: 'parking', bank: 'bank' };
-  // Photon 目前不支持 lang=zh，且中文类别词召回差；已知类别改用英文 OSM 术语
-  function photonTerm(q, cats) {
-    var s = String(q || '').trim(), lower = s.toLowerCase();
-    if (KW[s] || KW[lower]) return PHOTON_TERM[(KW[s] || KW[lower])[0]] || s;
-    return PHOTON_TERM[cats && cats[0]] || s;
+  var MANEUVER = { depart: '出发', arrive: '到达目的地', turn: '转弯', 'new name': '变更道路', continue: '继续直行', merge: '汇入道路', on_ramp: '驶入匝道', off_ramp: '驶出匝道', roundabout: '环岛', fork: '分岔', 'end of road': '道路尽头' };
+  var BRAND = {
+    '汉庭': 'Hanting', '如家': 'Home Inn', '全季': 'Ji Hotel', '锦江之星': 'Jinjiang Inn',
+    '7-11': '7-Eleven', '全家': 'FamilyMart', '罗森': 'Lawson',
+    '星巴克': 'Starbucks', '肯德基': 'KFC', '麦当劳': "McDonald's", '瑞幸': 'Luckin Coffee'
+  };
+  // 只用公开地图真实数据；中文类别/品牌转成 OSM 常用英文名，按优先级依次尝试
+  function queryVariants(q, cats) {
+    var s = String(q || '').trim(), lower = s.toLowerCase(), out = [];
+    function add(t) { if (t && out.indexOf(t) < 0) out.push(t); }
+    add(s);
+    var hasBrand = false;
+    Object.keys(BRAND).forEach(function (k) {
+      if (s.indexOf(k) >= 0 || lower.indexOf(k.toLowerCase()) >= 0) { add(BRAND[k]); hasBrand = true; }
+    });
+    // 指定了品牌/专名时用品牌词，不再退化成泛类别，避免搜“汉庭”却冒出别的酒店
+    if (!hasBrand) (cats || []).forEach(function (c) { if (PHOTON_TERM[c]) add(PHOTON_TERM[c]); });
+    if (KW[s] || KW[lower]) {
+      var primary = PHOTON_TERM[(KW[s] || KW[lower])[0]];
+      if (primary) { var i = out.indexOf(primary); if (i > 0) { out.splice(i, 1); out.unshift(primary); } }
+    }
+    return out.slice(0, 3);
   }
   function keywordCategories(q) {
     q = String(q || '').trim();
@@ -124,13 +141,13 @@
         }).catch(function () { clearTimeout(timer); if (!done) { done = true; resolve(null); } });
     });
   }
-  /* Overpass 不可用时：Photon 公开地理编码 + bbox 硬过滤，仍按当前定位由近到远 */
-  function fetchPhoton(q, cats, radius) {
+  /* Overpass 不可用时：Photon 公开地理编码 + bbox 硬过滤，只返回真实收录地点 */
+  function photonFetchTerm(term, radius) {
     return new Promise(function (resolve) {
-      var done = false, timer = setTimeout(function () { if (!done) { done = true; resolve(null); } }, 6000);
+      var done = false, timer = setTimeout(function () { if (!done) { done = true; resolve(null); } }, 4500);
       var dLat = radius / 111320, dLng = radius / (111320 * Math.cos(gps.lat * Math.PI / 180));
       var bbox = [gps.lng - dLng, gps.lat - dLat, gps.lng + dLng, gps.lat + dLat].join(',');
-      var url = PHOTON + '?q=' + encodeURIComponent(photonTerm(q, cats)) + '&limit=40&bbox=' + bbox + '&lat=' + gps.lat + '&lon=' + gps.lng;
+      var url = PHOTON + '?q=' + encodeURIComponent(term) + '&limit=40&bbox=' + bbox + '&lat=' + gps.lat + '&lon=' + gps.lng;
       fetch(url).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (d) {
         clearTimeout(timer); if (done) return; done = true;
         var list = (d.features || []).map(function (f) {
@@ -148,6 +165,16 @@
       }).catch(function () { clearTimeout(timer); if (!done) { done = true; resolve(null); } });
     });
   }
+  function fetchPhoton(q, cats, radius) {
+    var terms = queryVariants(q, cats);
+    function next(i) {
+      if (i >= terms.length) return Promise.resolve([]);
+      return photonFetchTerm(terms[i], radius).then(function (list) {
+        return (list && list.length) ? list : next(i + 1);
+      });
+    }
+    return next(0);
+  }
   function catFromTags(t) {
     if (t.tourism && /hotel|hostel|guest_house|motel/.test(t.tourism)) return 'hotel';
     if (t.amenity === 'hotel') return 'hotel';
@@ -164,53 +191,20 @@
     return 'pin';
   }
 
-  /* ---------- 本地兜底 POI（保证搜索永不为空，原型演示数据） ---------- */
-  var FALLBACK_NAMES = {
-    hotel: ['如家精选酒店', '汉庭酒店', '全季酒店', '桔子酒店', '亚朵轻居', '锦江之星'],
-    convenience: ['全家便利店', '罗森便利店', '7-ELEVEn', '美宜佳', '十足便利店'],
-    toilets: ['公共厕所', '便民公厕', '地铁口公共卫生间'],
-    restaurant: ['肯德基', '麦当劳', '星巴克', '外婆家', '新白鹿餐厅'],
-    cafe: ['星巴克', '瑞幸咖啡', 'Costa 咖啡'],
-    pharmacy: ['海王星辰药店', '老百姓大药房', '益丰大药房'],
-    hospital: ['社区卫生服务中心', '市第一医院门诊'],
-    subway: ['地铁站入口', '公交中心站'],
-    bus: ['公交站台'],
-    parking: ['地下停车场', '公共停车场'],
-    bank: ['ATM 自助银行', '银行营业网点']
-  };
-  function localPOI(cats, radius) {
-    var out = [];
-    cats.forEach(function (cat, ci) {
-      var names = FALLBACK_NAMES[cat] || ['附近' + (CAT_LABEL[cat] || '地点')];
-      names.forEach(function (name, i) {
-        var seed = (ci * 31 + i * 17 + Math.round(gps.lat * 100) + Math.round(gps.lng * 100));
-        var ang = (seed % 360) * Math.PI / 180;
-        var m = 120 + ((seed * 37) % Math.max(140, radius - 160));
-        var dLat = (m / 111320) * Math.sin(ang), dLng = (m / (111320 * Math.cos(gps.lat * Math.PI / 180))) * Math.cos(ang);
-        out.push({ name: name, category: cat, lat: gps.lat + dLat, lng: gps.lng + dLng, dist: m, address: '附近 · ' + CAT_LABEL[cat], demo: true });
-      });
-    });
-    return out.filter(function (p) { return p.dist <= radius; }).sort(function (a, b) { return a.dist - b.dist; }).slice(0, 14);
-  }
   function searchPOI(q) {
     var cats = keywordCategories(q);
     var box = XA.$('#pmResults');
     if (box) box.innerHTML = '<div class="pm-empty">正在按当前定位就近检索…</div>';
     function expand() {
-      if (box) box.innerHTML = '<div class="pm-empty">1000 米内暂无线索，正在扩大到 2000 米…</div>';
+      if (box) box.innerHTML = '<div class="pm-empty">1000 米内暂无公开地图数据，正在扩大到 2000 米…</div>';
       return fetchOverpass(q, cats, 2000).then(function (list2) {
         if (list2 && list2.length) { usedRadius = 2000; return list2; }
-        return fetchPhoton(q, cats, 2000).then(function (pl) {
-          usedRadius = 2000;
-          return (pl && pl.length) ? pl : localPOI(cats, 2000);
-        });
+        return fetchPhoton(q, cats, 2000).then(function (pl) { usedRadius = 2000; return pl || []; });
       });
     }
     return fetchOverpass(q, cats, 1000).then(function (list) {
       usedRadius = 1000;
-      if (list === null) { // Overpass 服务不可用，直接用公开地理编码兜底，避免“搜不到”
-        return fetchPhoton(q, cats, 1000).then(function (pl) { return (pl && pl.length) ? pl : expand(); });
-      }
+      if (list === null) return fetchPhoton(q, cats, 1000).then(function (pl) { return (pl && pl.length) ? pl : expand(); });
       return list.length ? list : expand();
     }).then(function (list) {
       results = list || [];
@@ -258,9 +252,11 @@
     var box = XA.$('#pmResults'); if (!box) return;
     var head = XA.$('#pmHead'), rad = XA.$('#pmRadius');
     if (head) head.textContent = '“' + q + '” · ' + results.length + ' 个结果';
-    if (rad) rad.textContent = (usedRadius === 2000 ? '已自动扩大到 2000 米' : '定位附近 · 1000 米') +
-      (results.some(function (p) { return p.demo; }) ? ' · 含演示数据' : results.some(function (p) { return p.via === 'photon'; }) ? ' · 公开地点数据' : '');
-    if (!results.length) { box.innerHTML = '<div class="pm-empty">该范围内没有找到相关地点，试试其他关键词</div>'; return; }
+    if (rad) rad.textContent = (usedRadius === 2000 ? '已自动扩大到 2000 米' : '定位附近 · 1000 米') + ' · 公开地图数据';
+    if (!results.length) {
+      box.innerHTML = '<div class="pm-empty">当前定位 ' + usedRadius + ' 米内没有公开地图收录的“' + esc(q) + '”。<br>为避免误导，不显示虚构地点；可试试类别词或到地图 App 核对。</div>';
+      return;
+    }
     box.innerHTML = results.map(function (p, i) {
       return '<button class="pm-item" data-pm-i="' + i + '">' +
         '<span class="pm-ico">' + ico(CAT_ICON[p.category] || 'pin') + '</span>' +
@@ -297,19 +293,10 @@
     var box = XA.$('#pmSuggest'); if (!box) return;
     q = String(q || '').trim();
     if (q.length < 1) { box.innerHTML = ''; box.classList.remove('show'); return; }
-    var words = Object.keys(KW).concat(Object.keys(CAT_LABEL).map(function (k) { return CAT_LABEL[k]; }));
+    var words = Object.keys(KW).concat(Object.keys(BRAND), Object.keys(CAT_LABEL).map(function (k) { return CAT_LABEL[k]; }));
     var local = words.filter(function (w) { return w.indexOf(q) >= 0 || q.indexOf(w) >= 0; }).slice(0, 6);
-    var items = local.map(function (w) { return '<button data-pm-s="' + esc(w) + '">' + ico('search') + esc(w) + '</button>'; });
-    box.innerHTML = items.join(''); box.classList.toggle('show', items.length > 0);
-    // 远端补充联想（Photon），失败静默
-    var remoteQ = (KW[q] || KW[q.toLowerCase()]) ? photonTerm(q, keywordCategories(q)) : q;
-    fetch(PHOTON + '?q=' + encodeURIComponent(remoteQ) + '&lat=' + gps.lat + '&lon=' + gps.lng + '&limit=4')
-      .then(function (r) { return r.json(); }).then(function (d) {
-        var more = (d.features || []).map(function (f) { return (f.properties && (f.properties.name || f.properties.street)) || ''; }).filter(Boolean);
-        if (!more.length) return;
-        more.forEach(function (m) { if (items.join('').indexOf(m) < 0) items.push('<button data-pm-s="' + esc(m) + '">' + ico('pin') + esc(m) + '</button>'); });
-        var cur = XA.$('#pmInput'); if (cur && cur.value.trim() === q) { box.innerHTML = items.join(''); box.classList.add('show'); }
-      }).catch(function () {});
+    box.innerHTML = local.map(function (w) { return '<button data-pm-s="' + esc(w) + '">' + ico('search') + esc(w) + '</button>'; }).join('');
+    box.classList.toggle('show', local.length > 0);
   }
 
   /* ---------- 路线 / 语音 / 轨迹 ---------- */
@@ -338,8 +325,8 @@
       var steps = rt.legs && rt.legs[0] && rt.legs[0].steps || [];
       var sEl = XA.$('#pmRouteSteps');
       if (sEl) sEl.innerHTML = steps.slice(0, 4).map(function (s) {
-        var m = s.maneuver || {}, type = m.type || 'turn';
-        return '<div class="pm-step">' + ico(type === 'arrive' ? 'pin' : 'navigation') + '<span>' + esc(type + (s.name ? ' · ' + s.name : '')) + '<small>' + fmtDist(s.distance || 0) + '</small></span></div>';
+        var m = s.maneuver || {}, type = m.type || 'turn', label = MANEUVER[type] || type;
+        return '<div class="pm-step">' + ico(type === 'arrive' ? 'pin' : 'navigation') + '<span>' + esc(label + (s.name ? ' · ' + s.name : '')) + '<small>' + fmtDist(s.distance || 0) + '</small></span></div>';
       }).join('');
       speak('开始步行导航，前往' + p.name + '，全程约' + Math.round(rt.distance) + '米');
       if (ready && map) {
