@@ -24,6 +24,7 @@ XA_SCREENS.home = `
   </button>
 
   <div class="home-floats">
+    <button class="float-btn poi-float" data-action="open-poi-map" aria-label="周边 POI 导航">${ic('search')}</button>
     <button class="float-btn" data-action="layer" aria-label="图层">${ic('layers')}</button>
     <button class="float-btn" data-action="risk-popover" aria-label="安全警告">${ic('warning')}</button>
     <button class="float-btn" data-action="recenter" aria-label="我的定位">${ic('pin')}</button>

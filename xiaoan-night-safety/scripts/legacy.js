@@ -702,7 +702,7 @@
     if (cityTried) { cb(cityName); return; }
     cityTried = true;
     var s = geoStart;
-    var url = PHOTON.replace('/api/', '/reverse/') + '?lat=' + s[0] + '&lon=' + s[1] + '&limit=1&lang=zh';
+    var url = PHOTON.replace('/api/', '/reverse/') + '?lat=' + s[0] + '&lon=' + s[1] + '&limit=1';
     fetch(url).then(function (r) { return r.json(); }).then(function (data) {
       var f = (data.features || [])[0], p = (f && f.properties) || {};
       cityName = p.city || p.town || p.municipality || p.state || p.county || '';
@@ -711,6 +711,22 @@
   }
 
   function placeCity(p) { return p.city || p.town || p.municipality || p.county || p.state || ''; }
+  // Photon 不支持 lang=zh，中文类别词召回差；已知类别改用英文 OSM 术语
+  var PHOTON_Q = {
+    '酒店': 'hotel', '宾馆': 'hotel', '住宿': 'hotel',
+    '便利店': 'convenience store', '超市': 'supermarket', '商店': 'shop',
+    '公厕': 'toilets', '厕所': 'toilets', '洗手间': 'toilets', '卫生间': 'toilets',
+    '餐厅': 'restaurant', '饭店': 'restaurant', '美食': 'restaurant', '咖啡': 'cafe',
+    '药店': 'pharmacy', '医院': 'hospital', '地铁': 'subway', '公交': 'bus stop',
+    '停车': 'parking', '银行': 'bank'
+  };
+  function photonQuery(q) {
+    var s = String(q || '').trim();
+    if (PHOTON_Q[s]) return PHOTON_Q[s];
+    var keys = Object.keys(PHOTON_Q);
+    for (var i = 0; i < keys.length; i++) if (s.indexOf(keys[i]) >= 0) return PHOTON_Q[keys[i]];
+    return s;
+  }
   function cityMatch(addrCity) {
     if (!cityName || !addrCity) return true;               // 城市未知时不过滤，避免过度收紧
     var a = cityName.replace(/市$/, ''), b = addrCity.replace(/市$/, '');
@@ -721,13 +737,13 @@
     var box = XA.$('#xaPlaceResults');
     if (!box) return;
     var scopeKm = SEARCH_SCOPES[XA.searchScope] || 20;
-    var c = gcj();
+    var c = geoStart; // Photon/OSM 为 WGS84，不能传高德瓦片用的 GCJ02 坐标
     var dLat = scopeKm / 111.32;
     var dLng = scopeKm / (111.32 * Math.cos(c[0] * Math.PI / 180));
     // bbox = 左下经度,左下纬度,右上经度,右上纬度 —— Photon 的硬地理过滤
     var bbox = [c[1] - dLng, c[0] - dLat, c[1] + dLng, c[0] + dLat].join(',');
-    var url = PHOTON + '?q=' + encodeURIComponent(q) + '&limit=40&bbox=' + bbox +
-      '&lat=' + c[0] + '&lon=' + c[1] + '&lang=zh';
+    var url = PHOTON + '?q=' + encodeURIComponent(photonQuery(q)) + '&limit=40&bbox=' + bbox +
+      '&lat=' + c[0] + '&lon=' + c[1];
 
     function render() {
       fetch(url).then(function (r) { return r.json(); }).then(function (data) {
