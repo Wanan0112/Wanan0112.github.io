@@ -35,6 +35,12 @@ XA_SCREENS.entertainment = `
     <span class="lyric-bars"><i></i><i></i><i></i><i></i><i></i></span>
   </div>
 
+  <button class="bs-entry" data-action="open-bottom-sheet">
+    <span class="bs-entry-ico">${ic('layers')}</span>
+    <span class="bs-entry-txt"><b>沉浸伴行 · 底部上拉面板</b><small>视频 / 音乐 · 双锚点手势 · SOS 常驻</small></span>
+    ${ic('chevron', 'go')}
+  </button>
+
   <div class="section-title"><h3 data-i18n="audioBook">伴行听书</h3><small data-i18n="bookSubtitle">接入番茄小说开放能力，APP 内沉浸式听书，不离开安星</small></div>
   <div class="fanqie-account glass">
     <span class="fq-logo">${ic('play')}</span>
