@@ -681,7 +681,7 @@
   };
   XA.actions['show-recommend'] = function () {
     var sh = XA.$('#modalLayer .sheet');
-    if (sh) sh.classList.add('raised');
+    if (sh) sh.classList.add('expanded');
   };
   function searchPlaces(q) {
     var box = XA.$('#xaPlaceResults');
@@ -737,37 +737,7 @@
     }
   };
 
-  /* ---------------- SOS 倒计时（使用设置值） ---------------- */
-  XA.showSosConfirm = function () {
-    if (XA.alarm) return;
-    var cd = XA.settings.sosCd || 3;
-    var box = document.createElement('div');
-    box.className = 'sos-confirm';
-    box.innerHTML = '<p>已准备报警 · ' + cd + ' 秒后发出</p><h3>长按取消</h3>' +
-      '<div class="confirm-ring"><button class="confirm-btn">SOS<span class="hold-fill"></span></button></div>' +
-      '<button class="cancel-hold">长按 2 秒取消报警<span class="hold-fill"></span></button>';
-    XA.$('#phone').appendChild(box);
-    requestAnimationFrame(function () { box.classList.add('open'); });
-    var count = cd, label = box.querySelector('p');
-    var tick = setInterval(function () {
-      count--;
-      label.textContent = count > 0 ? '已准备报警 · ' + count + ' 秒后发出' : '正在发出报警…';
-    }, 1000);
-    var fire = function () {
-      clearInterval(tick); clearTimeout(XA._sosTimer);
-      box.classList.remove('open');
-      setTimeout(function () { box.remove(); }, 250);
-      XA.fireAlarm();
-    };
-    XA._sosTimer = setTimeout(fire, cd * 1000);
-    XA.hold(box.querySelector('.cancel-hold'), 2000, function () {
-      clearInterval(tick); clearTimeout(XA._sosTimer);
-      box.classList.remove('open');
-      setTimeout(function () { box.remove(); }, 250);
-      XA.toast('报警已取消 · 未发出求助');
-    });
-    box.querySelector('.confirm-btn').addEventListener('click', fire);
-  };
+  /* ---------------- SOS 倒计时在 app.js 中实现（支持重复触发与多种取消方式） ---------------- */
 
   /* ---------------- 天气 ---------------- */
   var lastWeather = null;

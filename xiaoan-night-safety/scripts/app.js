@@ -33,6 +33,12 @@ XA.buildMapLights = function () {
 
 XA.go = function (screen, noHistory) {
   if (!XA_SCREENS[screen]) return;
+  if (XA.current === 'sos' && screen !== 'sos' && XA.alarm) {
+    XA.alarm = false;
+    XA.timers.forEach(clearTimeout);
+    XA.timers.forEach(clearInterval);
+    XA.timers = [];
+  }
   if (!noHistory && screen !== XA.current) XA.previous = XA.current;
   XA.current = screen;
   XA.$$('.screen').forEach(function (el) { el.classList.toggle('active', el.dataset.screen === screen); });
@@ -68,21 +74,28 @@ XA.bindSheetGestures = function () {
     if (e.pointerType === 'mouse') return;
     if (sheet.scrollTop > 4 && e.clientY > sheet.getBoundingClientRect().top + 70) return;
     startY = e.clientY; dy = 0; dragging = true;
+    sheet.classList.remove('snapback');
     sheet.classList.add('dragging');
   });
   sheet.addEventListener('pointermove', function (e) {
     if (!dragging) return;
-    dy = Math.max(-70, e.clientY - startY);
+    var raw = e.clientY - startY;
+    // 向上拖动使用阻尼，最多上移 36px，松手必定回弹，永不留白
+    dy = raw < 0 ? Math.max(-36, raw * 0.32) : raw;
     sheet.style.transform = 'translateY(' + dy + 'px)';
   });
   function end() {
     if (!dragging) return;
     dragging = false;
     sheet.classList.remove('dragging');
+    sheet.classList.add('snapback');
     sheet.style.transform = '';
-    if (dy > 90) XA.closeModal();
-    else if (dy < -30) sheet.classList.add('raised');
-    else if (dy > 20) sheet.classList.remove('raised');
+    if (dy > 110) XA.closeModal();
+    else if (dy < -22 && sheet.classList.contains('search-sheet')) {
+      // 搜索页上滑展开推荐：靠增高内容实现，不位移，避免底部留白
+      sheet.classList.add('expanded');
+      XA.toast('已展开附近推荐');
+    }
     dy = 0;
   }
   sheet.addEventListener('pointerup', end);
@@ -142,38 +155,75 @@ XA.hold = function (el, ms, done) {
 };
 
 XA.showSosConfirm = function () {
-  if (XA.alarm) return;
+  // 幂等：先清理任何遗留的确认层，保证每次都能再次打开
+  var stale = XA.$('#phone .sos-confirm');
+  if (stale) stale.remove();
+  if (XA._sosTimer) clearTimeout(XA._sosTimer);
+  if (XA._sosTick) clearInterval(XA._sosTick);
+
   var box = document.createElement('div');
   box.className = 'sos-confirm';
-  box.innerHTML = '<p>已准备报警 · 3 秒后发出</p><h3>长按取消</h3><div class="confirm-ring"><button class="confirm-btn">SOS<span class="hold-fill"></span></button></div>' +
-    '<button class="cancel-hold">长按 2 秒取消报警<span class="hold-fill"></span></button>';
+  box.innerHTML =
+    '<button class="sos-cancel-x" data-sos-cancel aria-label="取消报警">×</button>' +
+    '<p class="sos-confirm-label">已准备报警 · 3 秒后发出</p>' +
+    '<h3>误触？轻点即可取消</h3>' +
+    '<div class="confirm-ring"><div class="countdown-fill"></div><button class="confirm-btn">SOS<span class="hold-fill"></span></button></div>' +
+    '<button class="cancel-hold" data-sos-cancel>轻点取消，或长按更快<span class="hold-fill"></span></button>' +
+    '<p class="sos-cancel-tip">点击空白处 / 下滑 也可取消</p>';
   XA.$('#phone').appendChild(box);
-  requestAnimationFrame(function () { box.classList.add('open'); });
-  var count = 3;
-  var label = box.querySelector('p');
-  var tick = setInterval(function () {
+  void box.offsetWidth; // 强制回流，确保过渡动画可靠触发（后台标签页也能正常显示）
+  box.classList.add('open');
+
+  var cd = (XA.settings && XA.settings.sosCd) || 3;
+  var count = cd;
+  var label = box.querySelector('.sos-confirm-label');
+  var ring = box.querySelector('.countdown-fill');
+  if (label) label.textContent = '已准备报警 · ' + cd + ' 秒后发出';
+  XA._sosTick = setInterval(function () {
     count--;
-    label.textContent = count > 0 ? '已准备报警 · ' + count + ' 秒后发出' : '正在发出报警…';
+    if (label) label.textContent = count > 0 ? '已准备报警 · ' + count + ' 秒后发出' : '正在发出报警…';
+    if (ring) ring.style.setProperty('--cd', ((cd - count) / cd) + '');
   }, 1000);
-  var fire = function () {
-    clearInterval(tick);
+  if (ring) ring.style.setProperty('--cd', '0');
+
+  var settled = false;
+  function cleanup() {
+    settled = true;
+    if (XA._sosTimer) clearTimeout(XA._sosTimer);
+    if (XA._sosTick) clearInterval(XA._sosTick);
     box.classList.remove('open');
-    setTimeout(function () { box.remove(); }, 250);
-    XA.fireAlarm();
-  };
-  XA._sosTimer = setTimeout(fire, 3000);
-  XA.hold(box.querySelector('.cancel-hold'), 2000, function () {
-    clearInterval(tick); clearTimeout(XA._sosTimer);
-    box.classList.remove('open');
-    setTimeout(function () { box.remove(); }, 250);
+    setTimeout(function () { if (box.parentNode) box.remove(); }, 260);
+  }
+  XA._sosFire = function () { if (settled) return; cleanup(); XA.fireAlarm(); };
+  XA._sosCancel = function () {
+    if (settled) return;
+    cleanup();
+    if (navigator.vibrate) navigator.vibrate(20);
     XA.toast('报警已取消 · 未发出求助');
+  };
+  XA._sosTimer = setTimeout(XA._sosFire, cd * 1000);
+
+  // 多渠道取消：右上角 ×、取消按钮、点击空白处、下滑
+  XA.$$('[data-sos-cancel]', box).forEach(function (el) {
+    el.addEventListener('click', function (e) { e.stopPropagation(); XA._sosCancel(); });
   });
-  box.querySelector('.confirm-btn').addEventListener('click', function () {
-    clearInterval(tick); clearTimeout(XA._sosTimer);
-    box.classList.remove('open');
-    setTimeout(function () { box.remove(); }, 250);
-    XA.fireAlarm();
+  box.addEventListener('click', function (e) { if (e.target === box || e.target.classList.contains('confirm-ring')) XA._sosCancel(); });
+  box.querySelector('.confirm-btn').addEventListener('click', function (e) { e.stopPropagation(); XA._sosFire(); });
+
+  var sy = 0, moving = false;
+  box.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse') return; sy = e.clientY; moving = true; box.classList.add('swiping'); });
+  box.addEventListener('pointermove', function (e) {
+    if (!moving) return;
+    var d = e.clientY - sy;
+    if (d > 0) box.style.transform = 'translateY(' + d + 'px)';
   });
+  box.addEventListener('pointerup', function (e) {
+    if (!moving) return;
+    var d = e.clientY - sy; moving = false;
+    box.classList.remove('swiping'); box.style.transform = '';
+    if (d > 70) XA._sosCancel();
+  });
+  box.addEventListener('pointercancel', function () { moving = false; box.classList.remove('swiping'); box.style.transform = ''; });
 };
 
 XA.fireAlarm = function () {

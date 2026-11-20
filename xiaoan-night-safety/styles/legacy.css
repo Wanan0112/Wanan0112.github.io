@@ -113,9 +113,9 @@ html[data-theme="aurora"] .login-btn{background:linear-gradient(100deg,#a8c9ff,#
 .swipe-tip .ico{width:12px;height:12px;transform:rotate(90deg)}
 .reco-section{max-height:0;opacity:0;overflow:hidden;transition:max-height .35s ease,opacity .25s ease}
 .modal-layer.open .sheet.search-sheet{max-height:88%}
-.modal-layer.open .sheet.search-sheet.raised{transform:translateY(-96px)}
-.sheet.search-sheet.raised .reco-section{max-height:620px;opacity:1}
-.sheet.search-sheet.raised .swipe-tip{display:none}
+.modal-layer.open .sheet.search-sheet.expanded{max-height:96%}
+.sheet.search-sheet.expanded .reco-section{max-height:620px;opacity:1}
+.sheet.search-sheet.expanded .swipe-tip{display:none}
 .reco-title{margin-top:18px}
 .reco-group-label{display:flex;align-items:center;gap:6px;margin:12px 2px 7px;font-size:10px;color:var(--dim)}
 .reco-group-label .ico{width:11px;height:11px;color:var(--mint)}
@@ -184,7 +184,6 @@ html[data-theme="aurora"] .login-btn{background:linear-gradient(100deg,#a8c9ff,#
 /* 在线媒体 */
 .video-card-2 img{filter:brightness(.62) saturate(.8)}
 .xa-video{display:block;width:100%;max-height:320px;border-radius:14px;background:#000;margin-top:12px}
-.modal-layer.open .sheet.raised{transform:translateY(-34px)}
 
 /* 导航天气 */
 .weather-chip{position:absolute;left:0;top:-34px;display:inline-flex;align-items:center;gap:5px;border-radius:11px;background:rgba(6,12,18,.78);border:1px solid var(--line);padding:5px 9px;font-size:10px;color:#d6e2ef;box-shadow:0 8px 20px rgba(0,0,0,.3)}

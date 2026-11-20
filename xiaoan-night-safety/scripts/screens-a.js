@@ -163,7 +163,7 @@ XA_SCREENS.sos = `
       ${ic('pin')}<span><b>当前位置 · 已同步</b><small>杭州市西湖区文三路 90 号 · 精度 ±5m · 更新于 21:42:06</small></span>
       <span class="loc-btn">查看 ${ic('chevron')}</span>
     </button>
-    <button class="cancel-alarm" data-action="cancel-alarm"><span class="hold-fill"></span>${ic('check')} 我安全了 · 取消报警<small>长按 2 秒</small></button>
-    <p class="sos-footnote">长按 2 秒取消，防止误触 · 本次记录仍会保留</p>
+    <button class="cancel-alarm" data-action="cancel-alarm"><span class="hold-fill"></span>${ic('check')} 我安全了 · 取消报警<small>轻点即可取消</small></button>
+    <p class="sos-footnote">轻点或长按均可取消 · 本次记录仍会保留</p>
   </div>
 </section>`;

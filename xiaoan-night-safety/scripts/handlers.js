@@ -599,14 +599,14 @@ XA.actions = {
     XA.openSheet('<h3>求助与兜底</h3><div class="sheet-sub">所有自动动作可取消、可解释、可关闭</div>' +
       '<div class="option-row">' + ic('phone') + '<span><b>无法自动呼叫 110</b><small>会显示“请点击拨号”，不做虚假承诺</small></span></div>' +
       '<div class="option-row">' + ic('pin') + '<span><b>定位不准或暂无网络</b><small>显示精度范围并缓存位置，尝试短信求助</small></span></div>' +
-      '<div class="option-row">' + ic('shield') + '<span><b>误报恢复</b><small>长按 2 秒取消报警，记录保留可回看</small></span></div>');
+      '<div class="option-row">' + ic('shield') + '<span><b>误报恢复</b><small>轻点即可取消报警，记录保留可回看</small></span></div>');
   },
   'location-detail': function () {
     XA.openSheet('<h3>当前位置</h3><div class="sheet-sub">已同步给 3 位紧急联系人 · 精度 ±5 m</div>' +
       '<div class="option-row">' + ic('pin') + '<span><b>杭州市西湖区文三路 90 号</b><small>更新于 21:42:06 · 来源：GPS + 基站</small></span></div>' +
       '<p class="sheet-note">定位仅用于本次紧急行程共享，报警结束后停止共享。</p>');
   },
-  'cancel-alarm': function () {},
+  'cancel-alarm': function () { XA.cancelAlarm(); },
   'ar-entry': function () { XA.go('ar'); },
   play: function () {
     XA.playing = !XA.playing;
