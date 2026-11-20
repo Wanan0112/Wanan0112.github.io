@@ -7,7 +7,13 @@
    ========================================================= */
 (function () {
   var DEFAULT = { lat: 30.2700, lng: 120.1500 }; // 杭州演示位置（WGS84）
-  var AMAP_TILES = 'https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}';
+  // MapLibre 不支持 {s} 占位符，必须给出 4 条显式子域 URL，否则瓦片请求 404、地图空白
+  var AMAP_TILES = [
+    'https://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
+    'https://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
+    'https://webrd03.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
+    'https://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}'
+  ];
   var OVERPASS = 'https://overpass-api.de/api/interpreter';
   var OSRM_FOOT = 'https://routing.openstreetmap.de/routed-foot/route/v1/driving/';
   var PHOTON = 'https://photon.komoot.io/api/';
@@ -219,11 +225,14 @@
     return '<div class="pm-layer" id="pmLayer">' +
       '<div class="pm-map" id="pmMap"></div>' +
       '<div class="pm-top">' +
-        '<div class="pm-search">' +
-          ico('search') +
-          '<input id="pmInput" placeholder="搜索周边：酒店 / 便利店 / 公厕" autocomplete="off">' +
-          '<button id="pmClear" aria-label="清空">' + ico('close') + '</button>' +
-          '<div class="pm-suggest" id="pmSuggest"></div>' +
+        '<div class="pm-toprow">' +
+          '<button class="pm-exit" id="pmExit" aria-label="退出搜索">' + ico('back') + '<span>退出</span></button>' +
+          '<div class="pm-search">' +
+            ico('search') +
+            '<input id="pmInput" placeholder="搜索周边：酒店 / 便利店 / 公厕" autocomplete="off">' +
+            '<button id="pmClear" aria-label="清空">' + ico('close') + '</button>' +
+            '<div class="pm-suggest" id="pmSuggest"></div>' +
+          '</div>' +
         '</div>' +
         '<div class="pm-chips" id="pmChips">' +
           ['酒店', '便利店', '公厕', '餐厅', '药店', '地铁'].map(function (k) { return '<button data-pm-kw="' + k + '">' + k + '</button>'; }).join('') +
@@ -233,7 +242,6 @@
         '<button id="pmRecenter" aria-label="回到定位">' + ico('pin') + '</button>' +
         '<button id="pmTrack" aria-label="轨迹">' + ico('route') + '</button>' +
         '<button id="pmOffline" aria-label="离线地图">' + ico('cloud') + '</button>' +
-        '<button id="pmClose" aria-label="关闭">' + ico('close') + '</button>' +
       '</div>' +
       '<div class="pm-status" id="pmStatus"><span class="pm-live"></span><span id="pmStatusText">正在获取 GPS 定位…</span></div>' +
       '<div class="pm-sheet" id="pmSheet">' +
@@ -395,8 +403,8 @@
     function deg2num(lat, lng, zoom) { var n = Math.pow(2, zoom); return [Math.floor((lng + 180) / 360 * n), Math.floor((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * n)]; }
     var p = deg2num(c.lat, c.lng, z);
     for (var dx = -2; dx <= 2; dx++) for (var dy = -2; dy <= 2; dy++) {
-      var s = ((p[0] + dx) % 4 + 4) % 4 + 1;
-      tiles.push(AMAP_TILES.replace('{s}', s).replace('{x}', p[0] + dx).replace('{y}', p[1] + dy).replace('{z}', z));
+      var s = ((p[0] + dx) % 4 + 4) % 4;
+      tiles.push(AMAP_TILES[s].replace('{x}', p[0] + dx).replace('{y}', p[1] + dy).replace('{z}', z));
     }
     caches.open('anxing-offline').then(function (cache) {
       return Promise.all(tiles.map(function (u) { return cache.add(new Request(u, { mode: 'no-cors' })).catch(function () {}); }));
@@ -414,7 +422,7 @@
     try {
       map = new maplibregl.Map({
         container: 'pmMap', center: [c[1], c[0]], zoom: 15,
-        style: { version: 8, sources: { amap: { type: 'raster', tiles: [AMAP_TILES], tileSize: 256, subdomains: ['1', '2', '3', '4'], attribution: '© 高德地图' } }, layers: [{ id: 'amap', type: 'raster', source: 'amap' }] }
+        style: { version: 8, sources: { amap: { type: 'raster', tiles: AMAP_TILES, tileSize: 256, attribution: '© 高德地图' } }, layers: [{ id: 'amap', type: 'raster', source: 'amap' }] }
       });
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
       map.on('load', function () {
@@ -446,7 +454,7 @@
     var rc = XA.$('#pmRecenter'); if (rc) rc.addEventListener('click', function () { var c = disp(gps.lat, gps.lng); if (ready && map) map.flyTo({ center: [c[1], c[0]], zoom: 16 }); XA.toast('已回到当前定位'); });
     var tr = XA.$('#pmTrack'); if (tr) tr.addEventListener('click', function () { trackOn = !trackOn; tr.classList.toggle('on', trackOn); drawTrack(); XA.toast(trackOn ? 'GPS 轨迹已开启' : 'GPS 轨迹已关闭'); });
     var of = XA.$('#pmOffline'); if (of) of.addEventListener('click', cacheOffline);
-    var close = XA.$('#pmClose'); if (close) close.addEventListener('click', closePanel);
+    var exit = XA.$('#pmExit'); if (exit) exit.addEventListener('click', closePanel);
     var rclose = XA.$('#pmRouteClose'); if (rclose) rclose.addEventListener('click', function () { var cd = XA.$('#pmRoute'); if (cd) cd.classList.remove('show'); if (ready && map && map.getLayer('pm-route')) { map.removeLayer('pm-route'); map.removeSource('pm-route'); } dest = null; });
   }
   function openPanel() {
