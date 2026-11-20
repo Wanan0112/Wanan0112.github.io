@@ -683,29 +683,102 @@
     var sh = XA.$('#modalLayer .sheet');
     if (sh) sh.classList.add('expanded');
   };
+  // 搜索范围：以自身定位为中心，限定公里数 + 所在城市
+  var SEARCH_SCOPES = { near5: 5, near20: 20, city: 60 };
+  if (!XA.searchScope || !SEARCH_SCOPES[XA.searchScope]) XA.searchScope = 'near20';
+  var cityName = '';          // 当前所在城市，异步解析后缓存
+  var cityTried = false;
+
+  function distanceM(lat1, lng1, lat2, lng2) {
+    var rad = Math.PI / 180, R = 6371000;
+    var dLat = (lat2 - lat1) * rad, dLng = (lng2 - lng1) * rad;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  // 通过逆地理编码解析当前城市（Photon reverse，失败则回退到定位演示城市）
+  function resolveCity(cb) {
+    if (cityTried) { cb(cityName); return; }
+    cityTried = true;
+    var s = geoStart;
+    var url = PHOTON.replace('/api/', '/reverse/') + '?lat=' + s[0] + '&lon=' + s[1] + '&limit=1&lang=zh';
+    fetch(url).then(function (r) { return r.json(); }).then(function (data) {
+      var f = (data.features || [])[0], p = (f && f.properties) || {};
+      cityName = p.city || p.town || p.municipality || p.state || p.county || '';
+      cb(cityName);
+    }).catch(function () { cityName = ''; cb(cityName); });
+  }
+
+  function placeCity(p) { return p.city || p.town || p.municipality || p.county || p.state || ''; }
+  function cityMatch(addrCity) {
+    if (!cityName || !addrCity) return true;               // 城市未知时不过滤，避免过度收紧
+    var a = cityName.replace(/市$/, ''), b = addrCity.replace(/市$/, '');
+    return a === b || a.indexOf(b) >= 0 || b.indexOf(a) >= 0;
+  }
+
   function searchPlaces(q) {
     var box = XA.$('#xaPlaceResults');
     if (!box) return;
-    box.innerHTML = '<div style="font-size:10px;color:var(--dim);padding:10px">正在搜索附近地点…</div>';
-    var url = PHOTON + '?q=' + encodeURIComponent(q) + '&limit=8';
+    var scopeKm = SEARCH_SCOPES[XA.searchScope] || 20;
     var c = gcj();
-    url += '&lat=' + c[0] + '&lon=' + c[1];
-    fetch(url).then(function (r) { return r.json(); }).then(function (data) {
-      var list = (data.features || []).map(function (f) {
-        var p = f.properties || {};
-        return { name: p.name || p.street || '未命名地点', address: [p.city, p.district, p.street].filter(Boolean).join(''), lat: f.geometry.coordinates[1], lng: f.geometry.coordinates[0] };
+    var dLat = scopeKm / 111.32;
+    var dLng = scopeKm / (111.32 * Math.cos(c[0] * Math.PI / 180));
+    // bbox = 左下经度,左下纬度,右上经度,右上纬度 —— Photon 的硬地理过滤
+    var bbox = [c[1] - dLng, c[0] - dLat, c[1] + dLng, c[0] + dLat].join(',');
+    var url = PHOTON + '?q=' + encodeURIComponent(q) + '&limit=40&bbox=' + bbox +
+      '&lat=' + c[0] + '&lon=' + c[1] + '&lang=zh';
+
+    function render() {
+      fetch(url).then(function (r) { return r.json(); }).then(function (data) {
+        var list = (data.features || []).map(function (f) {
+          var p = f.properties || {}, co = f.geometry.coordinates || [];
+          var lat = co[1], lng = co[0];
+          return {
+            name: p.name || p.street || '未命名地点',
+            address: [p.city, p.district, p.street].filter(Boolean).join(' · '),
+            city: placeCity(p),
+            lat: lat, lng: lng,
+            dist: (typeof lat === 'number' && typeof lng === 'number') ? distanceM(c[0], c[1], lat, lng) : Infinity
+          };
+        }).filter(function (p) {
+          if (!cityMatch(p.city)) return false;                    // 必须同城
+          // 所在城市档以城市名为准，放宽半径；附近档严格按半径
+          return XA.searchScope === 'city' ? true : p.dist <= scopeKm * 1000;
+        }).sort(function (a, b) { return a.dist - b.dist; }).slice(0, 12);
+
+        var scopeLabel = XA.searchScope === 'city' ? (cityName || '所在城市') : (scopeKm + ' 公里内');
+        if (!list.length) {
+          box.innerHTML = '<div style="font-size:10px;color:var(--dim);padding:10px;line-height:1.6">' +
+            '在' + esc(scopeLabel) + '未找到“' + esc(q) + '”相关地点。<br>可切换更大的搜索范围后重试。</div>';
+          XA._xaPlaces = [];
+          return;
+        }
+        box.innerHTML = '<div class="search-scope-note">' + ic('pin') + ' ' + esc(scopeLabel) + ' · 找到 ' + list.length + ' 个结果</div>' +
+          list.map(function (p, i) {
+            var d = p.dist >= 1000 ? (p.dist / 1000).toFixed(1) + ' km' : Math.round(p.dist) + ' m';
+            return '<button class="option-row" data-photon="' + i + '">' + ic('pin') +
+              '<span><b>' + esc(p.name) + '</b><small>' + esc(p.address) + '</small></span>' +
+              '<em class="place-dist">' + d + '</em></button>';
+          }).join('');
+        XA._xaPlaces = list;
+      }).catch(function () {
+        box.innerHTML = '<div style="font-size:10px;color:var(--dim);padding:10px">搜索失败，请检查网络</div>';
       });
-      if (!list.length) { box.innerHTML = '<div style="font-size:10px;color:var(--dim);padding:10px">没有找到相关地点</div>'; return; }
-      box.innerHTML = list.map(function (p, i) {
-        return '<button class="option-row" data-photon="' + i + '">' + ic('pin') + '<span><b>' + p.name + '</b><small>' + p.address + '</small></span></button>';
-      }).join('');
-      XA._xaPlaces = list;
-    }).catch(function () { box.innerHTML = '<div style="font-size:10px;color:var(--dim);padding:10px">搜索失败，请检查网络</div>'; });
+    }
+    box.innerHTML = '<div style="font-size:10px;color:var(--dim);padding:10px">正在搜索附近地点…</div>';
+    resolveCity(render);
   }
   XA.actions.search = function () {
     var presets = Object.keys(DESTS);
     XA.openSheet('<h3 data-i18n="search">搜索目的地</h3><div class="sheet-sub" data-i18n="searchSheetSub">输入关键词搜索真实地点，或使用下方地址</div>' +
-      '<input id="xaSearchInput" class="sheet-input" style="min-height:auto;height:44px" placeholder="输入地点名称，如 西湖" autocomplete="off">' +
+      '<div class="scope-picker"><span class="scope-label">' + ic('pin') + ' 搜索范围</span>' +
+        '<div class="scope-seg">' +
+          '<button data-scope="near5" class="' + (XA.searchScope === 'near5' ? 'on' : '') + '">附近 5km</button>' +
+          '<button data-scope="near20" class="' + (XA.searchScope === 'near20' ? 'on' : '') + '">附近 20km</button>' +
+          '<button data-scope="city" class="' + (XA.searchScope === 'city' ? 'on' : '') + '">所在城市</button>' +
+        '</div></div>' +
+      '<input id="xaSearchInput" class="sheet-input" style="min-height:auto;height:44px" placeholder="输入地点名称，如 酒店" autocomplete="off">' +
       '<div id="xaPlaceResults" class="search-results"></div>' +
       '<div class="fav-hint">' + ic('pin') + '<span><b data-i18n="commonAddresses">常用地址</b><small data-i18n="commonHint">点击即可快速规划夜间安全路线</small></span></div>' +
       '<div id="xaPreset" class="seg">' + presets.map(function (n) {
@@ -735,6 +808,16 @@
       });
       setTimeout(function () { input.focus(); }, 260);
     }
+    XA.$$('[data-scope]').forEach(function (b) {
+      b.addEventListener('click', function (e) {
+        e.stopPropagation();
+        XA.searchScope = b.dataset.scope;
+        XA.$$('[data-scope]').forEach(function (x) { x.classList.toggle('on', x === b); });
+        var q = input ? input.value.trim() : '';
+        if (q.length >= 2) searchPlaces(q);
+        else XA.toast('搜索范围已切换为 ' + b.textContent);
+      });
+    });
   };
 
   /* ---------------- SOS 倒计时在 app.js 中实现（支持重复触发与多种取消方式） ---------------- */

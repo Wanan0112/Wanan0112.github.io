@@ -97,6 +97,16 @@ html[data-theme="aurora"] .login-btn{background:linear-gradient(100deg,#a8c9ff,#
 .fav-hint b{font-size:10px;font-weight:600}
 .fav-hint small{font-size:10px;color:var(--dim);white-space:normal}
 .search-results:empty{display:none}
+.scope-picker{display:flex;align-items:center;gap:10px;margin:10px 2px 4px;flex-wrap:wrap}
+.scope-label{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);white-space:nowrap}
+.scope-label .ico{width:12px;height:12px;color:var(--mint)}
+.scope-seg{display:flex;gap:6px;flex-wrap:wrap}
+.scope-seg button{padding:6px 11px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);font-size:10px;transition:all .18s}
+.scope-seg button.on{background:rgba(127,240,212,.16);border-color:rgba(127,240,212,.5);color:var(--mint);font-weight:600}
+.scope-seg button:active{transform:scale(.94)}
+.search-scope-note{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--mint);padding:4px 2px 8px}
+.search-scope-note .ico{width:12px;height:12px}
+.option-row .place-dist{margin-left:auto;font-style:normal;font-size:10px;color:var(--mint);white-space:nowrap;align-self:center}
 .search-section-title{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:16px 2px 8px}
 .search-section-title b{font-size:12px}
 .search-section-title small{font-size:10px;color:var(--dim);display:flex;align-items:center;gap:8px;text-align:right}
