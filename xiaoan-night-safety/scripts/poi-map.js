@@ -1,13 +1,13 @@
 /* =========================================================
-   安星 · 完整地图（高德地图免 Key iframe 嵌入）
-   - 地区标识 / 地点详情 / 关键词搜索 / 路线导航均由高德地图提供
-   - 无需 Mapbox / 高德 JS API Key，无需自建瓦片与 POI 数据
+   安星 · 唯一地图（首页高德地图免 Key 嵌入）
+   - 首页地图即完整高德地图：地区标识 / 地点详情 / 搜索 / 导航
+   - 首页搜索框直接控制这一张地图，不再弹出第二张地图
    ========================================================= */
 (function () {
   var DEFAULT = { lat: 30.2700, lng: 120.1500 };
   var EMBED = 'https://www.amap.com/ssr/embed/';
-  var layer = null, gps = { lat: DEFAULT.lat, lng: DEFAULT.lng, real: false }, watchId = null;
-  var suggestTimer = null, lastQuery = '';
+  var gps = { lat: DEFAULT.lat, lng: DEFAULT.lng, real: false };
+  var watchId = null, lastQuery = '', lastLoad = 0, locApplied = false;
 
   function outOfChina(lat, lng) { return lng < 73.66 || lng > 135.05 || lat < 3.86 || lat > 53.55; }
   function transformLat(x, y) {
@@ -34,11 +34,6 @@
     dLng = (dLng * 180) / (a / sq * Math.cos(radLat) * Math.PI);
     return [lat + dLat, lng + dLng];
   }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-  function ico(n) { return window.ic ? window.ic(n) : '<svg class="ico"><use href="#i-' + n + '"/></svg>'; }
-
-  var KEYWORDS = ['酒店', '宾馆', '便利店', '超市', '公厕', '厕所', '餐厅', '美食', '咖啡', '药店', '医院', '地铁', '公交', '停车', '银行', 'ATM'];
-
   function center() { return wgs84ToGcj02(gps.lat, gps.lng); }
   function viewUrl() {
     var c = center();
@@ -49,124 +44,55 @@
     return EMBED + 'search?keyword=' + encodeURIComponent(q) + '&city=' + encodeURIComponent('全国') +
       '&lng=' + c[1] + '&lat=' + c[0] + '&zoom=15&platform=pc';
   }
-  function setEmbed(url) {
-    var f = XA.$('#pmEmbed'); if (!f) return;
-    if (f.getAttribute('src') !== url) f.setAttribute('src', url);
+  function setEmbed(url, force) {
+    var f = XA.$('#homeEmbed'); if (!f) return false;
+    if (f.getAttribute('src') === url) return false;
+    var now = Date.now();
+    // 高德嵌入页短时间内反复请求会触发人机验证，这里做节流
+    if (!force && now - lastLoad < 2200) { XA.toast('搜索切换太快，请稍候再试'); return false; }
+    f.setAttribute('src', url); lastLoad = now; return true;
   }
-  function setStatus(t) { var el = XA.$('#pmStatusText'); if (el) el.textContent = t; }
-  function setHead(title, sub) {
-    var h = XA.$('#pmHead'), r = XA.$('#pmRadius');
-    if (h) h.textContent = title;
-    if (r) r.textContent = sub;
+  function markSearching(q) {
+    var box = XA.$('#homeSearch'); if (!box) return;
+    box.classList.toggle('searching', !!q);
+    var input = XA.$('#homeSearchInput'); if (input && q) input.value = q;
   }
-
   function searchPOI(q) {
     q = String(q || '').trim(); if (!q) return;
-    lastQuery = q;
-    setEmbed(searchUrl(q));
-    setHead('“' + q + '” · 高德地图', '真实地点 · 点击查看详情与导航');
-    var box = XA.$('#pmResults');
-    if (box) box.innerHTML = '<div class="pm-empty">已在高德地图中搜索「' + esc(q) + '」。<br>点击地图上的地点标记查看地址、电话并规划路线。</div>';
+    var url = searchUrl(q);
+    if (setEmbed(url, q !== lastQuery)) {
+      lastQuery = q; markSearching(q);
+    }
   }
-  function resetEmbed() {
-    lastQuery = '';
-    setEmbed(viewUrl());
-    setHead('完整地图', '高德地图 · 可拖动 / 缩放 / 搜索');
-    var box = XA.$('#pmResults');
-    if (box) box.innerHTML = '<div class="pm-empty">拖动地图查看地区，点击地点查看详情；上方输入关键词可搜索并导航。</div>';
+  function resetMap() {
+    lastQuery = ''; markSearching('');
+    setEmbed(viewUrl(), true);
   }
-
-  function html() {
-    return '<div class="pm-layer" id="pmLayer">' +
-      '<iframe class="pm-embed" id="pmEmbed" title="高德地图" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' +
-      '<div class="pm-top">' +
-        '<div class="pm-toprow">' +
-          '<button class="pm-exit" id="pmExit" aria-label="退出地图">' + ico('back') + '<span>退出</span></button>' +
-          '<div class="pm-search">' +
-            ico('search') +
-            '<input id="pmInput" placeholder="搜索地点 / 地址，如 汉庭酒店" autocomplete="off">' +
-            '<button id="pmClear" aria-label="清空">' + ico('close') + '</button>' +
-            '<div class="pm-suggest" id="pmSuggest"></div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="pm-chips" id="pmChips">' +
-          ['酒店', '便利店', '公厕', '餐厅', '药店', '地铁'].map(function (k) { return '<button data-pm-kw="' + k + '">' + k + '</button>'; }).join('') +
-        '</div>' +
-      '</div>' +
-      '<div class="pm-status" id="pmStatus"><span class="pm-live"></span><span id="pmStatusText">正在获取 GPS 定位…</span></div>' +
-      '<div class="pm-sheet" id="pmSheet">' +
-        '<div class="pm-handle"></div>' +
-        '<div class="pm-sheet-head"><b id="pmHead">完整地图</b><small id="pmRadius">高德地图 · 可拖动 / 缩放 / 搜索</small></div>' +
-        '<div class="pm-results" id="pmResults"><div class="pm-empty">拖动地图查看地区，点击地点查看详情；上方输入关键词可搜索并导航。</div></div>' +
-      '</div>' +
-      '</div>';
+  function focusSearch() {
+    XA.go('home');
+    setTimeout(function () { var i = XA.$('#homeSearchInput'); if (i) i.focus(); }, 120);
   }
-
-  function suggest(q) {
-    var box = XA.$('#pmSuggest'); if (!box) return;
-    q = String(q || '').trim();
-    if (!q) { box.innerHTML = ''; box.classList.remove('show'); return; }
-    var words = KEYWORDS.filter(function (w) { return w.indexOf(q) >= 0 || q.indexOf(w) >= 0; }).slice(0, 6);
-    box.innerHTML = words.map(function (w) { return '<button data-pm-s="' + esc(w) + '">' + ico('search') + esc(w) + '</button>'; }).join('');
-    box.classList.toggle('show', words.length > 0);
-  }
-
   function startGPS() {
-    if (!navigator.geolocation) { setStatus('设备不支持 GPS，使用演示位置'); return; }
+    if (!navigator.geolocation) return;
     watchId = navigator.geolocation.watchPosition(function (p) {
       gps = { lat: p.coords.latitude, lng: p.coords.longitude, real: true };
-      setStatus('GPS 实时定位 · 精度 ±' + Math.round(p.coords.accuracy || 8) + 'm');
-      if (lastQuery) return; // 搜索中重载地图会打断浏览，位置只更新状态
-      var f = XA.$('#pmEmbed');
-      if (f && f.getAttribute('src') === viewUrl()) return;
-    }, function () { setStatus('定位未开启，使用演示位置'); }, { enableHighAccuracy: true, maximumAge: 2000, timeout: 15000 });
+      if (!locApplied && !lastQuery) { locApplied = true; setEmbed(viewUrl(), true); }
+    }, function () {}, { enableHighAccuracy: true, maximumAge: 2000, timeout: 15000 });
   }
-
   function bind() {
-    var input = XA.$('#pmInput');
-    if (input) {
-      input.addEventListener('input', function () { clearTimeout(suggestTimer); suggestTimer = setTimeout(function () { suggest(input.value); }, 180); });
-      input.addEventListener('keydown', function (e) {
-        if (e.key !== 'Enter') return;
-        var q = input.value.trim(); if (!q) return;
-        var s = XA.$('#pmSuggest'); if (s) s.classList.remove('show');
-        searchPOI(q);
-      });
-    }
-    XA.$$('[data-pm-kw]').forEach(function (b) {
-      b.addEventListener('click', function () { if (input) input.value = b.dataset.pmKw; var s = XA.$('#pmSuggest'); if (s) s.classList.remove('show'); searchPOI(b.dataset.pmKw); });
+    var input = XA.$('#homeSearchInput');
+    if (input) input.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter') return;
+      var q = input.value.trim(); if (q) searchPOI(q);
     });
-    document.addEventListener('click', function (e) {
-      var sg = e.target.closest('[data-pm-s]');
-      if (sg) { if (input) input.value = sg.dataset.pmS; var s = XA.$('#pmSuggest'); if (s) s.classList.remove('show'); searchPOI(sg.dataset.pmS); }
-    });
-    var clear = XA.$('#pmClear');
-    if (clear) clear.addEventListener('click', function () {
-      if (input) input.value = '';
-      var s = XA.$('#pmSuggest'); if (s) s.classList.remove('show');
-      resetEmbed();
-    });
-    var exit = XA.$('#pmExit'); if (exit) exit.addEventListener('click', closePanel);
+    var clear = XA.$('#homeSearchClear'); if (clear) clear.addEventListener('click', resetMap);
+    var exit = XA.$('#homeSearchExit'); if (exit) exit.addEventListener('click', resetMap);
   }
+  function init() { bind(); setEmbed(viewUrl(), true); startGPS(); }
 
-  function openPanel() {
-    if (!layer) {
-      var phone = XA.$('#phone'); if (!phone) return;
-      phone.insertAdjacentHTML('beforeend', html());
-      layer = XA.$('#pmLayer'); bind(); resetEmbed(); startGPS();
-    }
-    layer.classList.add('open');
-    XA.$('#phone').classList.add('modal-open');
-    var input = XA.$('#pmInput'); if (input) setTimeout(function () { input.focus(); }, 200);
-  }
-  function closePanel() {
-    if (!layer) return;
-    layer.classList.remove('open');
-    XA.$('#phone').classList.remove('modal-open');
-    if (watchId && navigator.geolocation) { navigator.geolocation.clearWatch(watchId); watchId = null; }
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 
-  XA.openPoiMap = openPanel;
-  XA.actions['open-poi-map'] = openPanel;
-  XA.actions.search = openPanel;
+  XA.openPoiMap = focusSearch;
+  XA.actions['open-poi-map'] = focusSearch;
+  XA.actions.search = focusSearch;
 })();

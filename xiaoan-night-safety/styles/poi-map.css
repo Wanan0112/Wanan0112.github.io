@@ -4,9 +4,17 @@
    ========================================================= */
 .pm-layer{position:absolute;inset:0;z-index:158;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;background:#05080f;overflow:hidden}
 .pm-layer.open{opacity:1;visibility:visible}
-/* 高德地图免 Key iframe 嵌入：完整地图 / 地区标识 / 地点详情 / 搜索 / 导航 */
-.pm-embed{position:absolute;inset:0;width:100%;height:100%;border:0;background:#0b1018;filter:brightness(.95) saturate(.9) contrast(1.02)}
-.pm-layer::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:rgba(28,44,72,.09)}
+/* 首页唯一地图：高德免 Key 嵌入，搜索框直接控制它 */
+.home-map.map-embed{background:#0b1018}
+.home-embed{position:absolute;inset:0;width:100%;height:100%;border:0;background:#0b1018;filter:brightness(.95) saturate(.9) contrast(1.02)}
+.home-map.map-embed::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(28,44,72,.12),transparent 30%,transparent 70%,rgba(28,44,72,.16))}
+.home-floats .float-btn[data-action="layer"],.home-floats .float-btn[data-action="recenter"]{display:none}
+.home-search input{flex:1;min-width:0;background:transparent;border:0;outline:none;color:var(--text);font-size:12px}
+.home-search input::placeholder{color:var(--dim)}
+.home-search-clear{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--dim)}
+.home-search-clear .ico{width:12px;height:12px}
+.home-search-exit{display:none;flex:none;padding:4px 9px;border-radius:10px;font-size:10px;color:var(--mint);border:1px solid rgba(127,240,212,.35);background:rgba(127,240,212,.1)}
+.home-search.searching .home-search-exit{display:block}
 
 .pm-top{position:absolute;top:calc(30px + env(safe-area-inset-top));left:var(--safe);right:var(--safe);z-index:20}
 .pm-toprow{display:flex;align-items:center;gap:8px}

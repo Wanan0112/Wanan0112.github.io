@@ -352,6 +352,7 @@
   /* ---------------- 地图 ---------------- */
   function setupMap(el, center, zoom) {
     if (!el || typeof L === 'undefined') return null;
+    if (el.classList && el.classList.contains('map-embed')) return null; // 首页已用高德完整地图，不再叠加 Leaflet
     if (el._xaMap) return el._xaMap;
     var m = L.map(el, { zoomControl: false, attributionControl: false }).setView(center, zoom || 16);
     L.tileLayer(TILE, { subdomains: '1234', maxZoom: 19 }).addTo(m);

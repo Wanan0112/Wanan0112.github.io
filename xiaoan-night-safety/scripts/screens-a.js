@@ -5,23 +5,15 @@ window.ic = function (name, cls) {
 
 XA_SCREENS.home = `
 <section class="screen active state-default" data-screen="home">
-  <div class="home-map">
-    <div class="map-blocks">
-      <span class="blk b1"></span><span class="blk b2"></span><span class="blk b3"></span><span class="blk b4"></span>
-      <span class="park">西溪公园</span><span class="street st1">文昌巷</span><span class="street st2">滨江路</span>
-    </div>
-    <svg class="map-lines" viewBox="0 0 390 470" preserveAspectRatio="none">
-      <path class="road-base" d="M-20 330 C80 300 130 250 190 205 S310 120 420 70"/>
-      <path class="road-base thin" d="M-20 200 C90 215 160 240 230 300 S330 370 420 390"/>
-      <path class="road-base thin" d="M60 -10 C100 90 130 180 100 290 S80 420 60 490"/>
-    </svg>
-    <div class="map-lights"></div>
-    <span class="map-node n1"></span><span class="map-node n2"></span><span class="map-node n3"></span>
+  <div class="home-map map-embed" id="homeMap">
+    <iframe class="home-embed" id="homeEmbed" title="高德地图" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div>
 
-  <button class="home-search" data-action="search">
-    ${ic('search')}<span data-destination data-i18n="searchHint">搜索目的地、公交站</span>${ic('mic','mic')}
-  </button>
+  <div class="home-search" id="homeSearch">
+    ${ic('search')}<input id="homeSearchInput" placeholder="搜索地点 / 地址，如 汉庭酒店" autocomplete="off">
+    <button id="homeSearchClear" class="home-search-clear" aria-label="清空搜索">${ic('close')}</button>
+    <button id="homeSearchExit" class="home-search-exit" aria-label="退出搜索">退出</button>
+  </div>
 
   <div class="home-floats">
     <button class="float-btn" data-action="layer" aria-label="图层">${ic('layers')}</button>
