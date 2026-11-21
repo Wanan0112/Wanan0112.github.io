@@ -63,27 +63,67 @@ XA_SCREENS.entertainment = `
 XA_SCREENS.community = `
 <section class="screen scroll-screen" data-screen="community">
   <header class="page-head flat">
-    <div class="head-title left"><h2>社区</h2><small>结伴走夜路 · 安心好物</small></div>
-    <span class="avatar">安</span>
+    <div class="head-title left"><h2>社区</h2><small>安心搭 · 找夜路同行搭子</small></div>
+    <button class="avatar cm-avatar" data-action="community-profile" aria-label="点击进入个人主页">安</button>
   </header>
-  <div class="cm-tabs" role="tablist">
-    <button class="cm-tab active" data-cm-tab="buddy">夜路搭子</button>
-    <button class="cm-tab" data-cm-tab="shop">安心好物商城</button>
-  </div>
 
-  <div class="cm-panel" id="cmBuddy">
+  <section class="cm-zone">
+    <div class="cm-zone-head"><span class="cm-zone-no">01</span><span><h3>安星商城</h3><small>安心好物 · 品牌正品</small></span>${ic('chevron')}</div>
+    <button class="cm-shop-entry" data-action="go-shop">
+      <span class="cm-shop-entry-ico">${ic('moon')}</span>
+      <span><b>进入安星商城</b><small>夜行装备与安全好物 · 独立页面</small></span>
+      ${ic('chevron')}
+    </button>
+  </section>
+  <div class="cm-zone-divider"></div>
+
+  <section class="cm-zone" id="cmBuddy">
+    <div class="cm-zone-head"><span class="cm-zone-no">02</span><span><h3>安心搭</h3><small id="cmQuota">免费体验 3 次</small></span></div>
+    <p class="cm-zone-desc">找夜路搭子，发布同行预约 · 提前预约，不是即时匹配</p>
     <div id="cmVerify"></div>
-    <div class="cm-benefit"><span>${ic('shield')}</span><div><b>提前预约，不是即时匹配</b><small>AI 匹配与你途经同一段路线的人，起点与终点不必完全一致</small></div></div>
-    <div class="cm-section-head"><h3>发起预约</h3><small id="cmQuota">免费体验 3 次</small></div>
+    <div class="cm-benefit"><span>${ic('shield')}</span><div><b>同路段 AI 匹配</b><small>匹配与你途经同一段路线的人，起点与终点不必完全一致</small></div></div>
     <button class="cm-primary" data-action="buddy-publish">${ic('plus')} 发布夜路同行预约</button>
-    <div class="cm-section-head"><h3>我的预约</h3><small>可查看 AI 匹配结果</small></div>
+  </section>
+  <div class="cm-zone-divider"></div>
+
+  <section class="cm-zone">
+    <div class="cm-zone-head"><span class="cm-zone-no">03</span><span><h3>我的预约</h3><small>可查看 AI 匹配结果</small></span></div>
     <div id="cmReservations"></div>
     <p class="cm-note">导航、听歌、听书等基础伴行功能永久免费 · 找搭子含 <b>3 次免费体验</b>，用完后纳入 VIP 增值权益</p>
-  </div>
+  </section>
+</section>`;
 
-  <div class="cm-panel" id="cmShop" hidden>
-    <div class="cm-benefit shop"><span>${ic('shield')}</span><div><b>APP 基础功能永久免费</b><small>商城商品单独付费，购买与否不影响导航与 SOS 使用</small></div></div>
-    <div class="cm-section-head"><h3>安心好物商城</h3><small>品牌正品 · 单独付费</small></div>
+XA_SCREENS.buddyProfile = `
+<section class="screen scroll-screen" data-screen="buddyProfile">
+  <header class="page-head">
+    <button class="icon-btn" data-back="community">${ic('back')}</button>
+    <div class="head-title"><h2>个人主页</h2><small>对外展示 · 信息已脱敏</small></div>
+  </header>
+  <div class="bp-card glass">
+    <span class="bp-avatar">安</span>
+    <span class="bp-main"><b>安星用户</b><small>夜行者 Lv.3 · 武汉藏龙岛片区</small></span>
+  </div>
+  <div class="bp-verified">${ic('shield')}<span><b>该用户已完成实名认证</b><small>已通过身份核验 · 用于找夜路同行搭子</small></span></div>
+  <div class="section-title"><h3>对外展示信息</h3><small>仅脱敏信息 · 保护隐私</small></div>
+  <div class="menu-group bp-fields">
+    <div><span class="menu-ico mint">${ic('user')}</span><span>性别</span><small>女</small></div>
+    <div><span class="menu-ico amber">${ic('clock')}</span><span>年龄区间</span><small>20-25 岁</small></div>
+    <div><span class="menu-ico blue">${ic('pin')}</span><span>常走区域</span><small>武汉 · 藏龙岛片区</small></div>
+    <div><span class="menu-ico mint">${ic('route')}</span><span>同行偏好</span><small>走有路灯的主路 · 21:00-23:00</small></div>
+  </div>
+  <div class="bp-privacy">${ic('lock')}<span><b>隐私保护说明</b><small>真实姓名、手机号、具体住址与实时位置不会对外展示；仅展示性别、年龄区间等脱敏信息，实名认证只显示核验结果。</small></span></div>
+  <button class="primary-btn" data-action="go-community">返回社区找搭子</button>
+</section>`;
+
+XA_SCREENS.shop = `
+<section class="screen scroll-screen" data-screen="shop">
+  <header class="page-head">
+    <button class="icon-btn" data-back="community">${ic('back')}</button>
+    <div class="head-title"><h2>安星商城</h2><small>安心好物 · 品牌正品</small></div>
+  </header>
+  <div class="cm-panel" id="cmShop">
+    <div class="cm-benefit shop"><span>${ic('shield')}</span><div><b>正品保障 · 七天无理由退货</b><small>概念演示商城 · 不会产生真实订单或扣费</small></div></div>
+    <div class="cm-section-head"><h3>安心好物</h3><small>为夜行安全而生</small></div>
     <div class="cm-goods" id="cmGoods"></div>
     <p class="cm-note">以上为概念演示商品，不会产生真实订单或扣费。</p>
   </div>
@@ -116,7 +156,7 @@ XA_SCREENS.ar = `
   <div class="section-title"><h3>导航操作</h3><small>与首页同一套按钮规范</small></div>
   <div class="ar-nav-actions">
     <button class="primary-btn" data-action="start-nav">${ic('navigation')}进入 AR 导航<small>预计 18 分钟</small></button>
-    <button class="ghost-btn ar-end" data-action="end-nav" hidden>${ic('close')}结束导航</button>
+    <button class="ghost-btn ar-end" data-action="end-nav" hidden>${ic('close')}退出导航</button>
     <button class="square-btn" data-action="find-glasses" aria-label="查找眼镜">${ic('pin')}</button>
   </div>
 
@@ -137,9 +177,9 @@ XA_SCREENS.ar = `
 
 XA_SCREENS.profile = `
 <section class="screen scroll-screen" data-screen="profile">
-  <header class="page-head flat"><div class="head-title left"><h2 data-i18n="profile">我的</h2><small data-i18n="profileSub">守护设置与夜行记录</small></div><button class="icon-btn" data-action="settings">${ic('settings')}</button></header>
-  <div class="profile-card glass"><span class="profile-avatar">安</span><span><b>安星用户</b><small>已连续守护 3 晚 · 杭州</small></span><span class="level">夜行者 Lv.3</span></div>
-  <div class="stats-row"><div><b>18</b><small>安全行程</small></div><div><b>92</b><small>平均安全分</small></div><div><b>3</b><small>紧急联系人</small></div></div>
+  <header class="page-head flat"><div class="head-title left"><h2 data-i18n="profile">我的</h2><small data-i18n="profileSub">守护设置与夜行记录</small></div><button class="icon-btn" data-action="settings-appearance" aria-label="外观与主题">${ic('moon')}</button></header>
+  <div class="profile-card glass"><span class="profile-avatar">安</span><span><b>安星用户</b><small>已连续守护 3 晚 · 武汉藏龙岛</small></span><span class="level">夜行者 Lv.3</span></div>
+  <div class="stats-row"><div><b>18</b><small>安全行程</small></div><div><b>92</b><small>平均安全分</small></div><div><b id="statContacts">3</b><small>紧急联系人</small></div></div>
   <button class="vip-card" data-action="vip-open" id="vipCard">
     <span class="vip-crown">${ic('shield')}</span>
     <span class="vip-copy"><b>安星 VIP · 增值权益</b><small id="vipStatus">解锁找搭子等增值功能 · 月 / 季 / 年包可选</small></span>
@@ -147,8 +187,8 @@ XA_SCREENS.profile = `
   </button>
   <p class="free-note">${ic('check')} 导航、听歌、听书等基础伴行功能永久免费；付费项仅含商城商品与 VIP 订阅</p>
   <div class="menu-group">
-    <button data-menu="contacts"><span class="menu-ico mint">${ic('users')}</span><span data-i18n="contacts">紧急联系人</span><small>3 位</small>${ic('chevron')}</button>
-    <button data-menu="routes"><span class="menu-ico amber">${ic('route')}</span><span data-i18n="routes">我的安全路线</span><small>2 条</small>${ic('chevron')}</button>
+    <button data-action="contacts-manage"><span class="menu-ico mint">${ic('users')}</span><span data-i18n="contacts">紧急联系人</span><small id="contactsCount">3 位</small>${ic('chevron')}</button>
+    <button data-action="routes-manage"><span class="menu-ico amber">${ic('route')}</span><span data-i18n="routes">我的安全路线</span><small id="routesCount">2 条</small>${ic('chevron')}</button>
     <button data-menu="history"><span class="menu-ico blue">${ic('clock')}</span><span data-i18n="history">守护记录</span>${ic('chevron')}</button>
   </div>
   <div class="section-title profile-section"><h3 data-i18n="settings">设置</h3><small data-i18n="settingsSub">守护偏好与账号</small></div>
@@ -192,6 +232,7 @@ XA_SCREENS.settings = `
     <div class="settings-block-head"><span class="settings-block-ico blue">${ic('shield')}</span><span><b data-i18n="securityPrivacySettings">安全隐私设置</b><small data-i18n="securityPrivacySub">权限、账号与访问范围</small></span></div>
     <div class="menu-group">
       <button data-action="privacy-settings"><span class="menu-ico mint">${ic('lock')}</span><span data-i18n="privacyManage">隐私与权限</span><small>4 项开关</small>${ic('chevron')}</button>
+      <button data-action="route-pref"><span class="menu-ico blue">${ic('navigation')}</span><span>路线偏好</span><small id="routePrefLabel">夜行优先 · 安全第一</small>${ic('chevron')}</button>
       <button data-action="account-security"><span class="menu-ico amber">${ic('users')}</span><span data-i18n="accountSecurity">账号与安全</span><small data-i18n="deviceBound">已绑定设备</small>${ic('chevron')}</button>
     </div>
   </div>

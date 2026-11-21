@@ -10,7 +10,7 @@ XA.I18N = {
     accountDevice: '已配对设备', accountChange: '管理', languageSub: '选择应用显示语言',
     languageChinese: '简体中文', languageEnglish: 'English', switchAccountSub: '可使用其他手机号登录',
     continueSwitch: '继续切换', cancel: '取消', navActive: '安全导航中', remainingMin: '剩余分钟',
-    remainingKm: '剩余公里', safetyScore: '安全分', endNav: '结束导航', startNav: '开始安全导航',
+    remainingKm: '剩余公里', safetyScore: '安全分', endNav: '退出导航', startNav: '开始导航',
     search: '搜索目的地', commonAddresses: '常用地址', commonHint: '点击即可快速规划夜间安全路线',
     mapSettings: '地图设置', view: '视角', basemap: '底图', standard: '标准', satellite: '卫星',
     musicPlaying: '正在播放 · 后台播放', weatherFallback: '22° 多云',
@@ -66,7 +66,7 @@ XA.I18N = {
     accountDevice: 'Paired device', accountChange: 'Manage', languageSub: 'Choose the app display language',
     languageChinese: '简体中文', languageEnglish: 'English', switchAccountSub: 'Sign in with another phone number',
     continueSwitch: 'Continue', cancel: 'Cancel', navActive: 'Safe navigation', remainingMin: 'min left',
-    remainingKm: 'km left', safetyScore: 'Safety score', endNav: 'End navigation', startNav: 'Start safe navigation',
+    remainingKm: 'km left', safetyScore: 'Safety score', endNav: 'Exit navigation', startNav: 'Start navigation',
     search: 'Search destination', commonAddresses: 'Frequent addresses', commonHint: 'Tap to plan a safe night route',
     mapSettings: 'Map settings', view: 'View', basemap: 'Basemap', standard: 'Standard', satellite: 'Satellite',
     musicPlaying: 'Now playing · Background', weatherFallback: '22° Cloudy',
@@ -184,7 +184,7 @@ XA.books = [
   ] },
   { title: '城市微光', author: '沈砚', tags: '#都市悬疑 #温柔反转', coverClass: 'book-c5', coverWord: '城市微光', icon: 'navigation', chapters: [
     { title: '第 1 章 · 失物招领', text: '地铁站的失物招领处有一把旧钥匙，标签上写着：请在下雨天打开。她盯着那行字，忽然想起三年前的那个夜晚。' },
-    { title: '第 2 章 · 第九盏路灯', text: '沿着滨江路往前走，第九盏路灯下停着一辆自行车。车篮里有一封没有寄出的信。' }
+    { title: '第 2 章 · 第九盏路灯', text: '沿着栗庙路往前走，第九盏路灯下停着一辆自行车。车篮里有一封没有寄出的信。' }
   ] },
   { title: 'AI 恋人说明书', author: '鹤川', tags: '#轻科幻 #爽文', coverClass: 'book-c6', coverWord: 'AI 恋人', icon: 'play', chapters: [
     { title: '第 1 章 · 开机第一天', text: '清晨六点，客厅里的机器人轻声说：早安，今天也要好好生活。它不知道，这句话会改变一整个夏天。' },
@@ -441,10 +441,10 @@ XA.openExternalMusic = function (source) {
 };
 
 XA.navSteps = [
-  { title: '前方 30 m 右转进入滨江路', sub: '全程有灯 · 路灯覆盖 86%', dist: '30 m', icon: 'navigation' },
-  { title: '沿滨江路直行 400 m', sub: '监控 12 处 · 近 30 天事件 2 起', dist: '400 m', icon: 'navigation' },
+  { title: '前方 30 m 右转进入栗庙路', sub: '全程有灯 · 路灯覆盖 86%', dist: '30 m', icon: 'navigation' },
+  { title: '沿栗庙路直行 400 m', sub: '监控 12 处 · 近 30 天事件 2 起', dist: '400 m', icon: 'navigation' },
   { title: '前方路口左转进入花园路', sub: '便利店求助点 · 照明良好', dist: '120 m', icon: 'pin' },
-  { title: '即将到达 滨江花园 · 东南门', sub: '已为你照亮最后五百米', dist: '60 m', icon: 'check' }
+  { title: '即将到达 藏龙东街地铁站 · 东南门', sub: '已为你照亮最后五百米', dist: '60 m', icon: 'check' }
 ];
 
 XA.startNavigation = function () {
@@ -462,9 +462,10 @@ XA.startNavigation = function () {
       '</svg>' +
       '<span class="nv-user"></span>' +
       '<span class="nv-label">' + ic('shield') + ' <span data-i18n="navActive">安全导航中</span> · 路线 A</span>' +
-      '<div class="nav-turn"><span class="weather-chip" id="weatherChip">' + ic('cloud') + '<span id="weatherText">' + (XA.weatherText || XA.t('weatherFallback')) + '</span></span>' +
+      '<span class="weather-chip nav-weather" id="weatherChip">' + ic('cloud') + '<span id="weatherText">' + (XA.weatherText || XA.t('weatherFallback')) + '</span></span>' +
+      '<div class="nav-turn">' +
         '<span class="turn-arrow">' + ic('navigation') + '</span>' +
-        '<div><b id="turnTitle">前方 30 m 右转进入滨江路</b><small id="turnSub">全程有灯 · 路灯覆盖 86%</small></div>' +
+        '<div><b id="turnTitle">前方 30 m 右转进入栗庙路</b><small id="turnSub">全程有灯 · 路灯覆盖 86%</small></div>' +
         '<span class="turn-dist" id="turnDist">30 m</span></div>' +
     '</div>' +
     '<div class="nav-body">' +
@@ -473,10 +474,11 @@ XA.startNavigation = function () {
         return '<div class="nav-step' + (i === 0 ? ' active' : '') + '"><i></i><span>' + s.title + '</span><b>' + s.dist + '</b></div>';
       }).join('') + '</div>' +
       '<div class="nav-actions">' +
-        '<button class="primary-btn" data-action="end-nav" style="flex:1;width:auto">' + ic('check') + '<span data-i18n="endNav">结束导航</span></button>' +
+        '<button class="primary-btn" data-action="end-nav" style="flex:1;width:auto">' + ic('close') + '<span data-i18n="endNav">退出导航</span></button>' +
         '<button class="square-btn" data-action="nav-share">' + ic('share') + '</button>' +
       '</div>' +
-    '</div>';
+    '</div>' +
+    '<button class="nav-end-big" data-action="end-nav">' + ic('close') + '<span data-i18n="endNav">退出导航</span></button>';
   XA.$('#phone').appendChild(box);
   XA.applyI18n();
   requestAnimationFrame(function () { box.classList.add('open'); });
@@ -511,10 +513,11 @@ XA.startNavigation = function () {
   XA.toast('安全导航已开始 · 安星陪你走夜路');
 };
 
+var _earlyActions = XA.actions;   // 保留 app.js 中提前注册的取消报警身份验证动作
 XA.actions = {
   notifications: function () {
     XA.openSheet('<h3>守护通知</h3><div class="sheet-sub">安全消息优先送达</div>' +
-      '<div class="option-row">' + ic('warning') + '<span><b>文昌巷路灯检修</b><small>2 分钟前 · 建议绕行滨江路</small></span></div>' +
+      '<div class="option-row">' + ic('warning') + '<span><b>藏龙支路路灯检修</b><small>2 分钟前 · 建议绕行栗庙路</small></span></div>' +
       '<div class="option-row">' + ic('shield') + '<span><b>夜间守护已开启</b><small>今晚 21:00 · 已连续 3 晚</small></span></div>' +
       '<div class="option-row">' + ic('glasses') + '<span><b>AR 眼镜电量 82%</b><small>18 分钟前 · 设备状态正常</small></span></div>');
   },
@@ -524,7 +527,7 @@ XA.actions = {
       '<button class="option-row" data-lang="en">' + ic('glasses') + '<span><b data-i18n="languageEnglish">English</b><small>English interface</small></span></button>');
   },
   search: function () {
-    var names = ['滨江花园', '家', '公司', '健身房', '西溪公园', '地铁文三路站'];
+    var names = ['藏龙东街地铁站', '栗庙路夜市', '藏龙岛湿地公园', '湖北美术学院南门', '光谷广场', '家'];
     XA.openSheet('<h3>搜索目的地</h3><div class="sheet-sub">输入关键词，选择后会同步更新路线分析</div>' +
       '<input id="searchInput" class="sheet-input" style="min-height:auto;height:44px" placeholder="搜索地点或常用地址" autocomplete="off">' +
       '<div id="searchResults">' + names.map(function (n) {
@@ -551,7 +554,7 @@ XA.actions = {
   },
   'close-pick': function () { XA.closeModal(); },
   'score-detail': function () {
-    XA.openSheet('<h3>安全分由什么构成</h3><div class="sheet-sub">滨江路主线 · 21:40 更新 · 演示数据</div>' +
+    XA.openSheet('<h3>安全分由什么构成</h3><div class="sheet-sub">栗庙路主线 · 21:40 更新 · 演示数据</div>' +
       [['路灯覆盖', 30], ['监控与求助点', 20], ['实时事件', 25], ['人流与商业活跃度', 15], ['路线类型', 10]].map(function (r) {
         return '<div class="weight-row"><div><span>' + r[0] + '</span><b>' + r[1] + '%</b></div><div class="weight-bar"><i style="width:' + (r[1] * 3) + '%"></i></div></div>';
       }).join('') +
@@ -563,26 +566,26 @@ XA.actions = {
     XA.toast(on ? '路灯图层已开启 · 显示 86% 照明覆盖' : '路灯图层已关闭');
   },
   bulb: function () { XA.openSheet('<h3>路灯信息</h3><div class="sheet-sub">城市照明数据 · 21:39 更新</div>' +
-    '<div class="option-row">' + ic('warning') + '<span><b>文昌巷 300m 处路灯检修</b><small>预计 22:30 恢复 · 建议绕行滨江路</small></span></div>' +
-    '<div class="option-row">' + ic('check') + '<span><b>滨江路主线全程有灯</b><small>覆盖率 86% · 12 处监控</small></span></div>'); },
+    '<div class="option-row">' + ic('warning') + '<span><b>藏龙支路 300m 处路灯检修</b><small>预计 22:30 恢复 · 建议绕行栗庙路</small></span></div>' +
+    '<div class="option-row">' + ic('check') + '<span><b>栗庙路主线全程有灯</b><small>覆盖率 86% · 12 处监控</small></span></div>'); },
   'event-detail': function () {
     XA.openSheet('<h3>实时事件详情</h3><div class="sheet-sub">来源：城市照明 / 用户上报 · 2 分钟前</div>' +
-      '<div class="option-row">' + ic('warning') + '<span><b>文昌巷 300m 路灯检修</b><small>影响文昌巷捷径 B 线，A 线滨江路不受影响</small></span></div>' +
-      '<button class="primary-btn" data-action="accept-advice">采纳建议 · 改走滨江路</button>');
+      '<div class="option-row">' + ic('warning') + '<span><b>藏龙支路 300m 路灯检修</b><small>影响藏龙支路捷径 B 线，A 线栗庙路不受影响</small></span></div>' +
+      '<button class="primary-btn" data-action="accept-advice">采纳建议 · 改走栗庙路</button>');
   },
   'accept-advice': function () { XA.closeModal(); XA.selectRoute('A'); XA.go('route'); },
   'ai-suggest': function () {
     XA.openSheet('<h3>安星 AI</h3><div class="sheet-sub">陪你走夜路 · 短句、具体、不夸张</div>' +
-      '<div class="option-row">' + ic('navigation') + '<span><b>今晚走滨江路吧</b><small>路灯更亮，比文昌巷多 3 分钟，安全分 +28</small></span></div>' +
+      '<div class="option-row">' + ic('navigation') + '<span><b>今晚走栗庙路吧</b><small>路灯更亮，比藏龙支路多 3 分钟，安全分 +28</small></span></div>' +
       '<div class="option-row">' + ic('check') + '<span><b>已为你避开暗巷</b><small>路线经过 12 处监控、3 个便利店求助点</small></span></div>' +
-      '<button class="primary-btn" data-action="accept-advice">好的，走滨江路</button>');
+      '<button class="primary-btn" data-action="accept-advice">好的，走栗庙路</button>');
   },
   'start-nav': function () { XA.startNavigation(); },
   'end-nav': function () {
     var nav = XA.$('.nav-session');
     if (nav) { nav.classList.remove('open'); setTimeout(function () { nav.remove(); }, 360); }
     clearInterval(XA.navTimer);
-    XA.toast('导航已结束 · 行程记录已保存');
+    XA.toast('已退出导航 · 行程记录已保存');
   },
   'nav-share': function () { XA.actions['share-trip'](); },
   'share-trip': function () {
@@ -597,14 +600,17 @@ XA.actions = {
     XA.openSheet('<h3>求助与兜底</h3><div class="sheet-sub">所有自动动作可取消、可解释、可关闭</div>' +
       '<div class="option-row">' + ic('phone') + '<span><b>无法自动呼叫 110</b><small>会显示“请点击拨号”，不做虚假承诺</small></span></div>' +
       '<div class="option-row">' + ic('pin') + '<span><b>定位不准或暂无网络</b><small>显示精度范围并缓存位置，尝试短信求助</small></span></div>' +
-      '<div class="option-row">' + ic('shield') + '<span><b>误报恢复</b><small>轻点即可取消报警，记录保留可回看</small></span></div>');
+      '<div class="option-row">' + ic('shield') + '<span><b>误报恢复</b><small>需人脸识别或密码验证后才能取消报警，记录保留可回看</small></span></div>');
   },
   'location-detail': function () {
     XA.openSheet('<h3>当前位置</h3><div class="sheet-sub">已同步给 3 位紧急联系人 · 精度 ±5 m</div>' +
-      '<div class="option-row">' + ic('pin') + '<span><b>杭州市西湖区文三路 90 号</b><small>更新于 21:42:06 · 来源：GPS + 基站</small></span></div>' +
+      '<div class="option-row">' + ic('pin') + '<span><b>武汉市江夏区藏龙岛栗庙路 1 号</b><small>更新于 21:42:06 · 来源：GPS + 基站</small></span></div>' +
       '<p class="sheet-note">定位仅用于本次紧急行程共享，报警结束后停止共享。</p>');
   },
-  'cancel-alarm': function () { XA.cancelAlarm(); },
+  'cancel-alarm': function () {
+    if (XA.alarm && XA.showCancelAuth) XA.showCancelAuth();   // 报警发出后必须验证身份
+    else XA.cancelAlarm();
+  },
   'ar-entry': function () { XA.go('ar'); },
   play: function () {
     XA.playing = !XA.playing;
@@ -805,8 +811,8 @@ XA.actions = {
     article.dataset.cat = 'local';
     article.innerHTML = '<header><span class="avatar green">我</span><span><b>' +
       (XA.$('[data-pub="anon"]').classList.contains('active') ? '匿名用户' : '安星用户') +
-      '</b><small>刚刚 · 杭州</small></span><span class="real-tag">真实经历</span></header><p></p>' +
-      '<footer><span>滨江路 · 刚刚</span><span class="story-actions"><button class="like" data-action="like"><span class="like-ico">' +
+      '</b><small>刚刚 · 武汉藏龙岛</small></span><span class="real-tag">真实经历</span></header><p></p>' +
+      '<footer><span>栗庙路 · 刚刚</span><span class="story-actions"><button class="like" data-action="like"><span class="like-ico">' +
       ic('heart') + '</span><b>0</b></button><button>' + ic('comment') + '<b>0</b></button><button>' + ic('share') + '分享</button></span></footer>';
     article.querySelector('p').textContent = val;
     feed.insertBefore(article, feed.firstChild);
@@ -827,7 +833,7 @@ XA.actions = {
   'close-settings': function () { XA.closeModal(); },
   'ar-full': function () { XA.openSheet('<h3>实时镜片画面</h3><div class="sheet-sub">1080P · 眼镜端实时同步</div>' +
     '<img src="assets/ar-preview.jpg" alt="镜片预览" style="width:100%;border-radius:14px;display:block">' +
-    '<p class="sheet-note">前方 30 m 右转进入滨江路 · 目的地滨江花园 320 m · 安全分 92 · 路灯 86%</p>'); },
+    '<p class="sheet-note">前方 30 m 右转进入栗庙路 · 目的地藏龙东街地铁站 320 m · 安全分 92 · 路灯 86%</p>'); },
   'find-glasses': function () { XA.toast('已向眼镜发送查找信号 · 镜腿提示音与闪烁已开启'); },
   settings: function () { XA.go('settings'); },
   'settings-language': function () { XA.actions.language(); },
@@ -898,10 +904,11 @@ XA.actions = {
     }, 180);
   }
 };
+Object.assign(XA.actions, _earlyActions);   // 避免整体赋值覆盖早期动作（人脸/密码验证）
 
 XA.menuSheets = {
   contacts: ['紧急联系人', '妈妈 / 阿哲 / 物业管家 · 已通知 3 位'],
-  routes: ['我的安全路线', '滨江路主线 92 分 · 文三路备选 78 分'],
+  routes: ['我的安全路线', '栗庙路主线 92 分 · 藏龙大道备选 78 分'],
   history: ['守护记录', '已完成 18 段安全行程 · 1 次误报取消'],
   privacy: ['隐私与权限', '位置仅使用期间 · 麦克风端侧处理 · 可随时撤回'],
   device: ['AR 眼镜设备', 'XA-0281 已连接 · 电量 82% · 配对信息本地加密'],
@@ -909,8 +916,7 @@ XA.menuSheets = {
 };
 
 XA.bindPageEvents = function () {
-  var cancelBtn = XA.$('[data-action="cancel-alarm"]');
-  if (cancelBtn) XA.hold(cancelBtn, 2000, function () { XA.cancelAlarm(); });
+  /* 取消报警统一走人脸/密码验证，不再提供长按直接取消的旁路 */
 
   var homeNav = XA.$('.home-sheet [data-action="start-nav"]');
   if (homeNav) XA.hold(homeNav, 1200, function () { XA.actions['share-trip'](); });
@@ -987,8 +993,6 @@ XA.bindPageEvents = function () {
       XA.toast(sense.dataset.sense + (sense.classList.contains('on') ? '已开启' : '已关闭'));
       return;
     }
-    var goods = e.target.closest('[data-goods]');
-    if (goods) { XA.toast(goods.dataset.goods + ' · 社区专享，演示页面不下单'); }
   });
   ['volumeSlider', 'arVolume'].forEach(function (id) {
     var el = XA.$('#' + id);
@@ -1019,17 +1023,17 @@ XA.bindPageEvents = function () {
 
   var PLANS = { month: ['月包', '¥12', '适合临时夜行'], quarter: ['季包', '¥30', '省 ¥6 · 最受欢迎'], year: ['年包', '¥98', '省 ¥46 · 长期守护'] };
   var SKUS = [
-    { id: 'ar', name: '安星 AR 眼镜 XA-0281', desc: '3D 导航 · 夜视增强 · 开放式音频', price: '¥1,299', icon: 'glasses', tag: '品牌旗舰' },
-    { id: 'alarm', name: '随行声光报警器', desc: '120dB · 一键鸣响 · 可挂背包', price: '¥199', icon: 'siren', tag: '热销' },
-    { id: 'light', name: '夜行强光手电', desc: 'IPX7 防水 · 爆闪求救模式', price: '¥129', icon: 'moon', tag: '新品' },
-    { id: 'spray', name: '个人防护喷雾', desc: '合规便携 · 含防误触锁扣', price: '¥89', icon: 'shield', tag: '防护' }
+    { id: 'ar', name: '安星 AR 眼镜 XA-0281', desc: '3D 导航 · 夜视增强 · 开放式音频', price: '¥1,299', icon: 'glasses', tag: '品牌旗舰', grad: 'linear-gradient(135deg,#1c2b4a,#0e1626)', specs: ['曜石黑', '月光银', '星蓝限定'] },
+    { id: 'alarm', name: '随行声光报警器', desc: '120dB · 一键鸣响 · 可挂背包', price: '¥199', icon: 'siren', tag: '热销', grad: 'linear-gradient(135deg,#4a1c22,#26090d)', specs: ['标准版', '挂绳套装'] },
+    { id: 'light', name: '夜行强光手电', desc: 'IPX7 防水 · 爆闪求救模式', price: '¥129', icon: 'moon', tag: '新品', grad: 'linear-gradient(135deg,#463a17,#221b09)', specs: ['标准版', '礼盒版'] },
+    { id: 'spray', name: '个人防护喷雾', desc: '合规便携 · 含防误触锁扣', price: '¥89', icon: 'shield', tag: '防护', grad: 'linear-gradient(135deg,#173a2e,#0a1f18)', specs: ['单支装', '双支装'] }
   ];
   var BUDDY_POOL = [
-    { name: '林晚', time: '21:30', roads: ['文三路', '学院路', '滨江路'], dest: '地铁文三路站', note: '夜行 3 年 · 已实名' },
-    { name: '阿哲', time: '22:00', roads: ['学院路', '夜宵街'], dest: '滨江花园', note: 'AR 眼镜体验官 · 已实名' },
-    { name: '小满', time: '21:10', roads: ['文三路', '天目山路'], dest: '安康大药房', note: '同路段通勤 · 已实名' },
-    { name: '陈叔', time: '22:20', roads: ['滨江路', '江晖路'], dest: '滨江警务站', note: '物业夜巡 · 已实名' },
-    { name: 'Yuki', time: '21:45', roads: ['夜宵街', '学院路'], dest: '星巴克滨江店', note: '下班同行 · 已实名' }
+    { name: '林晚', time: '21:30', roads: ['栗庙路', '藏龙大道', '光谷大道'], dest: '藏龙东街地铁站', note: '夜行 3 年 · 已实名' },
+    { name: '阿哲', time: '22:00', roads: ['藏龙大道', '夜宵街'], dest: '藏龙东街地铁站', note: 'AR 眼镜体验官 · 已实名' },
+    { name: '小满', time: '21:10', roads: ['藏龙大道', '光谷大道'], dest: '益丰大药房', note: '同路段通勤 · 已实名' },
+    { name: '陈叔', time: '22:20', roads: ['藏龙大道', '栗庙路'], dest: '藏龙岛警务站', note: '物业夜巡 · 已实名' },
+    { name: 'Yuki', time: '21:45', roads: ['夜宵街', '藏龙大道'], dest: '藏龙岛夜市', note: '下班同行 · 已实名' }
   ];
 
   function isVip() { return !!XA.vip.plan; }
@@ -1123,8 +1127,8 @@ XA.bindPageEvents = function () {
     var def = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + 'T' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
     XA.openSheet('<h3>发布夜路同行预约</h3><div class="sheet-sub">提前预约，不是即时匹配 · AI 会匹配同段同行路线</div>' +
       '<div class="form-row"><label>出发时间</label><input id="byTime" type="datetime-local" value="' + def + '"></div>' +
-      '<div class="form-row"><label>出发 / 途经路段</label><input id="byRoads" placeholder="如 文三路、学院路、滨江路"></div>' +
-      '<div class="form-row"><label>终点</label><input id="byDest" placeholder="如 地铁文三路站"></div>' +
+      '<div class="form-row"><label>出发 / 途经路段</label><input id="byRoads" placeholder="如 栗庙路、藏龙大道、光谷大道"></div>' +
+      '<div class="form-row"><label>终点</label><input id="byDest" placeholder="如 藏龙东街地铁站"></div>' +
       '<div class="option-row">' + ic('users') + '<span><b>匹配规则</b><small>起点终点不必完全一致，只匹配同一段同行路线</small></span></div>' +
       '<button class="primary-btn" data-action="buddy-publish-submit">发布并查看 AI 匹配</button>');
   };
@@ -1143,13 +1147,39 @@ XA.bindPageEvents = function () {
     var res = XA.buddy.reservations.filter(function (x) { return String(x.id) === String(el.dataset.id); })[0];
     if (res) matchSheet(res);
   };
+  XA.actions['go-shop'] = function () { XA.go('shop'); };
+  XA.actions['community-profile'] = function () { XA.go('buddyProfile'); };
+  XA.actions['go-community'] = function () { XA.go('community'); };
   XA.actions['shop-buy'] = function (el) {
     var s = SKUS.filter(function (x) { return x.id === el.dataset.sku; })[0]; if (!s) return;
-    XA.openSheet('<h3>' + s.name + '</h3><div class="sheet-sub">' + s.desc + ' · 单独付费</div>' +
-      '<div class="shop-price">' + s.price + '</div>' +
-      '<div class="option-row">' + ic('shield') + '<span><b>基础功能不受影响</b><small>导航、听歌、听书与 SOS 永久免费，无需购买任何商品</small></span></div>' +
-      '<button class="primary-btn" data-action="shop-confirm" data-sku="' + s.id + '">加入购物车（演示）</button>' +
-      '<button class="ghost-btn" data-close="1">继续逛逛</button>');
+    XA.openSheet(
+      '<div class="shop-hero" style="background:' + s.grad + '">' +
+        '<span class="shop-hero-ico">' + ic(s.icon) + '</span>' +
+        '<span class="shop-hero-badge">' + s.tag + '</span>' +
+      '</div>' +
+      '<h3>' + s.name + '</h3><div class="sheet-sub">' + s.desc + '</div>' +
+      '<div class="shop-price">' + s.price + '<em>单独付费 · 概念演示</em></div>' +
+      '<button class="shop-video" data-action="shop-video">' +
+        '<img src="assets/video-night.jpg" alt="商品演示视频">' +
+        '<span class="shop-video-mask"></span>' +
+        '<span class="shop-video-play">▶</span>' +
+        '<small>商品演示视频 · 00:32</small>' +
+      '</button>' +
+      '<div class="setting-line"><span><b>选择规格</b><small>不同规格价格一致（演示）</small></span></div>' +
+      '<div class="seg" id="shopSpecs">' + s.specs.map(function (sp, i) {
+        return '<button data-spec="' + i + '" class="' + (i === 0 ? 'on' : '') + '">' + sp + '</button>';
+      }).join('') + '</div>' +
+      '<div class="shop-services">' + ic('check') + '正品保障' + ic('check') + '七天无理由' + ic('check') + '顺丰包邮' + ic('check') + '一年质保</div>' +
+      '<div class="shop-buy-row">' +
+        '<button class="ghost-btn" data-action="shop-confirm" data-sku="' + s.id + '">加入购物车</button>' +
+        '<button class="primary-btn" data-action="shop-order" data-sku="' + s.id + '">立即购买</button>' +
+      '</div>');
+  };
+  XA.actions['shop-video'] = function () { XA.toast('演示视频 · 概念原型暂无真实播放'); };
+  XA.actions['shop-order'] = function (el) {
+    var s = SKUS.filter(function (x) { return x.id === el.dataset.sku; })[0]; if (!s) return;
+    XA.closeModal();
+    XA.toast(s.name + ' · 演示原型，不产生真实订单');
   };
   XA.actions['shop-confirm'] = function (el) {
     var s = SKUS.filter(function (x) { return x.id === el.dataset.sku; })[0]; if (!s) return;
@@ -1175,7 +1205,7 @@ XA.bindPageEvents = function () {
 
   /* 定位点击无效修复：打开位置详情时主动取实时坐标，并支持重新定位 */
   function locationDetailHtml() {
-    var p = XA.position || { lat: 30.2700, lng: 120.1500, real: false, acc: 0 };
+    var p = XA.position || { lat: 30.4431, lng: 114.4072, real: false, acc: 0 };
     var detail = p.real
       ? '实时定位 ' + p.lat.toFixed(5) + ', ' + p.lng.toFixed(5) + ' · 精度 ±' + Math.round(p.acc || 8) + 'm'
       : '设备定位未开启 · 当前为概念演示位置';
@@ -1195,14 +1225,127 @@ XA.bindPageEvents = function () {
     else setTimeout(function () { done(XA.position); }, 400);
   };
 
-  /* 社区标签切换 */
+  /* 商品规格选择 */
   document.addEventListener('click', function (e) {
-    var tab = e.target.closest('[data-cm-tab]'); if (!tab) return;
-    XA.$$('[data-cm-tab]').forEach(function (b) { b.classList.toggle('active', b === tab); });
-    var isShop = tab.dataset.cmTab === 'shop';
-    var b = XA.$('#cmBuddy'), s = XA.$('#cmShop');
-    if (b) b.hidden = isShop;
-    if (s) s.hidden = !isShop;
+    var sp = e.target.closest('[data-spec]'); if (!sp) return;
+    var seg = sp.parentElement;
+    if (seg) XA.$$('[data-spec]', seg).forEach(function (b) { b.classList.toggle('on', b === sp); });
+  });
+})();
+
+/* =========================================================
+   我的页：紧急联系人增删管理（含设备绑定）/ 常用路线增删与一键导航
+   全部为概念演示，数据保存在本机 localStorage
+   ========================================================= */
+(function () {
+  function load(key, def) { try { return JSON.parse(localStorage.getItem(key)) || def; } catch (e) { return def; } }
+  function save(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  XA.contacts = load('xa_contacts', [
+    { id: 1, name: '妈妈', tel: '138****6621', device: '手机短信 / 电话' },
+    { id: 2, name: '阿哲', tel: '137****0935', device: '安星手表' },
+    { id: 3, name: '物业管家', tel: '0571-88**', device: '固话' }
+  ]);
+  if (!Array.isArray(XA.contacts)) XA.contacts = [];
+  XA.myRoutes = load('xa_routes', [
+    { id: 1, name: '湖美 → 藏龙东街地铁站', dest: '藏龙东街地铁站', time: '18 分钟', score: 92 },
+    { id: 2, name: '湖美 → 栗庙路夜市', dest: '栗庙路夜市', time: '12 分钟', score: 90 }
+  ]);
+  if (!Array.isArray(XA.myRoutes)) XA.myRoutes = [];
+  XA.ctDevices = load('xa_ct_devices', { phone: true, watch: true, ar: false });
+
+  XA.renderProfileCounts = function () {
+    var c = XA.$('#contactsCount'); if (c) c.textContent = XA.contacts.length + ' 位';
+    var r = XA.$('#routesCount'); if (r) r.textContent = XA.myRoutes.length + ' 条';
+    var s = XA.$('#statContacts'); if (s) s.textContent = XA.contacts.length;
+  };
+
+  XA.actions['contacts-manage'] = function () {
+    var html = '<h3>紧急联系人</h3><div class="sheet-sub">SOS 触发时将同步实时位置并依次通知</div>';
+    html += XA.contacts.length
+      ? XA.contacts.map(function (c) {
+          return '<div class="ct-row"><span class="match-avatar">' + esc(c.name.slice(0, 1)) + '</span>' +
+            '<span class="ct-info"><b>' + esc(c.name) + '</b><small>' + esc(c.tel) + ' · ' + esc(c.device) + '</small></span>' +
+            '<button class="ct-del" data-action="contact-del" data-id="' + c.id + '" aria-label="删除">' + ic('close') + '</button></div>';
+        }).join('')
+      : '<div class="poi-empty">还没有紧急联系人 · 添加后 SOS 会第一时间通知 TA</div>';
+    var dv = XA.ctDevices;
+    html += '<div class="setting-line" style="margin-top:8px"><span><b>通知设备绑定</b><small>选择联系人接收求助的设备通道</small></span></div>' +
+      '<div class="seg">' +
+      '<button data-ctdev="phone" class="' + (dv.phone ? 'on' : '') + '">手机短信 / 电话</button>' +
+      '<button data-ctdev="watch" class="' + (dv.watch ? 'on' : '') + '">安星手表</button>' +
+      '<button data-ctdev="ar" class="' + (dv.ar ? 'on' : '') + '">AR 眼镜推送</button></div>' +
+      '<div class="form-row"><label>姓名</label><input id="ctName" maxlength="8" placeholder="如 妈妈"></div>' +
+      '<div class="form-row"><label>电话（可脱敏）</label><input id="ctTel" maxlength="16" placeholder="如 138****6621"></div>' +
+      '<button class="primary-btn" data-action="contact-add">' + ic('plus') + '添加联系人</button>';
+    XA.openSheet(html);
+  };
+  XA.actions['contact-del'] = function (el) {
+    XA.contacts = XA.contacts.filter(function (c) { return String(c.id) !== String(el.dataset.id); });
+    save('xa_contacts', XA.contacts);
+    XA.renderProfileCounts();
+    XA.actions['contacts-manage']();
+    XA.toast('联系人已删除 · 保存于本机');
+  };
+  XA.actions['contact-add'] = function () {
+    var name = ((XA.$('#ctName') || {}).value || '').trim();
+    var tel = ((XA.$('#ctTel') || {}).value || '').trim();
+    if (!name) { XA.toast('请填写联系人姓名'); return; }
+    XA.contacts.unshift({ id: Date.now(), name: name, tel: tel || '未填写', device: '手机短信 / 电话' });
+    save('xa_contacts', XA.contacts);
+    XA.renderProfileCounts();
+    XA.actions['contacts-manage']();
+    XA.toast('已添加 ' + name + ' · SOS 时将同步位置');
+  };
+
+  XA.actions['routes-manage'] = function () {
+    var html = '<h3>我的安全路线</h3><div class="sheet-sub">点右侧按钮一键导航 · 也可删除后重新添加</div>';
+    html += XA.myRoutes.length
+      ? XA.myRoutes.map(function (r) {
+          return '<div class="ct-row"><span class="rt-score">' + r.score + '</span>' +
+            '<span class="ct-info"><b>' + esc(r.name) + '</b><small>预计 ' + esc(r.time) + ' · 安全分 ' + r.score + '</small></span>' +
+            '<button class="rt-go" data-action="route-go" data-dest="' + esc(r.dest) + '" aria-label="一键导航">' + ic('navigation') + '</button>' +
+            '<button class="ct-del" data-action="route-del" data-id="' + r.id + '" aria-label="删除">' + ic('close') + '</button></div>';
+        }).join('')
+      : '<div class="poi-empty">还没有常用路线 · 添加终点即可一键导航</div>';
+    html += '<div class="form-row"><label>路线名称</label><input id="rtName" maxlength="12" placeholder="如 家 → 公司"></div>' +
+      '<div class="form-row"><label>终点（演示地点）</label><input id="rtDest" maxlength="12" placeholder="如 藏龙东街地铁站 / 栗庙路夜市"></div>' +
+      '<button class="primary-btn" data-action="route-add">' + ic('plus') + '添加常用路线</button>';
+    XA.openSheet(html);
+  };
+  XA.actions['route-del'] = function (el) {
+    XA.myRoutes = XA.myRoutes.filter(function (r) { return String(r.id) !== String(el.dataset.id); });
+    save('xa_routes', XA.myRoutes);
+    XA.renderProfileCounts();
+    XA.actions['routes-manage']();
+    XA.toast('已删除该路线');
+  };
+  XA.actions['route-add'] = function () {
+    var name = ((XA.$('#rtName') || {}).value || '').trim();
+    var dest = ((XA.$('#rtDest') || {}).value || '').trim();
+    if (!name || !dest) { XA.toast('请填写路线名称与终点'); return; }
+    XA.myRoutes.unshift({ id: Date.now(), name: name, dest: dest, time: '18 分钟', score: 88 });
+    save('xa_routes', XA.myRoutes);
+    XA.renderProfileCounts();
+    XA.actions['routes-manage']();
+    XA.toast('已添加「' + name + '」');
+  };
+  XA.actions['route-go'] = function (el) {
+    XA.closeModal();
+    XA.setDestination(el.dataset.dest);
+    XA.go('route');
+    XA.toast('已设定终点 ' + el.dataset.dest + ' · 请选择路线开始导航');
+  };
+
+  /* 设备绑定通道切换 */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-ctdev]'); if (!b) return;
+    var k = b.dataset.ctdev;
+    XA.ctDevices[k] = !XA.ctDevices[k];
+    save('xa_ct_devices', XA.ctDevices);
+    b.classList.toggle('on', XA.ctDevices[k]);
+    XA.toast(({ phone: '手机短信 / 电话', watch: '安星手表', ar: 'AR 眼镜推送' })[k] + (XA.ctDevices[k] ? ' 已开启' : ' 已关闭'));
   });
 })();
 

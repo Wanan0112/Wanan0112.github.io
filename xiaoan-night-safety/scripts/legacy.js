@@ -5,28 +5,30 @@
   var OSRM = 'https://router.project-osrm.org/route/v1/';
   var TILE = 'https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}';
   var TILE_SAT = 'https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}';
-  var DEFAULT = { lat: 30.2700, lng: 120.1500 };
+  /* 演示固定起点：湖北美术学院藏龙岛校区（武汉市江夏区藏龙岛栗庙路 1 号）
+     所有演示终点 / 推荐地点 / 点位偏移均以此为中心，全部为武汉本地 */
+  var DEFAULT = { lat: 30.4431, lng: 114.4072, name: '湖北美术学院藏龙岛校区' };
   var DESTS = {
-    '滨江花园': { lat: 30.2080, lng: 120.2100, name: '滨江花园' },
-    '家': { lat: 30.2700, lng: 120.1500, name: '家' },
-    '公司': { lat: 30.2800, lng: 120.1200, name: '公司' },
-    '健身房': { lat: 30.2600, lng: 120.1600, name: '健身房' },
-    '西溪公园': { lat: 30.2680, lng: 120.0640, name: '西溪公园' },
-    '地铁文三路站': { lat: 30.2760, lng: 120.1390, name: '地铁文三路站' }
+    '藏龙东街地铁站': { lat: 30.4418, lng: 114.4210, name: '藏龙东街地铁站' },
+    '栗庙路夜市': { lat: 30.4469, lng: 114.3995, name: '栗庙路夜市' },
+    '藏龙岛湿地公园': { lat: 30.4328, lng: 114.4012, name: '藏龙岛湿地公园' },
+    '湖北美术学院南门': { lat: 30.4382, lng: 114.4063, name: '湖北美术学院南门' },
+    '光谷广场': { lat: 30.5067, lng: 114.4019, name: '光谷广场' },
+    '家': { lat: 30.4495, lng: 114.4152, name: '家' }
   };
   var RECOMMENDS = [
-    { name: '西湖公安分局 · 湖滨警务站', cat: '安全守护 · 24 小时开放', score: '安全 98', icon: 'shield', safe: true, lat: 30.2531, lng: 120.1652 },
-    { name: '西湖风景名胜区 · 湖滨入口', cat: '旅游景点 · 照明良好', score: '4.9 分', icon: 'navigation', lat: 30.2490, lng: 120.1530 },
-    { name: '湖滨银泰 in77', cat: '美食购物 · 人流充足', score: '4.8 分', icon: 'pin', lat: 30.2530, lng: 120.1675 },
-    { name: '知味观（湖滨店）', cat: '美食 · 营业至 22:30', score: '4.7 分', icon: 'pin', lat: 30.2542, lng: 120.1660 },
-    { name: '武林广场地铁站', cat: '交通枢纽 · 监控密集', score: '安全 94', icon: 'shield', safe: true, lat: 30.2732, lng: 120.1640 }
+    { name: '藏龙岛派出所 · 栗庙路警务站', cat: '安全守护 · 24 小时开放', score: '安全 98', icon: 'shield', safe: true, lat: 30.4451, lng: 114.4022 },
+    { name: '湖北美术学院 · 藏龙岛校区南门', cat: '校园入口 · 照明良好', score: '4.9 分', icon: 'navigation', lat: 30.4382, lng: 114.4063 },
+    { name: '藏龙岛商业街', cat: '美食购物 · 人流充足', score: '4.8 分', icon: 'pin', lat: 30.4470, lng: 114.3995 },
+    { name: '栗庙路 24 小时便利店', cat: '夜间营业 · 可作求助点', score: '4.7 分', icon: 'pin', lat: 30.4442, lng: 114.4031 },
+    { name: '地铁 2 号线藏龙东街站', cat: '交通枢纽 · 监控密集', score: '安全 94', icon: 'shield', safe: true, lat: 30.4418, lng: 114.4210 }
   ];
   var POINTS = [
-    { type: 'lamp', dLat: 0.0016, dLng: -0.0021 }, { type: 'lamp', dLat: 0.0009, dLng: 0.0018 },
+    { type: 'lamp', dLat: 0.0016, dLng: -0.0021, warn: '路灯损坏 · 已报修' }, { type: 'lamp', dLat: 0.0009, dLng: 0.0018 },
     { type: 'lamp', dLat: -0.0014, dLng: 0.0025 }, { type: 'lamp', dLat: -0.0020, dLng: -0.0015 },
-    { type: 'cam', dLat: 0.0007, dLng: -0.0010 }, { type: 'cam', dLat: -0.0011, dLng: 0.0011 },
+    { type: 'cam', dLat: 0.0007, dLng: -0.0010 }, { type: 'cam', dLat: -0.0011, dLng: 0.0011, warn: '监控失效 · 维修中' },
     { type: 'safe', dLat: 0.0022, dLng: 0.0008 }, { type: 'safe', dLat: -0.0006, dLng: -0.0024 },
-    { type: 'risk', dLat: 0.0013, dLng: 0.0027 }, { type: 'risk', dLat: -0.0022, dLng: 0.0004 }
+    { type: 'risk', dLat: 0.0013, dLng: 0.0027, warn: '照明不足 · 建议绕行主路' }, { type: 'risk', dLat: -0.0022, dLng: 0.0004 }
   ];
   var LTYPE = { lamp: '路灯', cam: '监控', safe: '安全点', risk: '照明不足' };
   var LCOLOR = { lamp: '#ffc46b', cam: '#8fb8ff', safe: '#7ff0d4', risk: '#ff5b52' };
@@ -125,7 +127,7 @@
 
   /* ---------------- 设置 ---------------- */
   XA.settings = {
-    theme: 'mint', appearance: 'system', sosCd: 6, voice: true, follow: true, radar: true, acc: true, aiCompanion: true,
+    theme: 'mint', appearance: 'system', sosCd: 6, voice: true, follow: true, radar: true, acc: true, aiCompanion: true, routePref: 'night',
     markers: {
       lamp: { color: LCOLOR.lamp, shape: 'circle', glow: 7 },
       cam: { color: LCOLOR.cam, shape: 'circle', glow: 6 },
@@ -140,6 +142,7 @@
         XA.settings.theme = s.theme || 'mint';
         XA.settings.appearance = s.appearance || 'system';
         XA.settings.sosCd = s.sosCd || 6;
+        if (s.routePref === 'time') XA.settings.routePref = 'time';
         ['voice', 'follow', 'radar', 'acc', 'aiCompanion'].forEach(function (k) {
           if (typeof s[k] === 'boolean') XA.settings[k] = s[k];
         });
@@ -213,21 +216,29 @@
   }
   XA.actions.settings = function () { XA.go('settings'); };
   XA.actions['settings-appearance'] = function () { openSettings(); };
+  XA.actions['route-pref'] = function () {
+    var s = XA.settings;
+    XA.openSheet('<h3>路线偏好</h3><div class="sheet-sub">决定路线列表的默认排序方式，保存在本机</div>' +
+      '<div class="seg">' +
+      '<button data-routepref="night" class="' + (s.routePref !== 'time' ? 'on' : '') + '">夜行优先 · 安全第一</button>' +
+      '<button data-routepref="time" class="' + (s.routePref === 'time' ? 'on' : '') + '">时间优先 · 最快到达</button>' +
+      '</div>');
+  };
+  /* 提示气泡开关：复用首页原有的警示图标，点一下收起所有气泡，再点恢复 */
   XA.actions['risk-popover'] = function () {
+    var off = document.body.classList.toggle('bubbles-off');
     var p = XA.$('#riskPopover'), m = XA.$('#mapModePop');
     if (m) m.classList.remove('open');
-    if (!p) return;
-    var open = !p.classList.contains('open');
-    p.classList.toggle('open', open);
+    if (p) p.classList.toggle('open', !off);
     var btn = XA.$('[data-action="risk-popover"]');
-    if (btn) btn.classList.toggle('active', open);
-    if (open) XA.toast('已展示附近夜行提示');
+    if (btn) { btn.classList.toggle('active', !off); btn.setAttribute('aria-label', off ? '恢复提示气泡' : '收起提示气泡'); }
+    XA.toast(off ? '提示气泡已收起 · 再点图标恢复' : '已恢复地图提示气泡');
   };
   XA.actions['close-risk'] = function () {
     var p = XA.$('#riskPopover'); if (p) p.classList.remove('open');
-    var btn = XA.$('[data-action="risk-popover"]'); if (btn) btn.classList.remove('active');
+    var btn = XA.$('[data-action="risk-popover"]'); if (btn && !document.body.classList.contains('bubbles-off')) btn.classList.remove('active');
   };
-  XA.actions.recenter = function () { locate(false); XA.toast('已回到当前位置'); };
+  XA.actions.recenter = function () { locate(false); XA.toast('已回到演示起点 · 湖北美院藏龙岛校区'); };
   XA.actions['ai-toggle'] = function () {
     XA.settings.aiCompanion = !XA.settings.aiCompanion;
     saveSettings(); syncPanel();
@@ -432,6 +443,11 @@
       var marker = L.marker([c[0] + p.dLat, c[1] + p.dLng], { icon: pointIcon(p.type), interactive: false }).addTo(m);
       marker._xaType = p.type;
       m._xaPoints.push(marker);
+      if (p.warn) {
+        var tip = L.tooltip({ permanent: true, direction: 'right', className: 'xa-warn-tip', offset: [9, 0] })
+          .setLatLng([c[0] + p.dLat, c[1] + p.dLng]).setContent(p.warn).addTo(m);
+        m._xaPoints.push(tip);
+      }
     });
   }
   function refreshMapLayers() {
@@ -450,6 +466,7 @@
     var m = setupMap(el, gcj(), 16);
     if (!m) return;
     addMeLayers(m, gcj());
+    addPoints(m, gcj());
     el.classList.add('map-ready');
   }
   function initRouteMap() {
@@ -458,6 +475,7 @@
     var m = setupMap(el, gcj(), 15);
     if (!m) return;
     addMeLayers(m, gcj());
+    addPoints(m, gcj());
     el.classList.add('map-ready');
     if (curRoutes.length) drawRoutes(m);
   }
@@ -467,13 +485,15 @@
     var m = setupMap(el, gcj(), 17);
     if (!m) return;
     addMeLayers(m, gcj());
+    addPoints(m, gcj());
     el.classList.add('map-ready');
     if (curRoutes.length) drawRoutes(m, true);
   }
   /* 单一实时定位数据源：所有页面与 SOS 都读 XA.position */
   XA.position = { lat: DEFAULT.lat, lng: DEFAULT.lng, acc: 0, real: false };
   function publishPosition(lat, lng, acc, real) {
-    geoStart = [lat, lng]; geoReady = !!real;
+    /* 演示起点固定：实时坐标只写入 XA.position（供 SOS 与搜索中心使用），不改路线起点 */
+    geoReady = !!real;
     XA.position = { lat: lat, lng: lng, acc: acc || 0, real: !!real };
     if (XA.onPositionChange) XA.onPositionChange(XA.position);
     updatePosition(lat, lng, acc);
@@ -500,13 +520,11 @@
     }, { enableHighAccuracy: true, maximumAge: 3000, timeout: 15000 });
   }
   function updatePosition(lat, lng, acc) {
-    geoStart = [lat, lng];
-    var c = wgs84ToGcj02(lat, lng);
+    /* 演示地图恒定以湖北美院藏龙岛校区为中心：不随实时定位跳到其它城市 */
+    var c = wgs84ToGcj02(DEFAULT.lat, DEFAULT.lng);
     [XA.$('.home-map'), XA.$('.nav-map')].forEach(function (el) {
       var m = el && el._xaMap;
       if (!m) return;
-      // 首页只移动"我的位置"标记，不强制拉回视角，避免打断手动浏览地图；导航中才自动跟随
-      if (XA.settings.follow && XA.homeState === 'nav') m.setView(c, m.getZoom(), { animate: true, duration: .6 });
       addMeLayers(m, c);
     });
     if (XA.settings.acc) {
@@ -631,13 +649,24 @@
         ring.style.setProperty('--ring', i === 0 ? '#7ff0d4' : i === 1 ? '#ffc46b' : '#93a0b5');
       }
     });
+    var idx = XA.route === 'B' ? 1 : XA.route === 'C' ? 2 : 0;
     var eta = XA.$('#routeEta');
-    if (eta && curRoutes[0]) eta.textContent = '预计 ' + curRoutes[0].time + ' 分钟';
+    if (eta && curRoutes[idx]) eta.textContent = '路线 ' + (XA.route || 'A') + ' · 预计 ' + curRoutes[idx].time + ' 分钟';
+    var rbt = XA.$('#routeBtnText');
+    if (rbt) rbt.textContent = '开始导航';
     var rm = XA.$('.rm-time');
     if (rm && curRoutes[0]) rm.textContent = curRoutes[0].dist + ' km · ' + curRoutes[0].time + ' min';
   }
+  function prefName() { return XA.settings.routePref === 'time' ? '时间优先' : '夜行优先'; }
+  function sortByPref() {
+    curRoutes.sort(function (a, b) { return XA.settings.routePref === 'time' ? a.seconds - b.seconds : b.safety - a.safety; });
+  }
   function planRoutes(name) {
-    var dest = destPoint || DESTS[name] || DESTS['滨江花园'];
+    /* 按目的地名称解析终点，避免沿用上一次点击的旧点位导致路线跳转错乱 */
+    var dest = (XA.destPoint && XA.destPoint.name === name) ? XA.destPoint
+      : (destPoint && destPoint.name === name) ? destPoint
+      : DESTS[name] || null;
+    if (!dest) dest = { name: name, lat: DEFAULT.lat + 0.006, lng: DEFAULT.lng + 0.008 }; // 未知终点也落在武汉美院附近
     destPoint = dest;
     var start = geoStart;
     var url = OSRM + 'driving/' + start[1] + ',' + start[0] + ';' + dest.lng + ',' + dest.lat +
@@ -646,13 +675,15 @@
     return fetch(url).then(function (res) { return res.json(); }).then(function (data) {
       if (data.code !== 'Ok' || !data.routes || !data.routes.length) throw new Error('no route');
       curRoutes = data.routes.slice(0, 3).map(assessRoute);
+      sortByPref();
       updateRouteCards(); syncPanel();
       var eh = XA.$('.home-map'); if (eh && eh._xaMap) drawRoutes(eh._xaMap);
       var em = XA.$('.route-map'); if (em && em._xaMap) drawRoutes(em._xaMap);
       var en = XA.$('.nav-map'); if (en && en._xaMap) drawRoutes(en._xaMap, true);
-      XA.toast('已生成 3 条真实路线 · 按安全优先排序');
+      XA.toast('已生成 3 条真实路线 · 按' + prefName() + '排序');
     }).catch(function () {
       curRoutes = syntheticRoutes(dest);
+      sortByPref();
       updateRouteCards(); syncPanel();
       var eh = XA.$('.home-map'); if (eh && eh._xaMap) drawRoutes(eh._xaMap);
       var em = XA.$('.route-map'); if (em && em._xaMap) drawRoutes(em._xaMap);
@@ -697,8 +728,8 @@
     return m < 1000 ? Math.round(m) + ' m' : (m / 1000).toFixed(1) + ' km';
   }
   function goToPlace(name, point) {
-    destPoint = point || DESTS[name] || { name: name, lat: DEFAULT.lat, lng: DEFAULT.lng };
-    XA.setDestination(name);
+    destPoint = point || DESTS[name] || { name: name, lat: DEFAULT.lat + 0.006, lng: DEFAULT.lng + 0.008 };
+    XA.setDestination(name, destPoint);
     XA._lastPlanned = name;
     addSearchHistory(name);
     XA.closeModal();
@@ -932,14 +963,14 @@
     if (!splash) return;
     var stages = [
       [0, '正在连接夜间守护…'],
-      [450, '正在获取实时位置…'],
+      [450, '正在载入武汉藏龙岛演示地图…'],
       [1100, '正在校准路灯与事件数据…'],
       [1750, 'AI 安星正在守护…']
     ];
     stages.forEach(function (s) { setTimeout(function () { if (status) status.textContent = s[1]; }, s[0]); });
     initHomeMap();
     updateWeather();
-    setTimeout(startHomeWatch, 500);   // 开启后持续跟随用户实时位置（概念演示）
+    /* 不再启动自动定位跟随：演示版固定以湖北美院藏龙岛校区为起点，不默认跳到其它城市 */
     var gone = false;
     function dismiss() {
       if (gone) return;
@@ -986,8 +1017,6 @@
       if (nav) {
         nav.classList.add('pure-nav');
         var duplicateSos = nav.querySelector('.nav-sos'); if (duplicateSos) duplicateSos.remove();
-        var turn = nav.querySelector('.nav-turn');
-        if (turn && !turn.querySelector('.nav-end')) turn.insertAdjacentHTML('beforeend', '<button class="nav-end" data-action="end-nav">' + ic('close') + ' 结束导航</button>');
       }
       var arEnd = XA.$('.ar-end'); if (arEnd) arEnd.hidden = false;
       if (curRoutes.length) {
@@ -1008,7 +1037,7 @@
   XA.actions['end-nav'] = function () {
     stopWatch(); origEnd(); resetHome();
     var arEnd = XA.$('.ar-end'); if (arEnd) arEnd.hidden = true;
-    XA.toast('导航已结束 · 已返回首页');
+    XA.toast('已退出导航 · 已返回首页');
   };
   var origFire = XA.fireAlarm;
   XA.fireAlarm = function () { stopWatch(); origFire(); };
@@ -1021,11 +1050,14 @@
 
   XA.init();
   loadSettings();
+  var _rpl = XA.$('#routePrefLabel');
+  if (_rpl) _rpl.textContent = prefName() + (XA.settings.routePref === 'time' ? ' · 最快到达' : ' · 安全第一');
   loadAccount();
   loadPrivacy();
   loadSearchHistory();
   XA.loadFanqie();
   if (XA.renderCommunity) XA.renderCommunity();
+  if (XA.renderProfileCounts) XA.renderProfileCounts();
   var savedLang = 'zh';
   try { savedLang = localStorage.getItem('xa_language') || 'zh'; } catch (e) {}
   XA.setLanguage(savedLang);
@@ -1043,6 +1075,18 @@
     if (theme) { XA.settings.theme = theme.dataset.themeSet; saveSettings(); applyTheme(); openSettings(); XA.toast('主题色已更新'); return; }
     var cd = e.target.closest('[data-soscd]');
     if (cd) { XA.settings.sosCd = parseInt(cd.dataset.soscd, 10); saveSettings(); openSettings(); XA.toast('SOS 倒计时已设为 ' + XA.settings.sosCd + ' 秒'); return; }
+    var rp = e.target.closest('[data-routepref]');
+    if (rp) {
+      XA.settings.routePref = rp.dataset.routepref === 'time' ? 'time' : 'night';
+      saveSettings();
+      var rpl = XA.$('#routePrefLabel');
+      if (rpl) rpl.textContent = prefName() + (XA.settings.routePref === 'time' ? ' · 最快到达' : ' · 安全第一');
+      XA.closeModal();
+      XA.toast('已切换为' + prefName() + ' · 路线将重新排序');
+      XA._lastPlanned = null;
+      if (XA.go && XA.$('[data-screen="route"]') && !XA.$('[data-screen="route"]').hidden) planRoutes(XA.destination);
+      return;
+    }
     var color = e.target.closest('[data-color]');
     if (color) { XA.settings.markers[color.dataset.color].color = color.dataset.value; saveSettings(); refreshMapLayers(); openSettings(); return; }
     var shape = e.target.closest('[data-shape]');
@@ -1097,10 +1141,7 @@
     if (menuItem) { openSettings(); return; }
     if (!e.target.closest('#riskPopover') && !e.target.closest('[data-action="risk-popover"]')) {
       var rp = XA.$('#riskPopover');
-      if (rp && rp.classList.contains('open')) {
-        rp.classList.remove('open');
-        var rbtn = XA.$('[data-action="risk-popover"]'); if (rbtn) rbtn.classList.remove('active');
-      }
+      if (rp && rp.classList.contains('open')) rp.classList.remove('open');
     }
     if (!e.target.closest('#mapModePop') && !e.target.closest('[data-action="layer"]')) {
       var mp = XA.$('#mapModePop'); if (mp) mp.classList.remove('open');

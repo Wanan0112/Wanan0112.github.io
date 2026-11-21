@@ -200,6 +200,11 @@ html[data-theme="aurora"] .login-btn{background:linear-gradient(100deg,#a8c9ff,#
 .weather-chip b{font-size:10px;color:var(--amber)}
 .weather-chip .ico{width:12px;height:12px;color:var(--amber)}
 
+/* 地图路况预警永久小字（路灯损坏 / 监控失效等） */
+.leaflet-tooltip.xa-warn-tip{background:rgba(9,13,20,.84);border:1px solid rgba(255,91,82,.4);color:#ffb3ad;font-size:9px;line-height:1.3;padding:3px 7px;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.4);white-space:nowrap;font-weight:600}
+.leaflet-tooltip.xa-warn-tip::before{display:none}
+html[data-scheme="light"] .leaflet-tooltip.xa-warn-tip{background:rgba(255,250,248,.92);border-color:rgba(214,47,39,.3);color:#c0392b}
+
 /* 我的页设置分组 */
 .profile-section{margin:18px 2px 8px}
 .account-actions{margin-top:16px}
@@ -215,7 +220,16 @@ html[data-theme="aurora"] .login-btn{background:linear-gradient(100deg,#a8c9ff,#
 
 /* 底部标签栏在导航态也可见、可切换 */
 .tabbar{z-index:160}
-.nav-session.pure-nav .nav-map{height:calc(100% - var(--tabh) - env(safe-area-inset-bottom))}
+.nav-session.pure-nav .nav-map{height:calc(100% - var(--tabh) - env(safe-area-inset-bottom) - 138px)}
+
+/* 导航天气：独立挂载到地图右上角，不再挤在转向卡片里 */
+.nav-map .nav-weather{position:absolute;right:var(--safe);left:auto;top:calc(16px + env(safe-area-inset-top));z-index:500}
+
+/* 结束导航：底部大按钮，位于标签栏上方独立区域 */
+.nav-end-big{display:none;position:absolute;z-index:520;left:var(--safe);right:var(--safe);bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 62px);height:58px;border-radius:19px;border:1px solid rgba(255,150,140,.45);background:linear-gradient(135deg,#ff8b7a,#e6453c);color:#fff;font-size:16px;font-weight:800;letter-spacing:2px;align-items:center;justify-content:center;gap:9px;box-shadow:0 16px 40px rgba(230,69,60,.4);transition:transform .15s}
+.nav-end-big .ico{width:19px;height:19px}
+.nav-end-big:active{transform:scale(.97)}
+.nav-session.pure-nav .nav-end-big{display:flex}
 
 /* 地图统一为克制蓝灰暗色，保证标注可读 */
 .home-map.leaflet-container{opacity:.97;filter:brightness(.8) saturate(.66) contrast(1.04) hue-rotate(182deg) invert(.03)}
@@ -371,7 +385,43 @@ html[data-theme="aurora"] .login-btn{background:linear-gradient(100deg,#a8c9ff,#
 .match-card small{font-size:10px;color:var(--dim)}
 .match-card em{font-size:10px;color:var(--mint);font-style:normal;margin-top:2px}
 .match-score{font-size:14px;font-weight:700;color:var(--mint);flex:none}
-.shop-price{font-size:30px;font-weight:800;color:var(--amber);margin:10px 0 4px}
+.shop-price{font-size:30px;font-weight:800;color:var(--amber);margin:10px 0 4px;display:flex;align-items:baseline;gap:9px}
+.shop-price em{font-size:10px;font-style:normal;font-weight:400;color:var(--dim)}
+
+/* --- 安星商城：入口卡 / 商品主图 / 演示视频 / 规格与服务 --- */
+.cm-shop-entry{display:flex;align-items:center;gap:12px;width:calc(100% - 36px);margin:2px 18px 14px;padding:13px 14px;border-radius:17px;text-align:left;
+  background:linear-gradient(105deg,rgba(255,196,107,.16),rgba(255,196,107,.04));border:1px solid rgba(255,196,107,.32)}
+.cm-shop-entry:active{transform:scale(.98)}
+.cm-shop-entry-ico{width:40px;height:40px;border-radius:13px;background:rgba(255,196,107,.16);color:var(--amber);display:flex;align-items:center;justify-content:center;flex:none}
+.cm-shop-entry-ico .ico{width:21px;height:21px}
+.cm-shop-entry>span:nth-child(2){flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.cm-shop-entry b{font-size:13px;color:var(--text)}
+.cm-shop-entry small{font-size:10px;color:var(--muted)}
+.cm-shop-entry>.ico{width:15px;height:15px;color:var(--dim);flex:none}
+.shop-hero{position:relative;height:150px;border-radius:18px;overflow:hidden;display:flex;align-items:center;justify-content:center;margin:2px 0 12px;border:1px solid var(--line)}
+.shop-hero-ico .ico{width:58px;height:58px;color:rgba(255,255,255,.85);filter:drop-shadow(0 8px 26px rgba(0,0,0,.5))}
+.shop-hero-badge{position:absolute;left:12px;top:11px;font-size:10px;font-weight:700;color:var(--amber);padding:3px 9px;border-radius:9px;background:rgba(9,13,20,.55);border:1px solid rgba(255,196,107,.35)}
+.shop-video{position:relative;display:block;width:100%;height:130px;border-radius:16px;overflow:hidden;border:1px solid var(--line);padding:0;margin:4px 0 6px}
+.shop-video img{width:100%;height:100%;object-fit:cover;filter:brightness(.6) saturate(.85)}
+.shop-video-mask{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(5,9,15,.75))}
+.shop-video-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:rgba(127,240,212,.9);color:#06251f;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 9px rgba(127,240,212,.16)}
+.shop-video small{position:absolute;left:11px;bottom:9px;font-size:10px;color:#e8f0f8}
+.shop-services{display:flex;flex-wrap:wrap;gap:7px 13px;padding:10px 2px 2px;font-size:10px;color:var(--muted)}
+.shop-services .ico{width:12px;height:12px;color:var(--mint);vertical-align:-2px;margin-right:3px}
+.shop-buy-row{display:flex;gap:9px;margin-top:12px}
+.shop-buy-row .ghost-btn{flex:1;height:48px}
+.shop-buy-row .primary-btn{flex:1.4;height:48px}
+
+/* --- 紧急联系人 / 常用路线 管理 --- */
+.ct-row{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line);margin-bottom:8px}
+.ct-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ct-info b{font-size:12px;color:var(--text)}
+.ct-info small{font-size:10px;color:var(--dim)}
+.ct-del{width:30px;height:30px;border-radius:10px;border:1px solid rgba(255,91,82,.35);background:rgba(255,91,82,.1);color:#ff8b82;display:flex;align-items:center;justify-content:center;flex:none}
+.ct-del .ico{width:13px;height:13px}
+.rt-score{width:36px;height:36px;border-radius:12px;background:rgba(127,240,212,.12);color:var(--mint);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.rt-go{width:36px;height:36px;border-radius:12px;border:1px solid rgba(127,240,212,.35);background:rgba(127,240,212,.12);color:var(--mint);display:flex;align-items:center;justify-content:center;flex:none}
+.rt-go .ico{width:15px;height:15px}
 .vip-plan{display:flex;align-items:center;justify-content:space-between;width:100%;padding:13px 14px;border-radius:15px;border:1px solid var(--line);background:rgba(255,255,255,.035);margin-bottom:9px;text-align:left}
 .vip-plan.active{border-color:rgba(127,240,212,.5);background:rgba(127,240,212,.08)}
 .vip-plan>span{display:flex;flex-direction:column}
@@ -507,3 +557,112 @@ html[data-scheme="light"] [data-screen="sos"] .sos-footnote,
 html[data-scheme="light"] [data-screen="sos"] .status-row small,
 html[data-scheme="light"] [data-screen="sos"] .location-card small{color:#c9a5a2}
 html[data-scheme="light"] .phone:has(.screen[data-screen="sos"].active) .status-bar{color:#fff}
+
+/* ============ 字体层级：标题放大 · 辅助小字缩小 · 图标对齐 ============ */
+.head-title h2{font-size:22px}
+.head-title.left h2{font-size:28px}
+.section-title h3{font-size:16px}
+.cm-section-head h3{font-size:14px}
+.sheet h3{font-size:19px}
+.head-title small,.section-title small,.cm-section-head small{font-size:9px}
+.nav-turn small,.nav-stats small,.route-meta{font-size:9px}
+.option-row small{font-size:9px}
+/* 图标与文字基线对齐 */
+.section-title small .ico,.head-title .ico{vertical-align:-2px}
+.option-row>.ico{flex:none;align-self:center}
+.route-meta .ico,.reco-meta .ico{vertical-align:-2px}
+
+/* ============ 演示版优化：气泡开关 / 指南示意图 / 社区分区 / 身份验证 / SOS 排版 ============ */
+
+/* 确认求助：四字横向居中，不再上下拆分 */
+.sos-confirm .confirm-btn{font-size:25px;letter-spacing:.02em;white-space:nowrap;display:flex;align-items:center;justify-content:center;line-height:1;color:#fff}
+
+/* 导航转向卡恒为深色底，文字固定浅色，避免浅色主题下看不清 */
+.nav-turn{color:#eef4fa}
+.nav-turn b{color:#f4f7fb}
+.nav-turn small{color:#b9c6d6}
+
+/* 提示气泡开关（复用首页警示图标） */
+body.bubbles-off .leaflet-tooltip,
+body.bubbles-off .risk-popover,
+body.bubbles-off .poi-tooltip{display:none!important}
+body.bubbles-off .float-btn[data-action="risk-popover"]{opacity:.55}
+.float-btn[data-action="risk-popover"].active{color:var(--mint);border-color:rgba(127,240,212,.4)}
+.guide-hl{outline:2px solid rgba(127,240,212,.85);outline-offset:3px;border-radius:12px}
+
+/* 使用指南：卡片恒为深色底，文字固定浅色，避免跟随系统主题后看不清 */
+.guide-card{color:#eef4fa}
+.guide-card h2{color:#f4f7fb}
+.guide-card p{color:#b9c6d6}
+.guide-mock>small,.gm-status,.gm-search,.gm-map,.gm-tabs{color:#9aa9bc}
+
+/* 使用指南：内嵌界面示意图 + 固定指向箭头 */
+.guide-mock{margin:13px 0 2px;padding:9px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+.gm-screen{position:relative;height:152px;border-radius:11px;overflow:hidden;background:linear-gradient(180deg,#19253a,#0c1420);border:1px solid rgba(255,255,255,.1);padding:7px 8px;display:flex;flex-direction:column;gap:5px}
+.gm-status{font-size:8px;color:var(--dim)}
+.gm-search{height:20px;border-radius:6px;background:rgba(255,255,255,.1);color:var(--dim);font-size:8px;display:flex;align-items:center;padding:0 7px}
+.gm-map{position:relative;flex:1;border-radius:8px;background:repeating-linear-gradient(45deg,rgba(127,240,212,.05) 0 8px,transparent 8px 16px),linear-gradient(160deg,#1b2a3d,#101a28);color:var(--dim);font-size:8px;padding:6px;display:flex;align-items:flex-end}
+.gm-float{position:absolute;right:7px;top:7px;width:18px;height:18px;border-radius:6px;background:rgba(255,196,107,.2);color:var(--amber);display:flex;align-items:center;justify-content:center}
+.gm-float .ico{width:11px;height:11px}
+.gm-route{height:22px;border-radius:7px;background:rgba(127,240,212,.14);color:var(--mint);font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.gm-tabs{height:24px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-around;color:var(--dim)}
+.gm-tabs i{width:15px;height:15px;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:7px}
+.gm-tabs .ico{width:12px;height:12px}
+.gm-tabs .gm-sos{width:20px;height:20px;border-radius:50%;background:#e2403a;color:#fff;font-size:7px;font-weight:800}
+.gm-spot{position:absolute;width:24px;height:24px;border-radius:50%;border:2px solid var(--mint);box-shadow:0 0 0 5px rgba(127,240,212,.18),0 0 18px rgba(127,240,212,.55);transform:translate(-50%,-50%);animation:gmPulse 1.6s ease-in-out infinite}
+@keyframes gmPulse{0%,100%{box-shadow:0 0 0 5px rgba(127,240,212,.18),0 0 18px rgba(127,240,212,.4)}50%{box-shadow:0 0 0 9px rgba(127,240,212,.08),0 0 26px rgba(127,240,212,.7)}}
+.gm-arrow{position:absolute;z-index:2;font-size:17px;line-height:1;font-weight:800;color:var(--mint);transform:translate(-50%,-170%);text-shadow:0 0 12px rgba(127,240,212,.8)}
+.gm-arrow.below{transform:translate(-50%,70%)}
+.guide-mock>small{display:block;text-align:center;font-size:9px;color:var(--dim);margin-top:7px}
+
+/* 社区：三个独立标题分区 + 分割线 */
+.cm-zone{padding:4px 18px 10px}
+.cm-zone-head{display:flex;align-items:center;gap:10px;margin:6px 0 10px}
+.cm-zone-no{font-size:10px;font-weight:800;color:var(--mint);letter-spacing:.08em;padding:3px 6px;border-radius:7px;background:rgba(127,240,212,.12);flex:none}
+.cm-zone-head>span:nth-child(2){flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.cm-zone-head h3{font-size:15px;margin:0;color:var(--text)}
+.cm-zone-head small{font-size:9px;color:var(--dim)}
+.cm-zone-head>.ico{width:14px;height:14px;color:var(--dim)}
+.cm-zone-divider{height:1px;margin:6px 18px 12px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent)}
+.cm-zone-desc{font-size:10px;color:var(--muted);margin:0 0 12px;line-height:1.6}
+.cm-zone .cm-shop-entry{width:100%;margin:0}
+.cm-avatar{cursor:pointer;border:2px solid rgba(127,240,212,.45);transition:transform .15s}
+.cm-avatar:active{transform:scale(.92)}
+
+/* 个人主页：脱敏信息 + 实名认证标识 */
+.bp-card{display:flex;align-items:center;gap:13px;width:calc(100% - 36px);margin:6px 18px 12px;padding:14px;border-radius:18px}
+.bp-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(140deg,#f6c98d,#d98f52);color:#3b2210;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.bp-main{display:flex;flex-direction:column;gap:3px}
+.bp-main b{font-size:16px;color:var(--text)}
+.bp-main small{font-size:10px;color:var(--dim)}
+.bp-verified{display:flex;align-items:center;gap:10px;width:calc(100% - 36px);margin:0 18px 18px;padding:12px;border-radius:15px;background:rgba(127,240,212,.1);border:1px solid rgba(127,240,212,.3)}
+.bp-verified>.ico{width:19px;height:19px;color:var(--mint);flex:none}
+.bp-verified span{display:flex;flex-direction:column;gap:2px}
+.bp-verified b{font-size:12px;color:var(--mint)}
+.bp-verified small{font-size:9px;color:var(--muted)}
+.bp-fields{margin:0 18px}
+.bp-fields>div{display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;color:var(--text)}
+.bp-fields>div:last-child{border-bottom:0}
+.bp-fields>div>span:nth-child(2){flex:1}
+.bp-fields small{font-size:10px;color:var(--muted)}
+.bp-privacy{display:flex;gap:10px;width:calc(100% - 36px);margin:18px;padding:12px;border-radius:15px;background:rgba(255,196,107,.08);border:1px solid rgba(255,196,107,.22)}
+.bp-privacy>.ico{width:17px;height:17px;color:var(--amber);flex:none}
+.bp-privacy span{display:flex;flex-direction:column;gap:4px}
+.bp-privacy b{font-size:11px;color:var(--amber)}
+.bp-privacy small{font-size:10px;color:var(--muted);line-height:1.6}
+[data-screen="buddyProfile"]>.primary-btn{width:calc(100% - 36px);margin:0 18px 24px}
+
+/* 取消报警身份验证 */
+.auth-face{display:flex;align-items:center;gap:12px;padding:12px;border-radius:15px;background:rgba(127,240,212,.07);border:1px solid rgba(127,240,212,.2);margin:6px 0}
+.auth-face-frame{position:relative;width:56px;height:56px;border-radius:16px;background:rgba(127,240,212,.1);border:1px dashed rgba(127,240,212,.5);color:var(--mint);display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none}
+.auth-face-frame .ico{width:26px;height:26px}
+.auth-face-frame video{width:100%;height:100%;object-fit:cover}
+.auth-face-frame.scanning{border-style:solid}
+.auth-scanline{position:absolute;left:6px;right:6px;height:2px;background:var(--mint);box-shadow:0 0 10px var(--mint);animation:authScan 1.2s ease-in-out infinite}
+@keyframes authScan{0%,100%{top:8px}50%{top:46px}}
+.auth-face>span:last-child{display:flex;flex-direction:column;gap:3px}
+.auth-face b{font-size:12px;color:var(--text)}
+.auth-face small{font-size:10px;color:var(--muted);line-height:1.5}
+.auth-or{text-align:center;font-size:10px;color:var(--dim);margin:14px 0 2px}
+.auth-btn{display:block;width:100%;margin-top:9px}
+

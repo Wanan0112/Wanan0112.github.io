@@ -1,9 +1,22 @@
+/* 演示版全局规则：每次打开 APP 强制重置为首次启动状态
+   清空所有 xa_ 前缀本地缓存（登录 / 实名 / 引导 / 联系人 / 路线 / 设置 / 浏览记录），无需任何开关 */
+(function () {
+  try {
+    var keys = [];
+    for (var i = 0; i < localStorage.length; i++) keys.push(localStorage.key(i));
+    keys.forEach(function (k) { if (k && k.indexOf('xa_') === 0) localStorage.removeItem(k); });
+  } catch (e) {}
+  try { sessionStorage.clear(); } catch (e) {}
+})();
+
 window.XA = {
   current: 'home',
   previous: 'home',
-  destination: '滨江花园',
+  destination: '藏龙东街地铁站',
   route: 'A',
   alarm: false,
+  destPoint: null,
+  cancelPin: '1234',
   actions: {},
   timers: [],
   clockTimer: null,
@@ -33,12 +46,7 @@ XA.buildMapLights = function () {
 
 XA.go = function (screen, noHistory) {
   if (!XA_SCREENS[screen]) return;
-  if (XA.current === 'sos' && screen !== 'sos' && XA.alarm) {
-    XA.alarm = false;
-    XA.timers.forEach(clearTimeout);
-    XA.timers.forEach(clearInterval);
-    XA.timers = [];
-  }
+  /* 报警已发出后，切换页面不得隐式取消求助：必须经人脸/密码身份验证 */
   if (!noHistory && screen !== XA.current) XA.previous = XA.current;
   XA.current = screen;
   XA.$$('.screen').forEach(function (el) { el.classList.toggle('active', el.dataset.screen === screen); });
@@ -81,10 +89,10 @@ XA.bindSheetGestures = function () {
   sheet.addEventListener('pointermove', function (e) {
     if (!dragging) return;
     var raw = e.clientY - startY;
-    // 上拉到上限后用强阻尼锁住，松手必定回弹；下拉也可关闭
+    // 上拉不位移（避免底部露出空隙），仅把手高亮提示已到顶部；下拉可关闭
     if (raw < 0) {
-      dy = Math.max(-40, raw * 0.32);
-      sheet.classList.toggle('at-upper', dy <= -36);
+      dy = 0;
+      sheet.classList.toggle('at-upper', raw <= -60);
     } else {
       dy = Math.min(raw, sheet.offsetHeight * 0.55);
       sheet.classList.remove('at-upper');
@@ -98,7 +106,6 @@ XA.bindSheetGestures = function () {
     sheet.classList.add('snapback');
     sheet.style.transform = '';
     if (dy > 110) XA.closeModal();
-    else if (dy < -22) XA.toast('已到顶部 · 回弹');   // 拉到上限的明确反馈
     dy = 0;
   }
   sheet.addEventListener('pointerup', end);
@@ -127,8 +134,10 @@ XA.closeModal = function () {
   setTimeout(function () { if (!layer.classList.contains('open')) layer.innerHTML = ''; }, 320);
 };
 
-XA.setDestination = function (name) {
+XA.setDestination = function (name, point) {
   XA.destination = name;
+  XA.destPoint = point || null;
+  XA._lastPlanned = null;
   XA.$$('[data-destination]').forEach(function (el) { el.textContent = name; });
 };
 
@@ -177,13 +186,13 @@ XA.showSosConfirm = function () {
   var left = cd;
   var box = document.createElement('div');
   box.className = 'sos-confirm';
+  /* 第一重保险：确认弹窗（确认 / 取消），未确认前绝不触发 */
   box.innerHTML =
     '<button class="sos-cancel-x" data-sos-cancel aria-label="取消求助">×</button>' +
     '<p class="sos-confirm-label">紧急求助确认</p>' +
-    '<h3>倒计时结束后自动求助</h3>' +
-    '<p class="sos-cancel-tip">误触？在倒计时结束前随时取消，不会发出求助。</p>' +
-    '<div class="cd-ring"><div class="cd-fill" id="cdFill"></div><div class="cd-num"><b id="cdNum">' + cd + '</b><small>秒后自动报警</small></div></div>' +
-    '<button class="sos-fire-now" id="sosFireNow">立即发出求助</button>' +
+    '<h3>仅在真实紧急情况使用</h3>' +
+    '<p class="sos-cancel-tip">确认后将进入 ' + cd + ' 秒倒计时缓冲，倒计时结束才真正报警，期间仍可取消。</p>' +
+    '<div class="confirm-ring"><button class="confirm-btn" id="sosConfirmBtn">确认求助</button></div>' +
     '<button class="cancel-hold" data-sos-cancel>取消 · 我不需要求助</button>' +
     '<p class="sos-cancel-tip">也可点击空白处、下滑或按 Esc 取消</p>';
   XA.$('#phone').appendChild(box);
@@ -207,23 +216,41 @@ XA.showSosConfirm = function () {
   };
   XA._sosTimer = null;
 
-  var num = box.querySelector('#cdNum'), fill = box.querySelector('#cdFill');
-  function paint() {
-    if (num) num.textContent = left;
-    if (fill) fill.style.background = 'conic-gradient(var(--coral) ' + (left / cd * 100) + '%, rgba(255,255,255,.09) 0)';
-  }
-  paint();
-  XA._sosTick = setInterval(function () {
-    if (settled) return;
-    left--; paint();
-    if (left <= 0) XA._sosFire();          // 倒计时结束自动触发
-  }, 1000);
-
   XA.$$('[data-sos-cancel]', box).forEach(function (el) {
     el.addEventListener('click', function (e) { e.stopPropagation(); XA._sosCancel(); });
   });
-  box.addEventListener('click', function (e) { if (e.target === box || e.target.classList.contains('cd-ring')) XA._sosCancel(); });
-  box.querySelector('#sosFireNow').addEventListener('click', function (e) { e.stopPropagation(); XA._sosFire(); });
+  box.addEventListener('click', function (e) { if (e.target === box || e.target.classList.contains('confirm-ring')) XA._sosCancel(); });
+
+  /* 确认后进入第二重保险：倒计时缓冲，结束自动触发 */
+  box.querySelector('#sosConfirmBtn').addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (settled) return;
+    box.innerHTML =
+      '<button class="sos-cancel-x" data-sos-cancel aria-label="取消求助">×</button>' +
+      '<p class="sos-confirm-label">紧急求助确认</p>' +
+      '<h3>倒计时结束后自动求助</h3>' +
+      '<p class="sos-cancel-tip">误触？在倒计时结束前随时取消，不会发出求助。</p>' +
+      '<div class="cd-ring"><div class="cd-fill" id="cdFill"></div><div class="cd-num"><b id="cdNum">' + cd + '</b><small>秒后自动报警</small></div></div>' +
+      '<button class="sos-fire-now" id="sosFireNow">立即发出求助</button>' +
+      '<button class="cancel-hold" data-sos-cancel>取消 · 我不需要求助</button>' +
+      '<p class="sos-cancel-tip">也可点击空白处、下滑或按 Esc 取消</p>';
+    XA.$$('[data-sos-cancel]', box).forEach(function (el) {
+      el.addEventListener('click', function (ev) { ev.stopPropagation(); XA._sosCancel(); });
+    });
+    var fire = box.querySelector('#sosFireNow');
+    if (fire) fire.addEventListener('click', function (ev) { ev.stopPropagation(); XA._sosFire(); });
+    var num = box.querySelector('#cdNum'), fill = box.querySelector('#cdFill');
+    function paint() {
+      if (num) num.textContent = left;
+      if (fill) fill.style.background = 'conic-gradient(var(--coral) ' + (left / cd * 100) + '%, rgba(255,255,255,.09) 0)';
+    }
+    paint();
+    XA._sosTick = setInterval(function () {
+      if (settled) return;
+      left--; paint();
+      if (left <= 0) XA._sosFire();          // 倒计时结束自动触发
+    }, 1000);
+  });
 
   var sy = 0, moving = false;
   box.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse') return; sy = e.clientY; moving = true; box.classList.add('swiping'); });
@@ -289,8 +316,66 @@ XA.cancelAlarm = function () {
   XA.timers.forEach(clearTimeout);
   XA.timers.forEach(clearInterval);
   XA.timers = [];
-  XA.go(XA.previous === 'sos' ? 'home' : XA.previous, true);
-  XA.toast('报警已取消 · 记录已保留');
+  XA.go('home', true);
+  XA.toast('身份验证通过 · 报警已取消 · 记录已保留');
+};
+
+/* 误报取消权限加固：报警发出后必须验证本人身份（优先人脸识别，光线不足用密码） */
+XA.showCancelAuth = function () {
+  XA.openSheet('<h3>取消报警需身份验证</h3><div class="sheet-sub">为防止他人拿到手机误取消求助，请先验证本人身份</div>' +
+    '<div class="auth-face"><span class="auth-face-frame">' + ic('user') + '</span>' +
+      '<span><b>优先 · 人脸识别</b><small>对准前置摄像头，识别通过后才会取消报警</small></span></div>' +
+    '<button class="primary-btn" data-action="cancel-auth-face">' + ic('shield') + '开始人脸识别</button>' +
+    '<div class="auth-or">光线不足？改用密码验证</div>' +
+    '<button class="ghost-btn auth-btn" data-action="cancel-auth-pin">使用自定义密码 / 设备密码</button>' +
+    '<button class="ghost-btn auth-btn" data-action="cancel-auth-setpin">设置自定义密码</button>' +
+    '<p class="sheet-note">演示设备密码 1234 · 每次打开 APP 自动重置；验证不通过时报警状态保持不变。</p>');
+};
+XA.actions['cancel-auth-face'] = function () {
+  var frame = XA.$('.auth-face-frame');
+  if (frame) { frame.classList.add('scanning'); frame.insertAdjacentHTML('beforeend', '<span class="auth-scanline"></span>'); }
+  XA.toast('正在进行人脸识别…');
+  var finish = function (realCam) {
+    XA.closeModal();
+    XA.cancelAlarm();
+    XA.toast(realCam ? '人脸识别通过 · 报警已取消' : '人脸识别通过（演示） · 报警已取消');
+  };
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && location.protocol !== 'file:') {
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false }).then(function (stream) {
+      if (frame) {
+        var v = document.createElement('video');
+        v.autoplay = true; v.playsInline = true; v.muted = true; v.srcObject = stream;
+        frame.innerHTML = ''; frame.appendChild(v);
+      }
+      setTimeout(function () { stream.getTracks().forEach(function (t) { t.stop(); }); finish(true); }, 1600);
+    }).catch(function () { setTimeout(function () { finish(false); }, 1200); });
+  } else {
+    setTimeout(function () { finish(false); }, 1400);
+  }
+};
+XA.actions['cancel-auth-pin'] = function () {
+  XA.openSheet('<h3>密码验证</h3><div class="sheet-sub">输入自定义密码或设备密码（演示默认 1234）</div>' +
+    '<div class="form-row"><label>验证密码</label><input id="cancelPin" type="password" inputmode="numeric" maxlength="8" placeholder="请输入密码"></div>' +
+    '<button class="primary-btn" data-action="cancel-auth-pin-submit">验证并取消报警</button>' +
+    '<button class="ghost-btn auth-btn" data-action="cancel-auth-back">返回人脸识别</button>');
+};
+XA.actions['cancel-auth-back'] = function () { XA.showCancelAuth(); };
+XA.actions['cancel-auth-pin-submit'] = function () {
+  var v = ((XA.$('#cancelPin') || {}).value || '').trim();
+  if (v !== XA.cancelPin) { XA.toast('密码错误 · 报警状态保持不变'); return; }
+  XA.closeModal(); XA.cancelAlarm();
+};
+XA.actions['cancel-auth-setpin'] = function () {
+  XA.openSheet('<h3>设置自定义密码</h3><div class="sheet-sub">用于光线不足时取消报警，仅保存在本次演示会话</div>' +
+    '<div class="form-row"><label>新密码（4-8 位数字）</label><input id="newPin" type="password" inputmode="numeric" maxlength="8" placeholder="如 6688"></div>' +
+    '<button class="primary-btn" data-action="cancel-auth-setpin-submit">保存密码</button>');
+};
+XA.actions['cancel-auth-setpin-submit'] = function () {
+  var v = ((XA.$('#newPin') || {}).value || '').trim();
+  if (!/^\d{4,8}$/.test(v)) { XA.toast('请输入 4-8 位数字密码'); return; }
+  XA.cancelPin = v;
+  XA.toast('自定义密码已设置 · 请完成验证');
+  XA.showCancelAuth();
 };
 
 XA.selectRoute = function (letter) {
@@ -300,8 +385,10 @@ XA.selectRoute = function (letter) {
   XA.$$('.rm-line').forEach(function (el) { el.classList.toggle('active', el.dataset.line === letter); });
   var eta = { A: '预计 18 分钟', B: '预计 22 分钟', C: '预计 15 分钟' };
   var el = XA.$('#routeEta');
-  if (el) el.textContent = eta[letter];
-  XA.toast('已切换到路线 ' + letter + ' · 安全优先排序已更新');
+  if (el) el.textContent = '路线 ' + letter + ' · ' + eta[letter];
+  var btn = XA.$('#routeBtnText');
+  if (btn) btn.textContent = '开始导航';
+  XA.toast('已切换到路线 ' + letter + ' · 点击【开始导航】出发');
 };
 
 XA.initClock = function () {

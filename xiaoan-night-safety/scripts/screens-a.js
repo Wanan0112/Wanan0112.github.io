@@ -7,12 +7,12 @@ XA_SCREENS.home = `
 <section class="screen active state-default" data-screen="home">
   <div class="home-map" id="homeMap" aria-label="可拖动和缩放的地图"></div>
   <div class="home-search" id="homeSearch">
-    ${ic('search')}<input id="homeSearchInput" placeholder="输入地点或品牌，如 汉庭酒店" autocomplete="off">
+    ${ic('search')}<input id="homeSearchInput" placeholder="输入地点或品牌，如 藏龙东街地铁站" autocomplete="off">
     <button id="homeSearchBtn" class="home-search-btn" data-action="do-search">搜索</button>
   </div>
   <div class="poi-suggest" id="poiSuggest" aria-label="附近地点联想推荐"></div>
   <div class="home-floats">
-    <button class="float-btn" data-action="risk-popover" aria-label="附近安全提示">${ic('warning')}</button>
+    <button class="float-btn" data-action="risk-popover" aria-label="提示气泡开关 · 点一下收起，再点恢复">${ic('warning')}</button>
     <button class="float-btn" data-action="recenter" aria-label="回到我的位置">${ic('pin')}</button>
   </div>
 
@@ -45,7 +45,7 @@ XA_SCREENS.route = `
     <div class="head-title"><h2 data-i18n="routeAnalysis">路线安全分析</h2><small data-i18n="routeSub">已按安全优先排序</small></div>
     <button class="icon-btn" data-action="share-trip">${ic('share')}</button>
   </header>
-  <div class="route-dest">${ic('route')}<span>到 <b data-destination>滨江花园</b> · 东南门</span><span class="sep">|</span><span>3 条路线</span></div>
+  <div class="route-dest">${ic('route')}<span>从 湖北美术学院藏龙岛校区 到 <b data-destination>藏龙东街地铁站</b> · A 口</span><span class="sep">|</span><span>3 条路线</span></div>
 
   <div class="route-map glass">
     <div class="rm-top"><span class="ai-sort">${ic('navigation')} AI 安全排序</span><span class="rm-time">1.2 km · 18 min</span></div>
@@ -75,7 +75,7 @@ XA_SCREENS.route = `
     <button class="route-card selected" data-route="A">
       <span class="route-letter">A<small>推荐</small></span>
       <span class="route-info">
-        <b>滨江路主线 <em>全程有灯</em></b>
+        <b>栗庙路主线 <em>全程有灯</em></b>
         <span class="route-meta">${ic('clock')}18 分钟 <i>·</i> 1.2 km <i>·</i> 步行</span>
         <span class="route-tags"><span class="tag mint">路灯 86%</span><span class="tag">监控 12</span><span class="tag">事件 2</span></span>
       </span>
@@ -83,7 +83,7 @@ XA_SCREENS.route = `
     </button>
     <button class="route-card" data-route="B">
       <span class="route-letter">B</span>
-      <span class="route-info"><b>文昌巷捷径</b>
+      <span class="route-info"><b>藏龙支路捷径</b>
         <span class="route-meta">${ic('clock')}22 分钟 <i>·</i> 1.4 km <i>·</i> 步行</span>
         <span class="route-tags"><span class="tag amber">路灯 61%</span><span class="tag amber">小巷 3 段</span><span class="tag">事件 4</span></span>
       </span>
@@ -91,16 +91,16 @@ XA_SCREENS.route = `
     </button>
     <button class="route-card" data-route="C">
       <span class="route-letter">C</span>
-      <span class="route-info"><b>文三路夜宵街</b>
+      <span class="route-info"><b>藏龙大道夜市</b>
         <span class="route-meta">${ic('clock')}15 分钟 <i>·</i> 1.1 km <i>·</i> 步行</span>
         <span class="route-tags"><span class="tag coral">路灯 43%</span><span class="tag coral">人流复杂</span><span class="tag">事件 7</span></span>
       </span>
       <span class="score-ring sm gray-ring" style="--p:64;--ring:#93a0b5" data-action="score-detail"><span>64</span><small>安全分</small></span>
     </button>
   </div>
-  <button class="event-strip glass" data-action="event-detail"><span class="live-dot"></span>文昌巷 300m 处路灯检修，A 线不受影响 ${ic('chevron')}</button>
+  <button class="event-strip glass" data-action="event-detail"><span class="live-dot"></span>藏龙支路 300m 处路灯检修，A 线不受影响 ${ic('chevron')}</button>
   <div class="route-footer">
-    <button class="primary-btn" data-action="start-nav">${ic('navigation')}开始导航<small id="routeEta">预计 18 分钟</small></button>
+    <button class="primary-btn" data-action="start-nav">${ic('navigation')}<span id="routeBtnText">开始导航</span><small id="routeEta">路线 A · 预计 18 分钟</small></button>
     <button class="square-btn" data-action="share-trip">${ic('share')}</button>
   </div>
 </section>`;
@@ -138,7 +138,7 @@ XA_SCREENS.sos = `
       <div class="sos-contact"><span>阿哲</span><small>已送达 · 实时位置</small><em>${ic('check')}</em></div>
       <div class="sos-contact"><span>物业管家</span><small>已送达 · 实时位置</small><em>${ic('check')}</em></div>
     </div>
-    <button class="cancel-alarm" data-action="cancel-alarm"><span class="hold-fill"></span>${ic('check')} 我安全了 · 取消报警<small>轻点即可取消</small></button>
-    <p class="sos-footnote">误报可随时取消 · 本次记录仍会保留 · 概念演示，不会真实拨号</p>
+    <button class="cancel-alarm" data-action="cancel-alarm"><span class="hold-fill"></span>${ic('shield')} 我安全了 · 取消报警<small>需人脸识别或密码验证</small></button>
+    <p class="sos-footnote">误报需验证本人身份后取消 · 本次记录仍会保留 · 概念演示，不会真实拨号</p>
   </div>
 </section>`;
