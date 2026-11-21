@@ -1,0 +1,98 @@
+/* =========================================================
+   安星 · 沉浸式底部上拉弹窗 (Bottom Sheet)
+   - 双锚点：收起态(peek) / 最大展开(85% 屏高)
+   - 面板固定 85% 高，仅用非负 translateY 位移 => 永不露底空白
+   - 内部独立滚动容器；手势拖拽 + 阻尼 + 弹性回弹
+   ========================================================= */
+
+.bs-layer{position:absolute;inset:0;z-index:160;pointer-events:none}
+.bs-layer.open{pointer-events:auto}
+
+.bs-backdrop{position:absolute;inset:0;background:rgba(2,4,9,.6);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);opacity:0;transition:opacity .3s ease;pointer-events:auto}
+.bs-layer.open .bs-backdrop{opacity:1}
+
+/* 面板本体：bottom 固定 0，高度 85%，translateY>=0 => 底边恒在屏幕底或屏幕外 */
+.bs-sheet{position:absolute;left:0;right:0;bottom:0;height:85%;display:flex;flex-direction:column;
+  background:linear-gradient(165deg,rgba(24,31,44,.97),rgba(9,13,20,.985));
+  backdrop-filter:blur(28px) saturate(1.25);-webkit-backdrop-filter:blur(28px) saturate(1.25);
+  border-top:1px solid rgba(255,255,255,.14);border-radius:28px 28px 0 0;
+  box-shadow:0 -22px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.06);
+  transform:translateY(100%);overflow:hidden;pointer-events:auto;touch-action:none;
+  will-change:transform}
+.bs-sheet.snapping{transition:transform .44s cubic-bezier(.18,.9,.24,1.06)}
+
+/* 抓取区：拖拽它始终控制整块面板 */
+.bs-grab{flex:none;position:relative;padding:9px 78px 12px 20px;cursor:grab;user-select:none;-webkit-user-select:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+.bs-sheet.grabbing .bs-grab{cursor:grabbing}
+.bs-handle{width:42px;height:4px;border-radius:4px;background:rgba(255,255,255,.28);margin:0 auto 11px;transition:background .2s,transform .2s}
+.bs-sheet.grabbing .bs-handle{background:var(--mint);transform:scaleX(1.18)}
+.bs-sheet.at-top .bs-handle{animation:bsTopPulse .5s ease}
+@keyframes bsTopPulse{0%,100%{transform:scaleX(1);background:rgba(255,255,255,.28)}50%{transform:scaleX(1.3);background:var(--mint)}}
+
+.bs-head{display:flex;align-items:center;gap:11px}
+.bs-head-ico{width:38px;height:38px;border-radius:12px;flex:none;display:flex;align-items:center;justify-content:center;
+  background:rgba(127,240,212,.12);color:var(--mint);border:1px solid rgba(127,240,212,.22)}
+.bs-head-ico .ico{width:19px;height:19px}
+.bs-head-txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.bs-head-txt b{font-size:15px;color:var(--text);font-weight:700}
+.bs-head-txt small{font-size:10px;color:var(--dim)}
+.bs-close{position:absolute;right:18px;top:18px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.06);
+  border:1px solid var(--line);color:var(--muted);display:flex;align-items:center;justify-content:center;transition:transform .15s,background .2s}
+.bs-close:active{transform:scale(.9);background:rgba(255,255,255,.14)}
+.bs-close .ico{width:15px;height:15px}
+.bs-grab-hint{position:absolute;right:18px;bottom:14px;font-size:10px;color:var(--dim);display:flex;align-items:center;gap:3px}
+.bs-grab-hint .ico{width:11px;height:11px;transform:rotate(180deg)}
+
+/* 内部独立滚动容器：touch-action 交给面板统一管理 (sheet 已 none) */
+.bs-scroll{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  padding:2px 18px calc(26px + env(safe-area-inset-bottom));scrollbar-width:none}
+.bs-scroll::-webkit-scrollbar{display:none}
+
+.bs-tabs{display:flex;gap:7px;margin:2px 0 14px}
+.bs-tab{padding:7px 13px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);font-size:11px;transition:all .2s}
+.bs-tab.active{color:#06251f;background:var(--mint);border-color:transparent;font-weight:700}
+
+.bs-sec{font-size:12px;color:var(--muted);margin:4px 2px 10px;display:flex;align-items:center;justify-content:space-between}
+.bs-sec b{color:var(--text);font-size:13px}
+.bs-sec small{color:var(--dim);font-size:10px}
+
+.bs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.bs-card{border-radius:16px;overflow:hidden;border:1px solid var(--line);text-align:left;background:#0c1119;
+  transition:transform .16s ease,box-shadow .2s,border-color .2s}
+.bs-card:active{transform:scale(.965)}
+.bs-cover{position:relative;height:96px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.92)}
+.bs-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(4,7,12,.55))}
+.bs-cover-ico{position:relative;z-index:1;width:40px;height:40px;border-radius:13px;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.16)}
+.bs-cover-ico .ico{width:20px;height:20px;fill:currentColor;stroke:none}
+.bs-play{position:absolute;z-index:2;right:9px;bottom:9px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.9);color:#101620;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.bs-play .ico{width:13px;height:13px;fill:currentColor;stroke:none}
+.cv-mint{background:radial-gradient(120px 80px at 70% 20%,rgba(127,240,212,.4),transparent 70%),linear-gradient(150deg,#2e7f76,#173f4a 60%,#0c2230)}
+.cv-amber{background:radial-gradient(120px 80px at 30% 25%,rgba(255,205,130,.45),transparent 70%),linear-gradient(150deg,#a86b3f,#6b3f2e 60%,#2b1d1c)}
+.cv-blue{background:radial-gradient(120px 80px at 65% 25%,rgba(170,200,255,.4),transparent 70%),linear-gradient(150deg,#3d5e8a,#26385e 60%,#141c31)}
+.cv-violet{background:radial-gradient(120px 80px at 35% 25%,rgba(200,170,255,.4),transparent 70%),linear-gradient(150deg,#5b4883,#332a5b 60%,#191430)}
+.cv-rose{background:radial-gradient(120px 80px at 70% 20%,rgba(255,170,170,.4),transparent 70%),linear-gradient(150deg,#9b5560,#5e3340 60%,#281820)}
+.cv-slate{background:radial-gradient(120px 80px at 40% 25%,rgba(180,210,220,.32),transparent 70%),linear-gradient(150deg,#4a6068,#2b3b45 60%,#141d24)}
+.bs-card-b{padding:9px 10px 11px}
+.bs-card-b b{display:block;font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bs-card-b small{display:block;font-size:10px;color:var(--dim);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.bs-note{display:flex;align-items:center;gap:8px;margin:2px 2px 8px;padding:10px 12px;border-radius:13px;
+  background:rgba(127,240,212,.07);border:1px solid rgba(127,240,212,.18);font-size:10px;color:#bdece0}
+.bs-note .ico{width:14px;height:14px;color:var(--mint);flex:none}
+.bs-note b{margin-left:auto;color:var(--mint);font-size:9px;letter-spacing:.1em}
+
+/* 触发入口卡片（伴行页内） */
+.bs-entry{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:12px;border-radius:16px;margin-top:12px;
+  background:linear-gradient(100deg,rgba(127,240,212,.12),rgba(255,255,255,.02));border:1px solid rgba(127,240,212,.22);
+  transition:transform .16s,box-shadow .2s}
+.bs-entry:active{transform:scale(.98)}
+.bs-entry-ico{width:40px;height:40px;border-radius:13px;flex:none;display:flex;align-items:center;justify-content:center;
+  background:rgba(127,240,212,.14);color:var(--mint);border:1px solid rgba(127,240,212,.24)}
+.bs-entry-ico .ico{width:20px;height:20px}
+.bs-entry-txt{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+.bs-entry-txt b{font-size:13px;color:var(--text)}
+.bs-entry-txt small{font-size:10px;color:var(--dim)}
+.bs-entry .ico.go{width:15px;height:15px;color:var(--mint)}

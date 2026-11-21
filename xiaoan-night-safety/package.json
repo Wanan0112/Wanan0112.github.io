@@ -1,8 +1,8 @@
 {
-  "name": "xiaoan-night-safety-prototype",
-  "version": "1.2.1",
+  "name": "anxing-night-safety-prototype",
+  "version": "2.0.0",
   "private": true,
-  "description": "小安 · 夜行安全 App 高保真可交互原型",
+  "description": "安星 · 夜行安全 App 高保真可交互原型",
   "scripts": {
     "start": "npx serve ."
   }

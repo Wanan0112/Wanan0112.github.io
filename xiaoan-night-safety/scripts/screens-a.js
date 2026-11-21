@@ -5,65 +5,34 @@ window.ic = function (name, cls) {
 
 XA_SCREENS.home = `
 <section class="screen active state-default" data-screen="home">
-  <div class="home-map">
-    <div class="map-blocks">
-      <span class="blk b1"></span><span class="blk b2"></span><span class="blk b3"></span><span class="blk b4"></span>
-      <span class="park">西溪公园</span><span class="street st1">文昌巷</span><span class="street st2">滨江路</span>
-    </div>
-    <svg class="map-lines" viewBox="0 0 390 470" preserveAspectRatio="none">
-      <path class="road-base" d="M-20 330 C80 300 130 250 190 205 S310 120 420 70"/>
-      <path class="road-base thin" d="M-20 200 C90 215 160 240 230 300 S330 370 420 390"/>
-      <path class="road-base thin" d="M60 -10 C100 90 130 180 100 290 S80 420 60 490"/>
-    </svg>
-    <div class="map-lights"></div>
-    <span class="map-node n1"></span><span class="map-node n2"></span><span class="map-node n3"></span>
+  <div class="home-map" id="homeMap" aria-label="可拖动和缩放的地图"></div>
+  <div class="home-search" id="homeSearch">
+    ${ic('search')}<input id="homeSearchInput" placeholder="输入地点或品牌，如 汉庭酒店" autocomplete="off">
+    <button id="homeSearchBtn" class="home-search-btn" data-action="do-search">搜索</button>
   </div>
-
-  <button class="home-search" data-action="search">
-    ${ic('search')}<span data-destination>搜索目的地、公交站</span>${ic('mic','mic')}
-  </button>
-
+  <div class="poi-suggest" id="poiSuggest" aria-label="附近地点联想推荐"></div>
   <div class="home-floats">
-    <button class="float-btn" data-action="layer" aria-label="图层">${ic('layers')}</button>
-    <button class="float-btn" data-action="risk-popover" aria-label="安全警告">${ic('warning')}</button>
-    <button class="float-btn" data-action="recenter" aria-label="我的定位">${ic('pin')}</button>
+    <button class="float-btn" data-action="risk-popover" aria-label="附近安全提示">${ic('warning')}</button>
+    <button class="float-btn" data-action="recenter" aria-label="回到我的位置">${ic('pin')}</button>
   </div>
 
   <div class="risk-popover" id="riskPopover">
-    <div class="rp-head"><b>附近夜行风险</b><button data-action="close-risk">${ic('close')}</button></div>
-    <div class="risk-item"><span class="risk-dot amber"></span><span><b>文昌巷 300m 路灯检修</b><small>2 分钟前 · 建议绕行滨江路</small></span></div>
-    <div class="risk-item"><span class="risk-dot coral"></span><span><b>文三路近 30 天事件 2 起</b><small>照明偏弱 · 建议走主干道</small></span></div>
-    <div class="risk-item"><span class="risk-dot amber"></span><span><b>西溪公园入口照明不足</b><small>今晚 21:12 用户上报</small></span></div>
+    <div class="rp-head"><b>附近夜行提示</b><button data-action="close-risk">${ic('close')}</button></div>
+    <div class="risk-item"><span class="risk-dot amber"></span><span><b>优先选择有路灯的主路</b><small>照明信息来自公开地图与路线估算</small></span></div>
+    <div class="risk-item"><span class="risk-dot coral"></span><span><b>路况可能变化</b><small>出发前请再次观察现场环境</small></span></div>
   </div>
 
-  <div class="map-mode-pop" id="mapModePop">
-    <div class="rp-head"><b>地图设置</b><button data-action="close-map-mode">${ic('close')}</button></div>
-    <small>视角</small><div class="seg"><button data-map-mode="2d" class="on">2D</button><button data-map-mode="3d">3D</button></div>
-    <small>底图</small><div class="seg"><button data-base-map="standard" class="on">标准</button><button data-base-map="satellite">卫星</button></div>
-  </div>
-
-  <div class="route-panel" id="routePanel">
-    <div class="rp-handle"></div>
-    <div class="rp-dest"><span class="dest-arrow">${ic('navigation')}</span><span><small>目的地</small><b><span data-destination>滨江花园</span> · 东南门</b></span><button data-action="search">修改</button></div>
-    <div class="rp-stats">
-      <div><b id="rpScore">92</b><small>安全系数</small></div>
-      <div><b id="rpLamp">86%</b><small>路灯覆盖</small></div>
-      <div><b id="rpCam">12 处</b><small>监控覆盖</small></div>
-    </div>
-    <div class="rp-tip">${ic('check')}<span>本路线避开暗巷，比常规路线多 3 分钟</span></div>
-    <div class="rp-ai"><span><b>AI 全程陪伴</b><small id="aiStateText">开启：语音陪伴 / 实时播报路况风险</small></span><button class="switch on" id="aiSwitch" data-action="ai-toggle"><i></i></button></div>
-    <div class="rp-actions">
-      <button class="primary-btn" data-action="start-nav">${ic('navigation')}开始安全导航</button>
-      <button class="sos-small" data-action="sos">SOS</button>
-    </div>
-  </div>
+  <section class="poi-results" id="poiResults" aria-label="地点搜索结果">
+    <div class="poi-head"><b id="poiTitle">地点搜索</b><button data-action="close-search" aria-label="关闭搜索结果">${ic('close')}</button></div>
+    <div class="poi-list" id="poiList"></div>
+  </section>
 
   <div class="side-drawer" id="sideDrawer">
-    <div class="drawer-head"><b>小安 · 夜行安全</b><small>夜间守护</small><button data-action="close-drawer">${ic('close')}</button></div>
+    <div class="drawer-head"><b>安星 · 夜行安全</b><small>夜间守护</small><button data-action="close-drawer">${ic('close')}</button></div>
     <button data-tab="home">${ic('navigation')}安全导航</button>
     <button data-action="open-route">${ic('route')}路线分析</button>
-    <button data-tab="entertainment">${ic('music')}夜间娱乐</button>
     <button data-tab="community">${ic('users')}社区互助</button>
+    <button data-tab="entertainment">${ic('music')}夜间伴行</button>
     <button data-action="open-ar">${ic('glasses')}AR 眼镜</button>
     <button data-tab="profile">${ic('user')}我的</button>
   </div>
@@ -73,7 +42,7 @@ XA_SCREENS.route = `
 <section class="screen" data-screen="route">
   <header class="page-head">
     <button class="icon-btn" data-back="home">${ic('back')}</button>
-    <div class="head-title"><h2>路线安全分析</h2><small>已按安全优先排序</small></div>
+    <div class="head-title"><h2 data-i18n="routeAnalysis">路线安全分析</h2><small data-i18n="routeSub">已按安全优先排序</small></div>
     <button class="icon-btn" data-action="share-trip">${ic('share')}</button>
   </header>
   <div class="route-dest">${ic('route')}<span>到 <b data-destination>滨江花园</b> · 东南门</span><span class="sep">|</span><span>3 条路线</span></div>
@@ -97,7 +66,7 @@ XA_SCREENS.route = `
 
   <button class="advice-card" data-action="ai-suggest">
     <span class="ai-face small">☺</span>
-    <span><b>小安建议</b> A 线多 3 分钟，换全程有灯与 <em>+28</em> 安全分</span>
+    <span><b>安星建议</b> A 线多 3 分钟，换全程有灯与 <em>+28</em> 安全分</span>
     <small>21:35 更新</small>
   </button>
 
@@ -137,17 +106,17 @@ XA_SCREENS.route = `
 </section>`;
 
 XA_SCREENS.sos = `
-<section class="screen" data-screen="sos">
+<section class="screen scroll-screen" data-screen="sos">
   <div class="sos-bg"></div>
   <header class="page-head light">
     <button class="icon-btn" data-back="home">${ic('back')}</button>
     <div class="head-title"><h2>紧急求助</h2><small>EMERGENCY · 一键报警</small></div>
-    <button class="icon-btn" data-action="sos-guide">${ic('shield')}</button>
+    <button class="sos-cancel-top" data-action="cancel-alarm">${ic('close')} 误报取消</button>
   </header>
   <div class="sos-content">
-    <div class="alarm-state"><span class="pulse-dot"></span>报警已发出 <i>21:42:06</i></div>
+    <div class="alarm-state"><span class="pulse-dot"></span>报警已发出 <i id="alarmSentAt">--:--:--</i></div>
     <h2 class="sos-title">已报警</h2>
-    <p class="sos-desc">已通知 3 位紧急联系人，并自动呼叫 110</p>
+    <p class="sos-desc" id="sosDesc">已通知 3 位紧急联系人，并自动呼叫 110</p>
     <div class="sos-orb-wrap">
       <div class="orb-rings"><i></i><i></i><i></i></div>
       <div class="sos-orb"><b>SOS</b><span id="alarmTimer">00:03</span><small>· 鸣响中 ·</small><div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
@@ -159,11 +128,17 @@ XA_SCREENS.sos = `
       <div class="status-row pending" data-status="2"><span class="st-ico amber">${ic('siren')}</span><span><b>警报鸣响</b><small>最大音量 · 现场录音已开启</small></span><span class="st-tag">鸣响中</span></div>
       <div class="status-row pending" data-status="3"><span class="st-ico blue">${ic('glasses')}</span><span><b>AR 眼镜联动</b><small>检测到剧烈动作与眼镜掉落，已自动报警</small></span><span class="st-tag done">已触发</span></div>
     </div>
-    <button class="location-card glass" data-action="location-detail">
-      ${ic('pin')}<span><b>当前位置 · 已同步</b><small>杭州市西湖区文三路 90 号 · 精度 ±5m · 更新于 21:42:06</small></span>
+    <button class="location-card glass" data-action="location-detail" id="sosLocationCard">
+      ${ic('pin')}<span><b>当前位置 · 实时同步中</b><small id="sosLocationDetail">正在获取设备实时定位…</small></span>
       <span class="loc-btn">查看 ${ic('chevron')}</span>
     </button>
-    <button class="cancel-alarm" data-action="cancel-alarm"><span class="hold-fill"></span>${ic('check')} 我安全了 · 取消报警<small>长按 2 秒</small></button>
-    <p class="sos-footnote">长按 2 秒取消，防止误触 · 本次记录仍会保留</p>
+    <div class="sos-contacts glass">
+      <div class="sos-contacts-head"><b>亲友实时位置已发送</b><small>3 位紧急联系人</small></div>
+      <div class="sos-contact"><span>妈妈</span><small>已送达 · 实时位置</small><em>${ic('check')}</em></div>
+      <div class="sos-contact"><span>阿哲</span><small>已送达 · 实时位置</small><em>${ic('check')}</em></div>
+      <div class="sos-contact"><span>物业管家</span><small>已送达 · 实时位置</small><em>${ic('check')}</em></div>
+    </div>
+    <button class="cancel-alarm" data-action="cancel-alarm"><span class="hold-fill"></span>${ic('check')} 我安全了 · 取消报警<small>轻点即可取消</small></button>
+    <p class="sos-footnote">误报可随时取消 · 本次记录仍会保留 · 概念演示，不会真实拨号</p>
   </div>
 </section>`;
