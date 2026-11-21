@@ -5,57 +5,52 @@ window.ic = function (name, cls) {
 
 XA_SCREENS.home = `
 <section class="screen active state-default" data-screen="home">
-  <div class="home-map map-embed" id="homeMap">
-    <iframe class="home-embed" id="homeEmbed" title="高德地图" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-  </div>
-
+  <div class="home-map" id="homeMap" aria-label="可拖动和缩放的地图"></div>
+  <header class="home-top">
+    <div class="brand"><b>安星</b><small>夜行安全</small></div>
+    <button class="help-btn" data-action="open-guide">使用指南</button>
+  </header>
   <div class="home-search" id="homeSearch">
-    ${ic('search')}<input id="homeSearchInput" placeholder="搜索地点 / 地址，如 汉庭酒店" autocomplete="off">
-    <button id="homeSearchClear" class="home-search-clear" aria-label="清空搜索">${ic('close')}</button>
-    <button id="homeSearchExit" class="home-search-exit" aria-label="退出搜索">退出</button>
+    ${ic('search')}<input id="homeSearchInput" placeholder="输入地点或品牌，如 汉庭酒店" autocomplete="off">
+    <button id="homeSearchBtn" class="home-search-btn" data-action="do-search">搜索</button>
   </div>
-
+  <div class="search-help">输入后点「搜索」；也可直接点选下方类别</div>
+  <div class="home-chips">${['酒店','便利店','公厕','餐厅','地铁'].map(function(k){return '<button data-action="search-category" data-category="'+k+'">'+k+'</button>';}).join('')}</div>
   <div class="home-floats">
-    <button class="float-btn" data-action="layer" aria-label="图层">${ic('layers')}</button>
-    <button class="float-btn" data-action="risk-popover" aria-label="安全警告">${ic('warning')}</button>
-    <button class="float-btn" data-action="recenter" aria-label="我的定位">${ic('pin')}</button>
+    <button class="float-btn" data-action="risk-popover" aria-label="附近安全提示">${ic('warning')}</button>
+    <button class="float-btn" data-action="recenter" aria-label="回到我的位置">${ic('pin')}</button>
   </div>
+  <div class="location-chip" id="locationChip">正在获取位置…</div>
 
   <div class="risk-popover" id="riskPopover">
-    <div class="rp-head"><b>附近夜行风险</b><button data-action="close-risk">${ic('close')}</button></div>
-    <div class="risk-item"><span class="risk-dot amber"></span><span><b>文昌巷 300m 路灯检修</b><small>2 分钟前 · 建议绕行滨江路</small></span></div>
-    <div class="risk-item"><span class="risk-dot coral"></span><span><b>文三路近 30 天事件 2 起</b><small>照明偏弱 · 建议走主干道</small></span></div>
-    <div class="risk-item"><span class="risk-dot amber"></span><span><b>西溪公园入口照明不足</b><small>今晚 21:12 用户上报</small></span></div>
+    <div class="rp-head"><b>附近夜行提示</b><button data-action="close-risk">${ic('close')}</button></div>
+    <div class="risk-item"><span class="risk-dot amber"></span><span><b>优先选择有路灯的主路</b><small>照明信息来自公开地图与路线估算</small></span></div>
+    <div class="risk-item"><span class="risk-dot coral"></span><span><b>路况可能变化</b><small>出发前请再次观察现场环境</small></span></div>
   </div>
 
-  <div class="map-mode-pop" id="mapModePop">
-    <div class="rp-head"><b data-i18n="mapSettings">地图设置</b><span class="rp-head-actions"><button class="map-cancel" data-action="close-map-mode" data-i18n="cancel">取消</button><button data-action="close-map-mode" aria-label="关闭">${ic('close')}</button></span></div>
-    <small data-i18n="view">视角</small><div class="seg"><button data-map-mode="2d" class="on">2D</button><button data-map-mode="3d">3D</button></div>
-    <small data-i18n="basemap">底图</small><div class="seg"><button data-base-map="standard" class="on" data-i18n="standard">标准</button><button data-base-map="satellite" data-i18n="satellite">卫星</button></div>
-  </div>
+  <section class="poi-results" id="poiResults" aria-label="地点搜索结果">
+    <div class="poi-head"><b id="poiTitle">地点搜索</b><button data-action="close-search" aria-label="关闭搜索结果">${ic('close')}</button></div>
+    <div class="poi-list" id="poiList"></div>
+  </section>
 
-  <div class="route-panel" id="routePanel">
-    <div class="rp-handle"></div>
-    <div class="rp-dest"><span class="dest-arrow">${ic('navigation')}</span><span><small>目的地</small><b><span data-destination>滨江花园</span> · 东南门</b></span><button data-action="search">修改</button></div>
-    <div class="rp-stats">
-      <div><b id="rpScore">92</b><small>安全系数</small></div>
-      <div><b id="rpLamp">86%</b><small>路灯覆盖</small></div>
-      <div><b id="rpCam">12 处</b><small>监控覆盖</small></div>
+  <div class="home-sheet" id="homeSheet">
+    <button class="hs-handle" data-action="toggle-home-sheet" aria-label="收起或展开路线卡片"></button>
+    <div class="dest-main"><span class="dest-icon">${ic('navigation')}</span><span><small>当前目的地</small><b data-destination>滨江花园</b></span><button class="dest-edit" data-action="focus-search">更换</button></div>
+    <div class="route-summary"><span><b>92</b>安全分</span><span><b>18</b>分钟</span><span><b>86%</b>路灯</span><span><b>12</b>处监控</span></div>
+    <div class="home-route-options">
+      <button class="selected" data-action="route-detail" data-route="A"><b>A 滨江路</b><small>92分 · 多3分钟</small></button>
+      <button data-action="route-detail" data-route="B"><b>B 文昌巷</b><small>78分 · 时间相近</small></button>
+      <button data-action="route-detail" data-route="C"><b>C 夜宵街</b><small>64分 · 少3分钟</small></button>
     </div>
-    <div class="rp-tip">${ic('check')}<span>本路线避开暗巷，比常规路线多 3 分钟</span></div>
-    <div class="rp-ai"><span><b>AI 全程陪伴</b><small id="aiStateText">开启：语音陪伴 / 实时播报路况风险</small></span><button class="switch on" id="aiSwitch" data-action="ai-toggle"><i></i></button></div>
-    <div class="rp-actions">
-      <button class="primary-btn" data-action="start-nav">${ic('navigation')}开始安全导航</button>
-      <button class="sos-small" data-action="sos">SOS</button>
-    </div>
+    <div class="home-actions"><button class="primary-btn" data-action="start-nav">${ic('navigation')}开始安全导航</button><button class="square-btn" data-action="share-trip">${ic('share')}</button></div>
   </div>
 
   <div class="side-drawer" id="sideDrawer">
     <div class="drawer-head"><b>安星 · 夜行安全</b><small>夜间守护</small><button data-action="close-drawer">${ic('close')}</button></div>
     <button data-tab="home">${ic('navigation')}安全导航</button>
     <button data-action="open-route">${ic('route')}路线分析</button>
-    <button data-tab="entertainment">${ic('music')}夜间伴行</button>
     <button data-tab="community">${ic('users')}社区互助</button>
+    <button data-tab="entertainment">${ic('music')}夜间伴行</button>
     <button data-action="open-ar">${ic('glasses')}AR 眼镜</button>
     <button data-tab="profile">${ic('user')}我的</button>
   </div>

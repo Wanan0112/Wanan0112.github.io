@@ -475,7 +475,6 @@ XA.startNavigation = function () {
       '<div class="nav-actions">' +
         '<button class="primary-btn" data-action="end-nav" style="flex:1;width:auto">' + ic('check') + '<span data-i18n="endNav">结束导航</span></button>' +
         '<button class="square-btn" data-action="nav-share">' + ic('share') + '</button>' +
-        '<button class="sos-mini" data-action="sos">SOS</button>' +
       '</div>' +
     '</div>';
   XA.$('#phone').appendChild(box);
@@ -503,8 +502,7 @@ XA.startNavigation = function () {
     i++;
     if (i >= XA.navSteps.length) {
       clearInterval(XA.navTimer);
-      XA.toast('已到达滨江花园 · 行程记录已保存');
-      XA.actions['end-nav']();
+      XA.toast('路线指引已结束 · 请观察现场并主动结束导航');
       return;
     }
     paint();

@@ -43,7 +43,7 @@ XA.go = function (screen, noHistory) {
   XA.current = screen;
   XA.$$('.screen').forEach(function (el) { el.classList.toggle('active', el.dataset.screen === screen); });
   XA.$$('.tab').forEach(function (el) { el.classList.toggle('active', el.dataset.tab === screen); });
-  XA.$('#phone').classList.toggle('no-tabbar', ['route', 'sos', 'ar', 'settings'].indexOf(screen) !== -1);
+  XA.$('#phone').classList.remove('no-tabbar');
   var active = XA.$('.screen.active');
   if (active && active.scrollTop !== undefined) active.scrollTop = 0;
 };
@@ -72,7 +72,7 @@ XA.bindSheetGestures = function () {
   var startY = 0, dy = 0, dragging = false;
   sheet.addEventListener('pointerdown', function (e) {
     if (e.pointerType === 'mouse') return;
-    if (sheet.scrollTop > 4 && e.clientY > sheet.getBoundingClientRect().top + 70) return;
+    if (!e.target.closest('.drag-handle')) return; // 内容区域交给原生滚动，仅把手拖拽面板
     startY = e.clientY; dy = 0; dragging = true;
     sheet.classList.remove('snapback');
     sheet.classList.add('dragging');
@@ -164,27 +164,16 @@ XA.showSosConfirm = function () {
   var box = document.createElement('div');
   box.className = 'sos-confirm';
   box.innerHTML =
-    '<button class="sos-cancel-x" data-sos-cancel aria-label="取消报警">×</button>' +
-    '<p class="sos-confirm-label">已准备报警 · 3 秒后发出</p>' +
-    '<h3>误触？轻点即可取消</h3>' +
-    '<div class="confirm-ring"><div class="countdown-fill"></div><button class="confirm-btn">SOS<span class="hold-fill"></span></button></div>' +
-    '<button class="cancel-hold" data-sos-cancel>轻点取消，或长按更快<span class="hold-fill"></span></button>' +
-    '<p class="sos-cancel-tip">点击空白处 / 下滑 也可取消</p>';
+    '<button class="sos-cancel-x" data-sos-cancel aria-label="取消求助">×</button>' +
+    '<p class="sos-confirm-label">紧急求助确认</p>' +
+    '<h3>仅在真实紧急情况使用</h3>' +
+    '<p class="sos-cancel-tip">发出后会展示定位并通知紧急联系人；误触不会自动报警。</p>' +
+    '<div class="confirm-ring"><button class="confirm-btn">确认发出</button></div>' +
+    '<button class="cancel-hold" data-sos-cancel>取消，不发出求助</button>' +
+    '<p class="sos-cancel-tip">也可点击空白处取消</p>';
   XA.$('#phone').appendChild(box);
   void box.offsetWidth; // 强制回流，确保过渡动画可靠触发（后台标签页也能正常显示）
   box.classList.add('open');
-
-  var cd = (XA.settings && XA.settings.sosCd) || 3;
-  var count = cd;
-  var label = box.querySelector('.sos-confirm-label');
-  var ring = box.querySelector('.countdown-fill');
-  if (label) label.textContent = '已准备报警 · ' + cd + ' 秒后发出';
-  XA._sosTick = setInterval(function () {
-    count--;
-    if (label) label.textContent = count > 0 ? '已准备报警 · ' + count + ' 秒后发出' : '正在发出报警…';
-    if (ring) ring.style.setProperty('--cd', ((cd - count) / cd) + '');
-  }, 1000);
-  if (ring) ring.style.setProperty('--cd', '0');
 
   var settled = false;
   function cleanup() {
@@ -201,7 +190,7 @@ XA.showSosConfirm = function () {
     if (navigator.vibrate) navigator.vibrate(20);
     XA.toast('报警已取消 · 未发出求助');
   };
-  XA._sosTimer = setTimeout(XA._sosFire, cd * 1000);
+  XA._sosTimer = null;
 
   // 多渠道取消：右上角 ×、取消按钮、点击空白处、下滑
   XA.$$('[data-sos-cancel]', box).forEach(function (el) {
@@ -232,6 +221,10 @@ XA.fireAlarm = function () {
   if (nav) nav.remove();
   clearInterval(XA.navTimer);
   XA.go('sos', true);
+  XA.toast('求助已发出 · 正在获取定位');
+  if (navigator.geolocation) navigator.geolocation.getCurrentPosition(function (p) {
+    XA.toast('定位成功 · ±' + Math.round(p.coords.accuracy || 0) + 'm');
+  }, function () { XA.toast('定位未开启 · 请手动说明位置'); }, { enableHighAccuracy: true, timeout: 8000 });
   var sec = 3;
   var t = XA.$('#alarmTimer');
   if (t) t.textContent = '00:0' + sec;

@@ -46,7 +46,7 @@
     if (!home) return;
     home.classList.remove('state-default', 'state-route', 'state-nav');
     home.classList.add('state-' + state);
-    XA.$('#phone').classList.toggle('no-tabbar', state !== 'default');
+    XA.$('#phone').classList.remove('no-tabbar');
     if (state === 'default') {
       var search = XA.$('.home-search [data-destination]');
       if (search) search.textContent = XA.t ? XA.t('searchHint') : '搜索目的地、公交站';
@@ -411,7 +411,6 @@
       if (m._xaRadar) { m.removeLayer(m._xaRadar); m._xaRadar = null; }
       if (m._xaSweep) { m.removeLayer(m._xaSweep); m._xaSweep = null; }
       addMeLayers(m, gcj());
-      addPoints(m, gcj());
     });
   }
   function initHomeMap() {
@@ -419,7 +418,7 @@
     if (!el) return;
     var m = setupMap(el, gcj(), 16);
     if (!m) return;
-    addMeLayers(m, gcj()); addPoints(m, gcj());
+    addMeLayers(m, gcj());
     el.classList.add('map-ready');
   }
   function initRouteMap() {
@@ -905,6 +904,11 @@
   var origGo = XA.go;
   XA.go = function (screen, noHistory) {
     origGo(screen, noHistory);
+    // 离开首页（切到其它标签）时主动结束导航，保证任何页面都能退出
+    if (screen !== 'home') {
+      var nav = XA.$('.nav-session');
+      if (nav) { nav.remove(); clearInterval(XA.navTimer); stopWatch(); }
+    }
     if (screen === 'home') {
       if (!noHistory) resetHome();
     }
@@ -929,7 +933,7 @@
       var nav = XA.$('.nav-session');
       if (nav) {
         nav.classList.add('pure-nav');
-        if (!nav.querySelector('.nav-sos')) nav.insertAdjacentHTML('beforeend', '<button class="nav-sos" data-action="sos">SOS</button>');
+        var duplicateSos = nav.querySelector('.nav-sos'); if (duplicateSos) duplicateSos.remove();
         var turn = nav.querySelector('.nav-turn');
         if (turn && !turn.querySelector('.nav-end')) turn.insertAdjacentHTML('beforeend', '<button class="nav-end" data-action="end-nav">结束</button>');
       }
